@@ -1,0 +1,48 @@
+.icon-volume {
+    font-size: 56px; /* Adjust to make the icon bigger */
+    color: #000; /* You can change the color too */
+}
+
+.volume-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Volume bar styling */
+.volume-bar-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.volume-slider {
+    width: 100%;
+    height: 13px;
+    background: linear-gradient(to right, #18EE3A 0%, #18EE3A var(--volume-level), #ccc var(--volume-level), #ccc 100%);
+    border-radius: 10px;
+    outline: none;
+    -webkit-appearance: none;
+    border: solid;
+    border-color: #000;
+}
+
+/* Webkit browsers (Chrome, Safari, etc.) */
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 2px;
+    background: blue;
+    cursor: pointer;
+}
+
+/* Firefox */
+.volume-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: blue;
+    cursor: pointer;
+}

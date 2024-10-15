@@ -1,0 +1,1285 @@
+/* Background styles */
+@import url('https://fonts.googleapis.com/css2?family=Hanalei+Fill&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grandstander:wght@400&display=swap');
+
+
+.background-container {
+    background-color: #000000; /* Your existing styles */
+    background-image: url('../../public/images/back.jpg'); /* Your existing styles */
+    background-size: cover; /* Your existing styles */
+    background-position: center; /* Your existing styles */
+    min-height: 100vh; /* Your existing styles */
+    color: rgba(0, 0, 0, 0.5); /* Your existing styles */
+    position: relative; 
+}
+
+.main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+  }
+
+
+.settings{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background-color:white;
+    align-items: center;
+    text-align: center;
+    cursor:pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.settings:hover {
+    transform: scale(1.1); /* Scale the element to 110% */
+   
+}
+
+.settings-img{
+    width:45px;
+    height:45px;
+
+    background-image: url('../../public/images/settings.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding-left: 1.5rem;  /* sm:px-6 -> 24px (on small screens and above) */
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding-left: 2rem;  /* lg:px-8 -> 32px (on large screens and above) */
+        padding-right: 2rem;
+    }
+}
+
+.game {
+    
+    font-family: 'Hanalei Fill', cursive;
+    font-size: 5.5rem; 
+    color: #ffffff; 
+    text-align: center; 
+    font-weight:bold;
+    -webkit-text-stroke: 2px black; 
+    text-shadow: 2px 2px 0 #ffffff; 
+}
+@keyframes wave {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.game2 {
+    font-family: 'Hanalei Fill', cursive;
+    font-size: 3.5rem;
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+    -webkit-text-stroke: 2px black;
+    text-shadow: 2px 2px 0 #ffffff;
+    white-space: nowrap; 
+    display: inline-block;
+}
+
+.game2 span {
+    display: inline-block;
+    animation: wave 2.5s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.1s); /* Stagger the wave effect */
+}
+
+
+.game2 span:nth-child(1) { --i: 1; }
+.game2 span:nth-child(2) { --i: 2; }
+.game2 span:nth-child(3) { --i: 3; }
+.game2 span:nth-child(4) { --i: 4; }
+.game2 span:nth-child(5) { --i: 5; }
+.game2 span:nth-child(6) { --i: 6; }
+.game2 span:nth-child(7) { --i: 7; }
+.game2 span:nth-child(8) { --i: 8; }
+.game2 span:nth-child(9) { --i: 9; }
+.game2 span:nth-child(10) { --i: 10; }
+.game2 span:nth-child(11) { --i: 11; }
+
+
+
+
+
+.settings-T {
+   
+    font-family: 'Hanalei Fill', cursive;
+    font-size: 2.8rem; 
+    color: #ffffff; 
+    text-align: center; 
+    font-weight:bold;
+    -webkit-text-stroke: 2px black; 
+    text-shadow: 2px 2px 0 #ffffff; 
+    white-space: nowrap; /* Prevents text from wrapping onto the next line */
+    /* Adjust this value to fit your needs */
+    text-align: center;
+}
+
+
+
+.shop-text{
+    
+    
+    
+        font-family: 'Hanalei Fill', cursive;
+        font-size: 2.5rem; 
+        color: #ffffff; 
+        text-align: center; 
+        font-weight:bold;
+        -webkit-text-stroke: 2px black; 
+        text-shadow: 2px 2px 0 #ffffff; 
+        white-space: nowrap; /* Prevents text from wrapping onto the next line */
+        /* Adjust this value to fit your needs */
+        text-align: center;
+ 
+}
+
+
+
+/* Content container */
+.flex-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    position: relative;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width:100%;
+  height: 100%;
+}
+.row70 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width:100%;
+    height: 70%;
+  }
+.rowL- {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    flex-wrap: wrap;
+    width:100%;
+    padding-left: 1rem;
+  }
+  .rowL {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    flex-wrap: wrap;
+    width:100%;
+   
+  }
+  .rowR {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    flex-wrap: wrap;
+    width:100%;
+    padding-right: 2rem  !important;
+  }
+.rowW {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width:100%;
+    
+  }
+
+  .rowW-M {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width:100%;
+    margin-top:10%;
+  }
+.rowH{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width:100%;
+    height: 100%;
+   
+  }
+  .rowH-M {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width:100%;
+    height: 100%;
+    margin-top:4%;
+  }
+
+  .signIn {
+    font-family: 'Grandstander', cursive;
+    font-size: 3rem; 
+    color: #ffffff; 
+    text-align: center; 
+    -webkit-text-stroke: 0.1px black;
+    font-weight:bolder;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1); 
+  }
+
+  .signup-form {
+    background-image: url('../../public/images/back2.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 450px;
+    min-width: 320px;
+    box-sizing: border-box; 
+    overflow: hidden; 
+    transition: all 0.3s ease;
+    min-height: 50vh; 
+    max-height: 80vh; 
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 0 15px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  
+
+.login-form {
+    background-image: url('../../public/images/back2.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 450px;
+    min-width: 320px;
+    box-sizing: border-box; 
+    overflow: hidden; 
+    transition: all 0.3s ease;
+    min-height: 40vh; 
+    max-height: 70vh; 
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+      box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.5);
+  
+      
+  }
+
+  
+
+.login-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .login-form input[type="email"],
+  .login-form input[type="password"] {
+      width: 80%;
+      padding: 6px;
+      margin-bottom: 15px;
+      border: none;
+      margin-top: 10px;
+      border-radius: 2px;
+      line-height: 1.5;
+      font-size: 19px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      text-align: center; 
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); 
+      cursor: pointer;
+      position: relative;
+      transform: skew(-20deg); 
+      background-color: #ffffff;
+  }
+  .remember-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    width: 80%;
+    justify-content: left;
+         
+}
+
+.checkbox {
+   
+    width: 20px;            
+    height: 20px;             
+    
+    accent-color: #0eb414;    
+    margin-right: 8px;        
+}
+
+.remember {
+    font-family: 'Grandstander', cursive; /* Use the same font as your other text */
+    font-size: 1.2rem;                  /* Adjust font size as needed */
+    color: #ffffff;                     /* Change text color */
+    cursor: pointer;                    /* Change cursor on hover */
+    transition: color 0.2s;            /* Smooth transition for color change */
+}
+
+.login-form input::placeholder {
+    /* Remove skew from the placeholder */
+    transform: none; /* or delete this line entirely */
+}
+
+
+  .login-form input::placeholder {
+    transform: skew(20deg);
+  }
+  
+  .login-form input:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8); 
+  }
+  
+  .login-form input:focus {
+    border-color: #007BFF;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8); 
+    outline: none;
+  }
+
+  .action-container {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Space out the link and button */
+    margin-top: 50px; /* Add top margin */
+    width: 80%;
+}
+
+.action-container2 {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: center; /* Space out the link and button */
+    margin-top: 50px; /* Add top margin */
+    width: 80%;
+}
+
+.link {
+    font-size: 16px; /* Slightly larger text */
+    color: #02c8ff; /* Dark gray color */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.2s ease; /* Smooth transition for hover */
+}
+
+.link:hover {
+    color: #007BFF; /* Change color on hover */
+}
+
+.button {
+    font-family: 'Hanalei Fill', cursive;
+    -webkit-text-stroke: 1px black; 
+    font-weight: bold;
+    width: 40%;
+    padding: 2px;
+    background-color: #0eb414;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+    font-size: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); 
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    background-color: #1bd124; /* Hover effect for button */
+}
+
+.button:active {
+    transform: scale(0.98); /* Active effect */
+}
+
+.flex-center::selection {
+    background-color: #FF2D20;
+    color: white;
+}
+
+.error-messages {
+    position: fixed;
+    top: 10%;
+    left: 86%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 250px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column-reverse; 
+    gap: 10px; 
+}
+
+.error-message {
+    background-color: red;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 18px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.5s ease-in-out;
+}
+
+
+.error-message.hidden {
+    opacity: 0;
+}
+
+
+.signup-form h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+  
+  .signup-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .signup-form input {
+    width: 80%;
+    padding: 6px;
+    margin-bottom: 15px;
+    border: none;
+    margin-top: 10px;
+    border-radius: 2px;
+    line-height: 1.5;
+    font-size: 19px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); 
+    cursor: pointer;
+    position: relative;
+    transform: skew(-20deg); 
+    background-color: #ffffff;
+  }
+  
+  .signup-form input::placeholder {
+    transform: skew(20deg);
+  }
+  
+  .signup-form input:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8); 
+  }
+  
+  .signup-form input:focus {
+    border-color: #007BFF;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);
+    outline: none;
+  }
+  
+ 
+  
+/* Main content */
+.content-wrapper {
+    width: 100%;
+    max-width: 42rem;
+    padding: 0 1.5rem;
+}
+
+.content-wrapper-lg {
+    max-width: 70rem;
+}
+
+.vs{
+
+    font-family: 'Hanalei Fill', cursive;
+    -webkit-text-stroke: 1px black; 
+    font-weight: bold;
+    width: 40%;
+    padding: 2px;
+    background-color: #00A3FF;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+    font-size: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); 
+    transition: background-color 0.3s ease, transform 0.2s ease;  
+}
+
+.vs:hover {
+    background-color: #09d0f3; /* Hover effect for button */
+}
+
+.vs:active {
+    transform: scale(0.98); /* Active effect */
+}
+
+.small-T{
+    font-family: 'Hanalei Fill', cursive;
+    -webkit-text-stroke: 1px black; 
+    font-weight: bold;  
+    font-size: 25px;
+    z-index: 1;
+    color: #ffffff;
+}
+.name-T{
+    font-family: 'Hanalei Fill', cursive;
+    -webkit-text-stroke: 1px black; 
+    font-weight: bold;  
+    font-size: 35px;
+    color: #ffffff;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;   /* Ensure full width */
+}
+
+.header > *:nth-child(1) {
+    justify-self: flex-start; /* Aligns the first item to the left */
+}
+
+.header > * {
+    flex: 1; /* Allow all child items to grow equally */
+    text-align: center; /* Center text within each item */
+}
+
+.header > *:nth-child(2) {
+    flex: 2; /* Make the second item take up more space if needed */
+}
+
+.mid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;   /* Ensure full width */
+}
+.set-box{
+   
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;   /* Ensure full width */
+
+}
+.set-box > * {
+    flex: 1; /* Allow all child items to grow equally */
+    text-align: center; /* Center text within each item */
+}
+@media (max-width: 555px) {
+    .set-box {
+        flex-direction: column; /* Stack the forms vertically */
+        gap: 15px; /* Adjust the spacing between the boxes */
+    }
+}
+
+
+.mid2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%;
+    margin-top:18%;   /* Ensure full width */
+}
+.mid3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 100%; 
+     /* Ensure full width */
+}
+
+.mid > *:nth-child(1) {
+    justify-self: flex-start; /* Aligns the first item to the left */
+}
+
+.mid > * {
+    flex: 1; /* Allow all child items to grow equally */
+    text-align: center; /* Center text within each item */
+}
+
+.mid > *:nth-child(2) {
+     /* Make the second item take up more space if needed */
+}
+
+.mid3 > *:nth-child(1) {
+    justify-self: flex-start; /* Aligns the first item to the left */
+}
+
+
+
+.type{
+
+   
+    width:200px;
+    height:600px;
+}
+
+
+
+.math {
+    width: 130px;
+    height: 130px;
+    background-image: url('../../public/images/math.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center;
+    border-radius: 20px;
+    position: relative; /* Necessary for positioning the pseudo-element */
+    overflow: hidden; /* Ensures the blur doesn't spill out of the div */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    
+}
+
+.math::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit; /* Copies the background image */
+    filter: blur(1px); /* Adjust the blur amount as needed */
+    z-index: 1; /* Puts the blur layer on top */
+    opacity: 0; /* Start with no blur */
+    transition: opacity 0.3s ease; /* Smooth transition for the blur */
+}
+
+.math:hover::before {
+    opacity: 1; /* Shows the blur on hover */
+}
+
+
+.math:hover {
+    transform: scale(1.05); /* Scale the element to 110% */
+  
+    cursor:pointer; 
+}
+
+.sport{
+    width:130px;
+    height:130px;
+    background-image: url('../../public/images/sport.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center;
+    border-radius:20px;
+    position: relative; /* Necessary for positioning the pseudo-element */
+    overflow: hidden; /* Ensures the blur doesn't spill out of the div */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.sport::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit; /* Copies the background image */
+    filter: blur(1px); /* Adjust the blur amount as needed */
+    z-index: 1; /* Puts the blur layer on top */
+    opacity: 0; /* Start with no blur */
+    transition: opacity 0.3s ease; /* Smooth transition for the blur */
+}
+
+.sport:hover::before {
+    opacity: 1; /* Shows the blur on hover */
+}
+
+.sport:hover {
+    transform: scale(1.05); /* Scale the element to 110% */
+  
+    cursor:pointer; 
+}
+
+.country{
+    width:130px;
+    height:130px;
+    background-image: url('../../public/images/country.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center;
+    border-radius:20px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.country:hover {
+    transform: scale(1.1); /* Scale the element to 110% */
+  
+    cursor:pointer; 
+}
+
+
+
+.leaderboard{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background-color:#FEFEFE;
+    background-image: url('../../public/images/leader.png');
+    background-size: cover; 
+    background-position: center;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.leaderboard:hover {
+    transform: scale(1.1); 
+  
+    cursor:pointer; 
+}
+
+.profile-pic{
+    width:120px;
+    height:120px;
+    background-image: url('../../public/images/dog.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+   
+}
+
+
+
+.history{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background-color:#FEFEFE;
+    background-image: url('../../public/images/history.png');
+    background-size: 92%; /* Ensures the image covers the div */
+    background-position: center;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+
+}
+.history:hover {
+    transform: scale(1.1); /* Scale the element to 110% */
+    cursor:pointer; 
+}
+
+
+
+.priv{
+    
+    height:550px;
+}
+
+
+.priv-content{
+    height:42%;
+    width:100%;
+    background-color: #FFF5EA;
+    border-radius:7px;
+}
+.priv-content2{
+    height:43%;
+    width:100%;
+    background-color: #FFF5EA;
+    border-radius:7px;
+    margin-top:4%;
+}
+.priv-title{
+    width:250px;
+    height:60px;
+    background-color:#FF5309;
+    border-radius:7px ;
+}
+
+
+
+
+/* Logo */
+.logo-container {
+    display: flex;
+    justify-content: center;
+}
+
+.logo {
+    height: 3rem;
+    width: auto;
+    color: white;
+}
+
+.logo-lg {
+    height: 4rem;
+    color: #FF2D20;
+}
+
+/* Navigation */
+.nav {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: -0.75rem;
+}
+
+.nav-link {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    color: black;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.nav-link:focus {
+    outline: none;
+    border-color: #FF2D20;
+}
+
+.nav-link.dark {
+    color: white;
+}
+
+.nav-link.dark:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.nav-link.dark:focus {
+    border-color: white;
+}
+
+/* Footer */
+.footer {
+    padding: 4rem 0;
+    text-align: center;
+    font-size: 0.875rem;
+    color: black;
+}
+
+.footer.dark {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+
+.center{
+    justify-content: center;
+    align-items: center;
+    width:100%;
+}
+
+.shop{
+    height:550px;
+
+  
+}
+
+.shop-title{
+    width:200px;
+    height:60px;
+    background-color:#FF5309;
+    border-radius:7px ;
+}
+
+.shop-content{
+    height:89%;
+    width:100%;
+    background-color: #FFF5EA;
+    border-radius:7px;
+}
+
+.value {
+    width: 100px;
+    height: 130px;
+    margin-top: 10%;
+    background-color: #0CB3FB;
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transition for scale and background color */
+}
+
+.value:hover {
+    transform: scale(1.1); /* Scale the element to 110% */
+    background-color: #0A8DA1;
+    cursor:pointer; 
+}
+.dog{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/dog1.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+.cat{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/cat.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+.frog{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/frog.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+.antilope{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/antilope.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+
+.lion{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/lion.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+
+.horse{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/horse.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+.snake{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/snake.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+.tiger{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/tiger.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+.deer{
+    width:100px;
+    height:90px;
+    background-image: url('../../public/images/deer.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+}
+.nauda{
+    font-family: 'Grandstander', cursive;
+    font:bolder;
+    
+    font-size: 25px;
+    color:white;
+}
+.score-text{
+    font-family: 'Grandstander', cursive;
+    font:bolder; 
+    font-size: 40px;
+    color:white;
+}
+
+.hint{
+    width:115px;
+    height:114px;
+    background-image: url('../../public/images/hint.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+    margin-top:10%;
+}
+
+.clock{
+    width:115px;
+    height:114px;
+    background-image: url('../../public/images/clock.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+    margin-top:10%;
+}
+
+.freeze{
+    width:115px;
+    height:114px;
+    background-image: url('../../public/images/freeze.png');
+    background-size: cover; /* Ensures the image covers the div */
+    background-position: center; /* Centers the image */
+    border-radius:50%;
+    margin-top:10%;
+}
+
+.priv-price{
+     height:38px;
+     width:80px;
+     background-color:#0CB3FB;
+     margin-top:17%;
+     border-radius:2px;
+}
+.priv-price:hover {
+    background-color: #0A8DA1;
+    cursor:pointer; 
+}
+
+.priv-value{
+    width:80px;
+    height:60px;
+    margin-top:17%;
+    background-color: #615858;
+    border-radius:60%;
+}
+
+
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); /* 70% opacity black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Ensure it's on top of other elements */
+}
+
+/* Popup box styling */
+.popup-box {
+    background-color: #F1F3DF; 
+    width: 90vw; 
+    max-width: 900px; 
+    height: auto; 
+    max-height: 80vh; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); 
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 2001; 
+}
+
+.scrollable-content {
+    flex: 1; /* Take up remaining space within the popup */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding-right: 10px;
+    max-height: calc(100% - 100px); /* Allow content to take full height minus header/controls */
+}
+
+
+.close-button {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: 'Grandstander', cursive;
+    font-weight: bold;
+    font-size: 75px;
+    color: #FC0000;
+    -webkit-text-stroke: 2px black;
+}
+
+
+.volume {
+    font-family: 'Grandstander', cursive;
+    font-size: 3vw; /* Responsive font size based on viewport width */
+    color: black;
+    padding-left: 1rem;
+}
+
+.profile-update, .password-update {
+    border: none;
+    height: 80vh; /* Responsive height for content areas */
+    max-height: 445px;
+    margin-top: 7%;
+}
+
+
+.volume-container, .volume-bar-container, .mid {
+    margin-bottom: 15px;
+}
+
+
+@media (max-width: 768px) {
+    .popup-box {
+        width: 95vw; /* Adjust popup width for smaller screens */
+        height: 90vh; /* Adjust popup height for smaller screens */
+    }
+
+    .close-button {
+        font-size: 50px; 
+    }
+
+    .volume {
+        font-size: 6vw; 
+    }
+
+    .profile-update {
+        height: 50vh;
+        max-height: 360px;
+       
+    }
+    .password-update{
+         height: 50vh; 
+        max-height: 469px;
+    }
+}
+
+.profile-title{
+    font-family: 'Grandstander', cursive;
+    font-weight: bold;
+    font-size: 30px;
+    color: white;
+    -webkit-text-stroke: 0.3px black;
+}
+
+.lable{
+    font-family: 'Grandstander', cursive;
+    font-weight: bold;
+    font-size: 17px;
+    color: black;
+  
+}
+.lable1{
+    
+    font-weight: bold;
+    font-size: 17px;
+    color: rgb(54, 54, 54);
+  
+}
+.lable2{
+    
+    font-weight: bold;
+    font-size: 22px;
+    color: rgb(54, 54, 54);
+  
+}
+.lable-small{
+    justify-content: left;
+   display:flex;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(54, 54, 54);
+    align-items: center;
+    text-align: justify;
+  
+}
+
+.inputs{
+    margin-top: 4px;
+    display: block;
+    width: 90%;
+}
+.success-message {
+    color: green;
+    background-color: #e6ffe6;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.5s ease-out; 
+}
+
+.success-message.fade-in {
+    opacity: 1;
+}
+
+.success-message.fade-out {
+    opacity: 0;
+}
+
+.delete-box{
+  border:none;
+  height: 28vh;
+  width:60vh;  
+}
+.modal {
+    position: fixed; /* or absolute depending on your layout */
+    z-index: 1000; /* Ensure this is higher than the popup box */
+    /* Other styles */
+}
+
+.secondary-button {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 0.375rem; /* rounded-md */
+    border: 1px solid #D1D5DB; /* border-gray-300 */
+    background-color: #FFFFFF; /* bg-white */
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 600; /* font-semibold */
+    text-transform: uppercase; /* uppercase */
+    letter-spacing: 0.05em; /* tracking-widest */
+    color: #374151; /* text-gray-700 */
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05); /* shadow-sm */
+    transition: background-color 0.15s ease-in-out, opacity 0.15s ease-in-out; /* transition duration-150 ease-in-out */
+}
+
+.secondary-button:hover {
+    background-color: #F9FAFB; /* hover:bg-gray-50 */
+}
+
+.secondary-button:focus {
+    outline: none; /* focus:outline-none */
+    box-shadow: 0 0 0 2px #6366F1, 0 0 0 4px #E0E7FF; /* focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 */
+}
+
+.secondary-button:disabled {
+    opacity: 0.25; /* disabled:opacity-25 */
+    pointer-events: none;
+}
+
+.score-box {
+    width: 22vh;
+    height: 7vh;
+    background-color: #FF0101;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 5%;
+    margin-right: 2rem; /* Add padding-right */
+}

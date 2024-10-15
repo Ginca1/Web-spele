@@ -1,0 +1,68 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(107, 114, 128, 0.75); /* Gray with 75% opacity */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000; /* Overlay z-index */
+}
+
+.modal-content {
+    margin-bottom: 1.5rem; /* Same as mb-6 */
+    transform: translateY(0);
+    overflow: hidden;
+    border-radius: 0.5rem; /* Rounded-lg */
+    background-color: white; /* Background color */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* Shadow-xl */
+    transition: all 0.2s; /* Smooth transition */
+    z-index: 3001; /* Make sure it's above the overlay */
+    position: relative; /* Ensure the modal content is positioned above the overlay */
+}
+
+/* Transition classes */
+.modal-enter {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.95); /* Translate down and scale */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.modal-enter-active {
+    opacity: 1;
+    transform: translateY(0) scale(1); /* Normal state */
+}
+
+.modal-exit {
+    opacity: 1;
+    transform: translateY(0) scale(1); /* Normal state */
+    transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+}
+
+.modal-exit-active {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.95); /* Translate down and scale */
+}
+
+/* Max width classes */
+.modal-sm {
+    max-width: 24rem; /* sm:max-w-sm */
+}
+
+.modal-md {
+    max-width: 28rem; /* sm:max-w-md */
+}
+
+.modal-lg {
+    max-width: 32rem; /* sm:max-w-lg */
+}
+
+.modal-xl {
+    max-width: 36rem; /* sm:max-w-xl */
+}
+
+.modal-2xl {
+    max-width: 42rem; /* sm:max-w-2xl */
+}
