@@ -33,7 +33,7 @@ export default function UpdatePasswordForm({ className = '' }) {
             onSuccess: () => {
                 reset();
                 setSuccessMessage('Parole atjaunota veiksmīgi.');
-                setIsVisible(true); // Show success message
+                setIsVisible(true); 
             },
             onError: (errors) => {
                 if (errors.password) {

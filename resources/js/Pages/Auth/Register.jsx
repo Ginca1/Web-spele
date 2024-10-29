@@ -1,7 +1,4 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+
 import GuestLayout from '@/Layouts/GuestLayout';
 import '../../../css/css.css';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -13,8 +10,6 @@ export default function Register() {
         password: '',
         password_confirmation: '',
     });
-
-    
 
     const submit = (e) => {
         e.preventDefault();
@@ -95,9 +90,9 @@ export default function Register() {
                     >
                        Vai tev jau ir profils?
                     </Link>
-                    <PrimaryButton className="button" disabled={processing}>
+                    <button className="button" disabled={processing}>
                         Sūtīt
-                    </PrimaryButton>
+                    </button>
                 </div>
 
             </form>

@@ -106,9 +106,9 @@ export default function Login({ status, canResetPassword }) {
 
 
 
-                    <PrimaryButton className="button" disabled={processing}>
+                    <button className="button" disabled={processing}>
                        Ienākt
-                    </PrimaryButton>
+                    </button>
                 </div>
             </form>
         </GuestLayout>

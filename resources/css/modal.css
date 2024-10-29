@@ -15,7 +15,7 @@
     margin-bottom: 1.5rem; /* Same as mb-6 */
     transform: translateY(0);
     overflow: hidden;
-    border-radius: 0.5rem; /* Rounded-lg */
+    border-radius: 0.2rem; /* Rounded-lg */
     background-color: white; /* Background color */
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* Shadow-xl */
     transition: all 0.2s; /* Smooth transition */
@@ -64,5 +64,5 @@
 }
 
 .modal-2xl {
-    max-width: 42rem; /* sm:max-w-2xl */
+    max-width: 25rem; /* sm:max-w-2xl */
 }

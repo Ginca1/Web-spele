@@ -48,7 +48,7 @@ export default function DeleteUserForm({ className = '' }) {
 
     return (
         <section className={`space-y-6 ${className}`}>
-            <div className="rowW">
+            <div className="rowW-M">
                 <div className="delete-box">
                     <div className="rowW">
                         <div className="profile-title">
@@ -62,7 +62,7 @@ export default function DeleteUserForm({ className = '' }) {
                         rūpīgi izvērtē savu lēmumu.
                     </p>
 
-                    <div className="rowW-M">
+                    <div className="rowW-M7">
                         <DangerButton onClick={confirmUserDeletion}>
                             Dzēst kontu
                         </DangerButton>
@@ -73,6 +73,9 @@ export default function DeleteUserForm({ className = '' }) {
             {/* Modal for user deletion confirmation */}
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
+                <div className="settings-T">
+                                 Informācija
+                                </div>
                     <h2 className="lable2">
                         Esi pārliecināts dzēst savu kontu?
                     </h2>
@@ -107,9 +110,9 @@ export default function DeleteUserForm({ className = '' }) {
                     </div>
 
                     <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>
+                        <button className="secondary-button2"  onClick={closeModal}>
                             Atcelt
-                        </SecondaryButton>
+                        </button>
 
                         <DangerButton className="ms-3" disabled={processing}>
                             Dzēst kontu

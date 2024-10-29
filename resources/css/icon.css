@@ -1,6 +1,6 @@
 .icon-volume {
-    font-size: 56px; /* Adjust to make the icon bigger */
-    color: #000; /* You can change the color too */
+    font-size: 56px; 
+    color: #000; 
 }
 
 .volume-container {
@@ -9,7 +9,7 @@
     margin-bottom: 10px;
 }
 
-/* Volume bar styling */
+
 .volume-bar-container {
     width: 100%;
     display: flex;
@@ -46,3 +46,9 @@
     background: blue;
     cursor: pointer;
 }
+/* html, body {
+    overflow: hidden; 
+    height: 100%; 
+} */
+
+

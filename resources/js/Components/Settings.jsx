@@ -65,7 +65,7 @@ export default function Settings() {
                                 href={route('logout')}
                                 as="button"
                             >
-                                Log Out
+                               Iziet
                             </ResponsiveNavLink>
 
                                 <button className="close-button" onClick={togglePopup}>

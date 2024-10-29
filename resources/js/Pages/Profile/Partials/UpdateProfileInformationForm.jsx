@@ -98,12 +98,12 @@ export default function UpdateProfileInformation({
                     <PrimaryButton disabled={processing}>Saglabāt</PrimaryButton>
                 </div>
 
-                {/* Display the success message with fade-out */}
+               
                 <div className={`success-message ${isVisible ? 'fade-in' : 'fade-out'}`}>
                     {successMessage}
                 </div>
 
-                {/* Display error messages */}
+              
                 {Object.values(errors).length > 0 && (
                     <div className="error-messages">
                         {Object.values(errors)

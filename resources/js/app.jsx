@@ -2,6 +2,9 @@ import '../css/app.css';
 import '../css/css.css';
 import '../css/icon.css';
 import '../css/modal.css';
+import '../css/Leaderboard.css';
+import '../css/History.css';
+import '../css/Lobby.css';
 import './bootstrap';
 import '../../public/images/back.jpg';
 
