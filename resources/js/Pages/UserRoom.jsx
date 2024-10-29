@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Head, usePage, Link } from '@inertiajs/react';
 import axios from 'axios';
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const UserRoom = ({ room }) => {
     const { auth } = usePage().props;
@@ -56,16 +57,23 @@ const UserRoom = ({ room }) => {
                     </div>
                 </div>
                 <div className="rowW-M2">
-                    <div className="user-container">
+                    <div className="lobby-container">
                         <Head title={`Lobby: ${room.room_code}`} />
-                        <div className="rowW">
+                        <div className="lobby-head">
+                        <Link href={route('lobby')} className="react-icon">
+                                <IoArrowBackCircleSharp /> 
+                            </Link>
                             <h1 className="room-title">Sveicināts istabā: {room.room_code}</h1>
+                        </div>
+                      
+                           
+                            <div className="rowW">
                             <div className="room-details-card">
                                 <div className="room-info">
                                     <p><strong>Tēma:</strong> {room.theme}</p>
                                     <p><strong>Reģions:</strong> {room.region}</p>
                                     <p><strong>Spēlētāji:</strong> {room.current_players}/{room.max_players}</p>
-                                    <p><strong>Status:</strong> {room.status}</p>
+                                    {/* <p><strong>Status:</strong> {room.status}</p> */}
                                     <p><strong>Privātuma iestatījums:</strong> {room.privacy}</p>
                                 </div>
                                 <div className="invite-section">

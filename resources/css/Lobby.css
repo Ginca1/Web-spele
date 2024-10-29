@@ -22,9 +22,25 @@
     margin: 10px 0 2px;
     color: #797979;
     white-space: nowrap;
+    width: 104%;
+    overflow: hidden;
+    text-align: center;
+}
+.type-name-code{
+    font-family: 'Nunito', sans-serif;
+    margin-right: 5px;
+    font-size: 16px;
+    margin: 10px 0 2px;
+    color: #797979;
+    white-space: nowrap;
     width: 100%;
     overflow: hidden;
     text-align: center;
+    padding-left: 5px;
+}
+.type-name-container {
+    display: flex; /* Use flexbox to align items */
+    align-items: center; /* Center items vertically */
 }
  
 .user-icon{
@@ -56,6 +72,16 @@
     color: #797979;
 }
 
+.userBellow-icon2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: #797979;
+    text-align: left; /* Align text to the left */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Show ellipsis if text overflows */
+    width: 100%; /* Take full width of the parent */
+}
 .roomInfo {
     display: -moz-flex;
     display: flex;
@@ -66,17 +92,7 @@
     margin: 10px 0 2px;
 }
 
-.roomInfoUser {
-    
-    width: 55px;
-    color: #868d96;
-    display: flex;
-    flex-direction: column; 
-    position: relative;
-    align-items: center;
-    justify-content: flex-start; 
-    padding: 0px; 
-}
+
 .roomInfoContinent {
     margin: 0 12px;
     width: 55px;
@@ -87,10 +103,15 @@
     align-items: center; 
     justify-content: flex-start; 
     padding: 0px; 
+    overflow: hidden; /* Prevent overflow */
+    text-align: center; /* Center align the text */
+    white-space: normal; /* Allow text to wrap */
 }
+
+.roomInfoUser,
 .roomInfoCreated {
-   
     width: 55px;
+    max-width: 55px; /* Prevents overflow */
     color: #868d96;
     display: flex; 
     flex-direction: column; 
@@ -98,6 +119,10 @@
     align-items: center; 
     justify-content: flex-start; 
     padding: 0px; 
+    text-align: center; /* Center-align text */
+    overflow: hidden; /* Hide overflow */
+    white-space: nowrap; /* Prevent text from wrapping to a new line */
+    text-overflow: ellipsis; 
 }
 
 .room-create-background {
@@ -219,53 +244,6 @@
 .scrollElements::-webkit-scrollbar-track {
     background-color: #9fb0c9;
     border-radius: 10px;
-}
-.rooms {
-    width: 226px;
-    height: 231px;
-    background-color: #fff;
-    border: 7px solid #fff;
-    margin: 2px 0 8px 10px;
-    
-    border-radius: 10px; 
-     cursor: pointer; 
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -moz-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-direction: normal;
-    -webkit-box-orient: vertical;
-    -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    /* -webkit-box-align: center; */
-    -ms-flex-align: center;
-    -webkit-align-items: center;
-    -moz-align-items: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
-    -moz-justify-content: center;
-    justify-content: center;
-    padding: 5px 0;
-    transition: all 0.3s ease; 
-    box-shadow: 0 0 2px 0 rgba(0, 0, 0, .5);
-}
-
-.rooms.selected-room {
-    border: 7px solid #00f; /* Keep this as border highlight */
-    background-color: #e6eff2; /* Soft background for selected room */
-    transition: all 0.3s ease; /* Smooth transition effect */
-}
-.rooms.selected-room .type-image-valstis,
-.rooms.selected-room .type-image-sports,
-.rooms.selected-room .type-image-matemātika {
-    transform: scale(1.05); /* Scale only when the room is selected */
-    transition: transform 0.3s ease-in-out; /* Smooth transition */
 }
 
 .lobby-header {
@@ -398,6 +376,14 @@
 
 .start-game-button:hover {
     background-color: #13bafe;
+}
+
+.create-game-button.disabled {
+    background-color: #d8d6d3; 
+    border-top-color: #f8f8f8;
+    border-bottom-color: #96928b;
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+    opacity: 0.6; /* Optional: make it look faded */
 }
 
 .create-game-button {
@@ -654,6 +640,7 @@
     max-width: 600px;
     text-align: center;
     margin-top: 5%;
+    height: 294px;
 }
 
 
@@ -761,7 +748,7 @@
     text-align: center;
     text-transform: uppercase;
     word-break: break-word;
-
+    position: relative; 
     margin: 0 15px 0 0;
     letter-spacing: 0;
 }
@@ -769,3 +756,90 @@
 .chat-send-button:hover {
     background-color: #0056b3;
 }
+
+
+.delete-room-button {
+    position: absolute;
+    top: -7px;
+    left: -7px;
+    background-color: #f71616;
+    color: white;
+    border: none;
+    /* border-radius: 11px; */
+    cursor: pointer;
+    padding: 5px 17px;
+    font-size: 15px;
+    border-top-left-radius: 11px;
+    border-bottom-right-radius: 11px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: #ffffff;
+}
+
+.delete-room-button:hover {
+    background-color: #e80e0e; /* Darker red on hover */
+}
+
+
+
+.rooms {
+    width: 226px;
+    height: 231px;
+    background-color: #fff;
+    border: 7px solid #fff;
+    margin: 2px 0 8px 10px;
+    
+    border-radius: 10px; 
+     cursor: pointer; 
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-direction: normal;
+    -webkit-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    /* -webkit-box-align: center; */
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    justify-content: center;
+    padding: 5px 0;
+    transition: all 0.3s ease; 
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, .5);
+    position: relative; 
+}
+
+.rooms.selected-room {
+    border: 7px solid #00f; /* Keep this as border highlight */
+    background-color: #e6eff2; /* Soft background for selected room */
+    transition: all 0.3s ease; /* Smooth transition effect */
+}
+.rooms.selected-room .type-image-valstis,
+.rooms.selected-room .type-image-sports,
+.rooms.selected-room .type-image-matemātika {
+    transform: scale(1.05); /* Scale only when the room is selected */
+    transition: transform 0.3s ease-in-out; /* Smooth transition */
+}
+
+.tooltip {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 10; /* Ensure the tooltip is above other elements */
+    /* Optional: Add a transition effect */
+    transition: opacity 0.3s ease;
+}
+

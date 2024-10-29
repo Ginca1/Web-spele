@@ -1,4 +1,4 @@
-import { Head, usePage, Link } from '@inertiajs/react'; 
+import { Head, usePage, Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { IoArrowBackCircleSharp, IoGlobe } from "react-icons/io5";
 import { MdVisibility } from "react-icons/md";
@@ -7,12 +7,39 @@ import React from 'react';
 const Create = ({ players = [], onStartGame }) => {
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [isPrivateRoom, setIsPrivateRoom] = useState(false);
-    const [region, setRegion] = useState('Visi'); // To store selected region
+    const [region, setRegion] = useState('Visi'); 
+    const [hasRoom, setHasRoom] = useState(false); 
+
+    const { props } = usePage();
+    const currentUserId = props.auth.user.id; 
+
+    useEffect(() => {
+        fetchUserRoom(); 
+    }, []);
+
+    const fetchUserRoom = async () => {
+        try {
+            const response = await fetch(`/rooms/user/${currentUserId}`); 
+            const data = await response.json();
+
+            console.log("Rooms fetched:", data); 
+
+          
+            if (Array.isArray(data) && data.length > 0) {
+                setHasRoom(true);
+                console.log("Rooms found for user:", true);
+            } else {
+                setHasRoom(false);
+                console.log("No rooms found for user:", false);
+            }
+        } catch (error) {
+            console.error("Error fetching user rooms:", error);
+        }
+    };
 
     const handleRoomClick = (room) => {
         setSelectedRoom(room);
-        // Optionally navigate directly to the room if you want to display it immediately
-        // window.location.href = `http://127.0.0.1:8000/rooms/${room}`;
+        console.log("Selected room:", room);
     };
 
     const handleTogglePrivacy = () => {
@@ -20,12 +47,14 @@ const Create = ({ players = [], onStartGame }) => {
     };
 
     const handleCreateRoom = async () => {
+        if (hasRoom || !selectedRoom) return; 
+
         const roomData = {
             theme: selectedRoom,
             region: region,
             privacy: isPrivateRoom ? 'private' : 'public'
         };
-    
+
         try {
             const response = await fetch(route('lobby.store'), {
                 method: 'POST',
@@ -35,30 +64,28 @@ const Create = ({ players = [], onStartGame }) => {
                 },
                 body: JSON.stringify(roomData)
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to create room');
             }
-    
+
             const data = await response.json();
-    
-            
             window.location.href = `/lobby/${data.room_code}`;
         } catch (error) {
             console.error(error.message); 
         }
     };
-    
+
     return (
         <div className="background-container">
             <div className="main">
                 <div className="header">
                     <div className="rowL-">
-                    <Link href={route('home')} className="game2">
+                        <Link href={route('home')} className="game2">
                             <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
                             <span>&nbsp;</span>
                             <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
-                            </Link>
+                        </Link>
                     </div>
                 </div>
 
@@ -127,12 +154,13 @@ const Create = ({ players = [], onStartGame }) => {
 
                         <div className="rowW-M2">
                             <button 
-                                className='create-game-button' 
-                                onClick={handleCreateRoom} // Trigger the create room function
-                                disabled={!selectedRoom} 
+                                className={`create-game-button ${!selectedRoom || hasRoom ? 'disabled' : ''}`}
+                                onClick={handleCreateRoom}
+                                disabled={!selectedRoom || hasRoom} 
                             >
-                                Jauna istaba
+                                Izveidot
                             </button>
+                            {console.log("Button disabled:", !selectedRoom || hasRoom)}
                         </div>
                     </div>
                 </div>

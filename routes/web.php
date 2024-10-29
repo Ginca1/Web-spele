@@ -20,8 +20,17 @@ Route::middleware('auth')->get('/user', [UserController::class, 'getUserData']);
 
 
 
+Route::get('/rooms', [RoomController::class, 'getUserRooms'])->name('rooms.get');
+Route::get('/rooms', [RoomController::class, 'getRooms']);
+Route::middleware(['auth'])->group(function () {
+    Route::delete('/rooms/{room}', [RoomController::class, 'destroy']);
+});
 Route::get('/rooms/{roomId}/messages', [ChatMessageController::class, 'index']);
 Route::post('/rooms/{roomId}/messages', [ChatMessageController::class, 'store']);
+Route::get('/rooms/user/{id}', [RoomController::class, 'getUserRooms']);
+
+
+
 
 Route::post('/user/purchase-picture', [UserController::class, 'purchasePicture'])->middleware('auth');
 Route::post('/user/update-profile-picture', [UserController::class, 'updateProfilePicture'])->middleware('auth');

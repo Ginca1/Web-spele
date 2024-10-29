@@ -29,7 +29,7 @@ class RoomController extends Controller
         $room->region = $request->region;
         $room->privacy = $request->privacy;
         $room->max_players = 2; 
-        $room->current_players = 1;  
+        $room->current_players = 0;  
         $room->status = 'open'; 
 
        
@@ -66,4 +66,27 @@ class RoomController extends Controller
         //     'status' => $room->status,
         // ]);
     }
+
+    public function getRooms()
+    {
+        
+        $rooms = Room::with('user')->get(); 
+    
+        return response()->json($rooms);
+    }
+
+    public function getUserRooms($id)
+    {
+       
+        $rooms = Room::where('user_id', $id)->get(); 
+    
+        return response()->json($rooms);
+    }
+    public function destroy($id)
+{
+    $room = Room::findOrFail($id);
+    $room->delete();
+
+    return response()->json(['message' => 'Room deleted successfully']);
+}
 }
