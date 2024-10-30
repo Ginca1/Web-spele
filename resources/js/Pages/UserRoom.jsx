@@ -33,11 +33,11 @@ const UserRoom = ({ room }) => {
                 const newMessage = {
                     id: response.data.id,
                     message: response.data.message,
-                    user: auth.user || { name: "Unknown User" }, // Fallback to "Unknown User"
+                    user: auth.user || { name: "Unknown User" }, 
                 };
 
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
-                setMessageInput(""); // Clear the input field
+                setMessageInput(""); 
             } catch (error) {
                 console.error("Error sending message:", error);
             }
@@ -60,14 +60,14 @@ const UserRoom = ({ room }) => {
                     <div className="lobby-container">
                         <Head title={`Lobby: ${room.room_code}`} />
                         <div className="lobby-head">
-                        <Link href={route('lobby')} className="react-icon">
+                        <Link href={route('lobby')} className="react-icon2">
                                 <IoArrowBackCircleSharp /> 
                             </Link>
                             <h1 className="room-title">Sveicināts istabā: {room.room_code}</h1>
                         </div>
                       
                            
-                            <div className="rowW">
+                            <div className="scrollElements">
                             <div className="room-details-card">
                                 <div className="room-info">
                                     <p><strong>Tēma:</strong> {room.theme}</p>
@@ -84,7 +84,7 @@ const UserRoom = ({ room }) => {
 
                             {/* Chat Box */}
                             <div className="chat-container">
-                                <h3>Čats</h3>
+                                <strong>Čats</strong>
                                 <div className="chat-messages">
                                     {messages.map((msg, index) => (
                                         <div key={index} className="chat-message">

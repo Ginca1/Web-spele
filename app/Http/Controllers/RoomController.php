@@ -11,8 +11,6 @@ use Illuminate\Support\Str;
 class RoomController extends Controller
 {
 
-
-    
     public function store(Request $request)
     {
        
@@ -32,14 +30,12 @@ class RoomController extends Controller
         $room->current_players = 0;  
         $room->status = 'open'; 
 
-       
         do {
             $room_code = Str::random(8);
         } while (Room::where('room_code', $room_code)->exists()); 
 
         $room->room_code = $room_code; 
 
-        
         $room->save();
 
       

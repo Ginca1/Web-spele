@@ -21,10 +21,8 @@ const Create = ({ players = [], onStartGame }) => {
         try {
             const response = await fetch(`/rooms/user/${currentUserId}`); 
             const data = await response.json();
-
+            
             console.log("Rooms fetched:", data); 
-
-          
             if (Array.isArray(data) && data.length > 0) {
                 setHasRoom(true);
                 console.log("Rooms found for user:", true);

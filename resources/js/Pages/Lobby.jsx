@@ -103,7 +103,7 @@ const Lobby = () => {
                                             </div>
                                             <div className="roomInfoCreated">
                                                 <div className="user-icon"><LuUserCircle /></div>
-                                                <div className={room.user.name.length > 5 ? "userBellow-icon2" : "userBellow-icon"}>
+                                                <div className={room.user.name.length > 10 ? "userBellow-icon2" : "userBellow-icon"}>
                                                     {room.user.name}
                                                 </div>
                                             </div>
@@ -113,7 +113,7 @@ const Lobby = () => {
                             </div>
                         </div>
 
-                        <div className="rowW-M2">
+                        <div className="rowW-M2B">
                             <Link href={route('create')} className="create-game-button">
                                 Izveidot istabu
                             </Link>

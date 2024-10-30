@@ -19,17 +19,8 @@ const pictureMap = {
     9: '/images/deer.png',
 };
 
-
 const pictureCost = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 50,
-    5: 75,
-    6: 100,
-    7: 125,
-    8: 150,
-    9: 200,
+    1: 0,  2: 0,   3: 0,  4: 50,   5: 75,   6: 100,   7: 125,   8: 150,   9: 200,
 };
 
 const Home = () => {
@@ -40,9 +31,6 @@ const Home = () => {
     const [coins, setCoins] = useState(user.coins);
     const [purchasedPictures, setPurchasedPictures] = useState([]);
 
-   
-    
-
     useEffect(() => {
         if (user) {
             axios.get(`/privileges/${user.id}`).then(response => {
@@ -51,8 +39,6 @@ const Home = () => {
         }
     }, [user]);
 
-  
- 
     useEffect(() => {
         axios.get('/user/get-user-picture-id')
             .then(response => {
@@ -63,7 +49,6 @@ const Home = () => {
             });
     }, []);
 
-    
     useEffect(() => {
         axios.get('/user/get-user-owned-pictures')
             .then(response => {
@@ -114,8 +99,7 @@ const Home = () => {
     
             // Assuming the server responds with updated coins and privileges
             const { updatedCoins, updatedPrivileges } = response.data;
-    
-            // Update state with new values from the server
+
             setCoins(updatedCoins);  // Set new coin balance
             setPrivileges(updatedPrivileges);  // Update privileges based on server response
             
@@ -125,8 +109,20 @@ const Home = () => {
         }
     };
 
-  
- 
+    const [isWideScreen, setIsWideScreen] = useState(window.innerWidth > 1218);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsWideScreen(window.innerWidth > 1218);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     return (
         <HomeLayout>
             <Head title="Homepage" />
@@ -152,7 +148,7 @@ const Home = () => {
                     <Settings />
                     </div>
                 </div>
-
+<div className="kop">
                 <div className="mid">
                     {/* picture shop starts */}
                     <div className="shop">
@@ -175,7 +171,7 @@ const Home = () => {
                                             <div className="dog"></div>
                                             <div className="rowH-M6">
                                             {selectedPictureId === 1 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(1)}</p>
                                                 )}
@@ -192,7 +188,7 @@ const Home = () => {
 
                                             <div className="rowH-M6">
                                             {selectedPictureId === 2 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(2)}</p>
                                                 )}
@@ -208,7 +204,7 @@ const Home = () => {
                                             </div>
                                             <div className="rowH-M6">
                                             {selectedPictureId === 3 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(3)}</p>
                                                 )}
@@ -217,7 +213,7 @@ const Home = () => {
                                         
                                     </div>
                                     </div>
-                                
+    
                         </div>
                         <div className="mid3">
                                 <div className="row">
@@ -228,7 +224,7 @@ const Home = () => {
                                             </div>
                                             <div className="rowH-M6">
                                             {selectedPictureId === 4 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(4)}</p>
                                                 )}
@@ -245,7 +241,7 @@ const Home = () => {
 
                                             <div className="rowH-M6">
                                             {selectedPictureId ===5 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(5)}</p>
                                                 )}
@@ -261,7 +257,7 @@ const Home = () => {
                                             </div>
                                             <div className="rowH-M6">
                                             {selectedPictureId === 6 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(6)}</p>
                                                 )}
@@ -269,8 +265,7 @@ const Home = () => {
                                         </div>
                                         
                                     </div>
-                                    </div>
-                                
+                                    </div>                     
                         </div>
                         <div className="mid3">
                                 <div className="row">
@@ -281,7 +276,7 @@ const Home = () => {
                                             </div>
                                             <div className="rowH-M6">
                                             {selectedPictureId === 8 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(8)}</p>
                                                 )}
@@ -298,7 +293,7 @@ const Home = () => {
 
                                             <div className="rowH-M6">
                                             {selectedPictureId === 7 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(7)}</p>
                                                 )}
@@ -309,29 +304,25 @@ const Home = () => {
                                     <div className="row">
                                     <div className={`value ${selectedPictureId === 9 ? 'selected' : ''}`} onClick={() => handlePictureClick(9)}>
                                         <div className="rowW">
-                                            <div className="deer">
-                                                
+                                            <div className="deer">                                               
                                             </div>
                                             <div className="rowH-M6">
                                             {selectedPictureId === 9 ? (
-                                                    <p className='nauda'>Izmato</p>
+                                                    <p className='nauda'>Izmanto</p>
                                                 ) : (
                                                     <p className='nauda'>{getPriceDisplay(9)}</p>
                                                 )}
                                             </div>
-                                        </div>
-                                        
+                                        </div>     
                                     </div>
                                     </div>
-                                
                         </div>
                         </div>
                     </div>
                     {/* picture shop ends */}
                     <div className="type">
                         <div className="mid">
-                            <div className="row">
-                                
+                            <div className="row">           
                             <Leaderboard />
                             <div className="row">
                                 <div className="small-T">
@@ -360,8 +351,7 @@ const Home = () => {
                             </div>
                             </div>
                         </div>
-
-                        <div className="mid2">
+                        <div className="mid2T">
                             <div className="row">
                                 <div className="math">
                                     <div className="rowH">
@@ -380,7 +370,6 @@ const Home = () => {
                                     </div>
                                 </div>
                             </div>
-
                             <div className="row">
                                 <div className="country">
                                 <div className="rowH">
@@ -391,12 +380,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-
-
-                        <div className="rowW-M">
-                        <Link href={route('lobby')} className="vs">1 pret 1</Link>
-                           
-                        </div>
+                        <Link href={route('lobby')} className="vs">1 pret 1</Link>      
                     </div>
                     <div className="priv">
                     <div className="rowW">
@@ -407,10 +391,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        
-
                     </div>
-
                     <div className="priv-content">
                         <div className="mid">
                             <div className="row">
@@ -495,9 +476,8 @@ const Home = () => {
                             </div>
                         </div>
                         </div>
-                    
-
                     </div>
+                </div>
                 </div>
             </div>
         </HomeLayout>
