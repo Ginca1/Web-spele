@@ -57,17 +57,18 @@ const UserRoom = ({ room }) => {
                     </div>
                 </div>
                 <div className="rowW-M2">
-                    <div className="lobby-container">
+                    <div className="bg-[#fdfdfb] w-[90vw] max-w-[1050px] h-auto max-h-[80vh] p-5 rounded-lg min-h-[70vh] shadow-md 
+                         relative text-center overflow-hidden flex flex-col z-[2001]">
                         <Head title={`Lobby: ${room.room_code}`} />
-                        <div className="lobby-head">
+                        <div className="flex items-center justify-center relative border-b-2 border-gray-300">
                         <Link href={route('lobby')} className="react-icon2">
                                 <IoArrowBackCircleSharp /> 
                             </Link>
                             <h1 className="room-title">Sveicināts istabā: {room.room_code}</h1>
                         </div>
                       
-                           
-                            <div className="scrollElements">
+                    
+                        <div className="flex flex-row items-center justify-center w-full flex-wrap my-2 gap-2 max-h-[394px] overflow-y-auto pr-4">
                             <div className="room-details-card">
                                 <div className="room-info">
                                     <p><strong>Tēma:</strong> {room.theme}</p>

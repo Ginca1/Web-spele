@@ -23,20 +23,15 @@ class UserController extends Controller
     $request->validate([
         'picture_id' => 'required|integer|exists:pictures,id', 
     ]);
-
   
     $user = Auth::user();
     $pictureId = $request->input('picture_id');
-
-    
     $ownedPictures = json_decode($user->owned_pictures, true) ?? [];
 
-    
     if (!in_array($pictureId, $ownedPictures)) {
         return response()->json(['message' => 'You do not own this picture.'], 403);
     }
 
-  
     $user->picture_id = $pictureId;
     $user->save();
 
@@ -47,6 +42,7 @@ class UserController extends Controller
         $user = auth()->user();
         return response()->json(['picture_id' => $user->picture_id]);
     }
+    
 
     public function updateUserPictureId(Request $request)
     {
@@ -61,8 +57,7 @@ class UserController extends Controller
     {
         $user = auth()->user();
         $pictureId = $request->input('picture_id');
-    
-       
+
         $picturePrices = [
             1 => 0, // Dog (free)
             2 => 0, // Cat (free)
@@ -80,10 +75,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Invalid picture ID!'], 400);
         }
     
-     
         $ownedPictures = json_decode($user->owned_pictures, true) ?? [];
-    
-        
         if (in_array($pictureId, $ownedPictures)) {
            
             if ($user->picture_id !== $pictureId) {
@@ -93,14 +85,12 @@ class UserController extends Controller
             }
             return response()->json(['message' => 'This picture is already set as your profile picture.']);
         }
-    
-      
+ 
         $cost = $picturePrices[$pictureId];
         if ($user->coins < $cost) {
             return response()->json(['message' => 'Not enough coins!'], 400);
         }
-    
-      
+ 
         $user->coins -= $cost;
         $ownedPictures[] = $pictureId;
         $user->owned_pictures = $ownedPictures;
@@ -127,22 +117,20 @@ class UserController extends Controller
     
         $cost = $privilegePrices[$privilegeName];
     
-        // Check if the user has enough coins
+       
         if ($user->coins < $cost) {
             return response()->json(['message' => 'Not enough coins!'], 400);
         }
-    
-        // Deduct coins from the user
+
         $user->coins -= $cost;
-        $user->save(); // Save the user model after deducting coins
+        $user->save(); 
     
-        // Retrieve or create the privilege record
         $privilege = Privilege::firstOrCreate(
             ['user_id' => $user->id],
             ['hint_quantity' => 0, 'power_quantity' => 0, 'freeze_quantity' => 0]
         );
     
-        // Update the specific privilege quantity based on the purchase
+        
         if ($privilegeName === 'hint') {
             $privilege->hint_quantity++;
         } elseif ($privilegeName === 'power') {
@@ -150,11 +138,9 @@ class UserController extends Controller
         } elseif ($privilegeName === 'freeze') {
             $privilege->freeze_quantity++;
         }
-    
-        // Save the updated privilege record
+
         $privilege->save();
-    
-        // Return the updated coins and privileges in the response
+   
         return response()->json([
             'message' => 'Privilege purchased successfully!',
             'updatedCoins' => $user->coins,
@@ -166,8 +152,6 @@ class UserController extends Controller
         ]);
     }
 
-
-
 public function getOwnedPictures(): JsonResponse
 {
     try {
@@ -177,12 +161,12 @@ public function getOwnedPictures(): JsonResponse
             return response()->json(['error' => 'User not authenticated'], 401);
         }
 
-        // Since `owned_pictures` is cast to array, no need for additional handling
+        
         $ownedPictures = $user->owned_pictures ?? [];
 
         return response()->json(['owned_pictures' => $ownedPictures]);
     } catch (\Exception $e) {
-        // Log the exception for debugging
+      
         \Log::error("Error fetching user-owned pictures: " . $e->getMessage());
         return response()->json(['error' => 'Internal Server Error'], 500);
     }

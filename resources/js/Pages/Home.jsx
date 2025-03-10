@@ -6,7 +6,6 @@ import History from '../Components/History';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
 const pictureMap = {
     1: '/images/dog.png',
     2: '/images/cat.png',
@@ -59,7 +58,6 @@ const Home = () => {
             });
     }, []);
 
-
     const handlePictureClick = (pictureId) => {
         const cost = pictureCost[pictureId];
         
@@ -82,11 +80,10 @@ const Home = () => {
                 console.error('Error updating picture:', error);
             });
     };
-
+    
     const getPriceDisplay = (pictureId) => {
         return purchasedPictures.includes(pictureId) ? '0' : pictureCost[pictureId];
     };
-
 
     const handlePurchasePrivilege = async (privilegeName, price) => {
         if (coins < price) {
@@ -96,12 +93,9 @@ const Home = () => {
         
         try {
             const response = await axios.post('/user/purchase-privilege', { privilege_name: privilegeName });
-    
-            // Assuming the server responds with updated coins and privileges
             const { updatedCoins, updatedPrivileges } = response.data;
-
-            setCoins(updatedCoins);  // Set new coin balance
-            setPrivileges(updatedPrivileges);  // Update privileges based on server response
+            setCoins(updatedCoins); 
+            setPrivileges(updatedPrivileges); 
             
             console.log(response.data.message);
         } catch (error) {
@@ -117,7 +111,6 @@ const Home = () => {
         };
 
         window.addEventListener('resize', handleResize);
-
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -127,17 +120,14 @@ const Home = () => {
         <HomeLayout>
             <Head title="Homepage" />
             <div className="main">
-                <div className="header">
-            
+                <div className="header">      
                     <div className="rowL-">
-                    <div className="game2">
-                        <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
-                        <span>&nbsp;</span>
-                        <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
-                    </div>
-
-                    </div>
-               
+                    <Link href={route('home')} className="game2">
+                            <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
+                            <span>&nbsp;</span>
+                            <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
+                        </Link>
+                    </div>            
                     <div className="rowR">
                         <div className="score-box">
                            <div className="rowL">
@@ -148,7 +138,7 @@ const Home = () => {
                     <Settings />
                     </div>
                 </div>
-<div className="kop">
+            <div className="kop">
                 <div className="mid">
                     {/* picture shop starts */}
                     <div className="shop">
@@ -162,7 +152,6 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-
                         <div className="shop-content">
                         <div className="mid3">
                                 <div className="row">
@@ -199,8 +188,7 @@ const Home = () => {
                                     <div className="row">
                                     <div className={`value ${selectedPictureId === 3 ? 'selected' : ''}`} onClick={() => handlePictureClick(3)}>
                                         <div className="rowW">
-                                            <div className="frog">
-                                                
+                                            <div className="frog">                                               
                                             </div>
                                             <div className="rowH-M6">
                                             {selectedPictureId === 3 ? (
@@ -209,18 +197,15 @@ const Home = () => {
                                                     <p className='nauda'>{getPriceDisplay(3)}</p>
                                                 )}
                                             </div>
-                                        </div>
-                                        
+                                        </div>                                      
                                     </div>
                                     </div>
-    
                         </div>
                         <div className="mid3">
                                 <div className="row">
                                      <div className={`value ${selectedPictureId === 4 ? 'selected' : ''}`} onClick={() => handlePictureClick(4)}>
                                         <div className="rowW">
                                             <div className="antilope">
-
                                             </div>
                                             <div className="rowH-M6">
                                             {selectedPictureId === 4 ? (
@@ -235,10 +220,8 @@ const Home = () => {
                                     <div className="row">
                                     <div className={`value ${selectedPictureId === 5 ? 'selected' : ''}`} onClick={() => handlePictureClick(5)}>
                                         <div className="rowW">
-                                            <div className="horse">
-                                                
+                                            <div className="horse">                                               
                                             </div>
-
                                             <div className="rowH-M6">
                                             {selectedPictureId ===5 ? (
                                                     <p className='nauda'>Izmanto</p>
@@ -262,8 +245,7 @@ const Home = () => {
                                                     <p className='nauda'>{getPriceDisplay(6)}</p>
                                                 )}
                                             </div>
-                                        </div>
-                                        
+                                        </div>                                      
                                     </div>
                                     </div>                     
                         </div>
@@ -287,10 +269,8 @@ const Home = () => {
                                     <div className="row">
                                     <div className={`value ${selectedPictureId === 7 ? 'selected' : ''}`} onClick={() => handlePictureClick(7)}>
                                         <div className="rowW">
-                                            <div className="tiger">
-                                                
+                                            <div className="tiger">                                              
                                             </div>
-
                                             <div className="rowH-M6">
                                             {selectedPictureId === 7 ? (
                                                     <p className='nauda'>Izmanto</p>
@@ -380,7 +360,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        <Link href={route('lobby')} className="vs">1 pret 1</Link>      
+                        <Link href={route('lobby')} className="vs">Spēlēt</Link>      
                     </div>
                     <div className="priv">
                     <div className="rowW">

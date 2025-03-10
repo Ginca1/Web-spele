@@ -1,20 +1,4 @@
-.lobby-container {
-    background-color: #fdfdfb;
-    width: 90vw;
-    max-width: 1050px;
-    height: auto;
-    max-height: 80vh;
-    padding: 20px;
-    border-radius: 8px;
-    min-height: 70vh;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    text-align: center;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    z-index: 2001;
-}
+
 .type-name{
     font-family: 'Nunito', sans-serif;
     margin-right: 5px;
@@ -126,19 +110,7 @@
     text-overflow: ellipsis; 
 }
 
-.room-create-background {
-    background: linear-gradient(135deg, #9fb0c9 0%, #6a8b9a 100%); /* Gradient for depth */
-    display: flex;
-    padding: 20px; /* Padding for inner content */
-    border: 2px solid #5d6c99; /* Thicker border for prominence */
-    min-height: 50vh;
-    height: auto;
-    border-radius: 15px; /* Rounded corners */
-    overflow: hidden; /* Prevents overflow */
-    position: relative; /* Enables absolute positioning for inner elements */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition effects */
-}
+
 
 
 .settings-box {
@@ -159,31 +131,6 @@
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
 }
 
-.room-background {
-    background: linear-gradient(135deg, #9fb0c9 0%, #6a8b9a 100%); /* Gradient for depth */
-    border: 2px solid #5d6c99; /* Slightly thicker border for prominence */
-    min-height: 50vh;
-    height: auto;
-    border-radius: 15px;
-    overflow: hidden;
-    position: relative; /* Enables absolute positioning of inner elements */
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition effects */
-}
-
-.scrollElements {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width:100%;
-    flex-wrap: wrap;
-    margin: 10px 0;
-    gap: 10px;
-    max-height: 394px; /* Limit height to create overflow */
-    overflow-y: auto; /* Enable vertical scroll */
-    padding-right: 15px; /* Adjust padding to make room for scrollbar */
-}
 
 .type-image-sports {
     background-image: url('../../public/images/sport.png');
@@ -251,14 +198,14 @@
 }
 
 .lobby-header {
-    /* background-color: #fdfdfb; */
+
     width: 90vw;
     max-width: 1200px;
     height: auto;
     max-height: 10vh;
     padding: 0px;
     border-radius: 2px;
-    /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); */
+   
     position: relative;
     text-align: center;
     overflow: hidden;
@@ -268,13 +215,7 @@
     margin-top:6%;
 }
 
-.lobby-head {
-    display: flex;
-    align-items: center; /* Center items vertically */
-    justify-content: center; /* Center items horizontally */
-    position: relative; 
-    border-bottom: 2px solid #ccc;
-}
+
 
 .react-icon {
     position: absolute; /* Position icon absolutely */
@@ -292,6 +233,7 @@
     color: #084fd3; 
     transform: translateY(-50%); /* Adjust for icon height */
 }
+
 
 .room-title {
   
@@ -312,6 +254,68 @@
       #001b51 2.88051px -.838247px 0;
 }
 
+.room-title1 {
+    margin: 0; /* Reset margin */
+    text-align: center; /* Center the text */
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    
+    /* -webkit-text-stroke: 1px black; */
+    text-shadow: 
+    0 -1px 0 white, 
+    black 3px 0 0, black 2.83487px 0.981584px 0,  black 2.35766px 1.85511px 0,  black 1.62091px 2.52441px 0, 
+    black 0.705713px 2.91581px 0,  black -0.287171px 2.98622px 0,  black -1.24844px 2.72789px 0,  black -2.07227px 2.16926px 0, 
+    black -2.66798px 1.37182px 0,  black -2.96998px 0.42336px 0, 
+    black -2.94502px -0.571704px 0,  black -2.59586px -1.50383px 0, black -1.96093px -2.27041px 0, black -1.11013px -2.78704px 0, 
+    black -0.137119px -2.99686px 0,  black 0.850987px -2.87677px 0,  black 1.74541px -2.43999px 0,  black 2.44769px -1.73459px 0,  black 2.88051px -0.838247px 0;
+}
+
+.map{
+    font-family: 'Grandstander', cursive;
+    font:bolder;
+    
+    font-size: 22px;
+    color:white;
+    text-shadow: 
+    black 3px 0 0, black 2.83487px 0.981584px 0,  black 2.35766px 1.85511px 0,  black 1.62091px 2.52441px 0, 
+    black 0.705713px 2.91581px 0,  black -0.287171px 2.98622px 0,  black -1.24844px 2.72789px 0,  black -2.07227px 2.16926px 0, 
+    black -2.66798px 1.37182px 0,  black -2.96998px 0.42336px 0, 
+    black -2.94502px -0.571704px 0,  black -2.59586px -1.50383px 0, black -1.96093px -2.27041px 0, black -1.11013px -2.78704px 0, 
+    black -0.137119px -2.99686px 0,  black 0.850987px -2.87677px 0,  black 1.74541px -2.43999px 0,  black 2.44769px -1.73459px 0,  black 2.88051px -0.838247px 0;
+}
+.cool{
+    color:white;
+    text-shadow: 
+    black 3px 0 0, black 2.83487px 0.981584px 0,  black 2.35766px 1.85511px 0,  black 1.62091px 2.52441px 0, 
+    black 0.705713px 2.91581px 0,  black -0.287171px 2.98622px 0,  black -1.24844px 2.72789px 0,  black -2.07227px 2.16926px 0, 
+    black -2.66798px 1.37182px 0,  black -2.96998px 0.42336px 0, 
+    black -2.94502px -0.571704px 0,  black -2.59586px -1.50383px 0, black -1.96093px -2.27041px 0, black -1.11013px -2.78704px 0, 
+    black -0.137119px -2.99686px 0,  black 0.850987px -2.87677px 0,  black 1.74541px -2.43999px 0,  black 2.44769px -1.73459px 0,  black 2.88051px -0.838247px 0;
+}
+
+
+.continent{
+    color: white; 
+    text-shadow: 
+    0 -1px 0 white, 
+    black 3px 0 0, black 2.83487px 0.981584px 0,  black 2.35766px 1.85511px 0,  black 1.62091px 2.52441px 0, 
+    black 0.705713px 2.91581px 0,  black -0.287171px 2.98622px 0,  black -1.24844px 2.72789px 0,  black -2.07227px 2.16926px 0, 
+    black -2.66798px 1.37182px 0,  black -2.96998px 0.42336px 0, 
+    black -2.94502px -0.571704px 0,  black -2.59586px -1.50383px 0, black -1.96093px -2.27041px 0, black -1.11013px -2.78704px 0, 
+    black -0.137119px -2.99686px 0,  black 0.850987px -2.87677px 0,  black 1.74541px -2.43999px 0,  black 2.44769px -1.73459px 0,  black 2.88051px -0.838247px 0;
+}
+
+.diff{
+    text-shadow: 
+
+    black 1.5px 0 0, black 1.2px 0.6px 0, black 1px 1px 0,  
+    black 0.8px 1.4px 0, black 0.5px 1.7px 0, black -0.2px 1.8px 0,  
+    black -1px 1.5px 0, black -1.5px 1px 0, black -1.8px 0.5px 0,  
+    black -1.8px -0.5px 0, black -1.5px -1px 0, black -1px -1.5px 0,  
+    black -0.5px -1.8px 0, black 0.5px -1.7px 0, black 1px -1.5px 0,  
+    black 1.5px -1px 0, black 1.8px -0.5px 0;
+}
 
 .lobby-title {
     font-size: 2.5rem;
@@ -460,6 +464,7 @@
     }
 
 }
+
 @media (max-width: 695px) {
 
     .react-icon2 {
@@ -467,7 +472,6 @@
         top: 134%;
         font-size: 42px;
     }
-
 }
 
 @media (max-width: 625px) {
@@ -859,38 +863,6 @@
     background-color: #e80e0e; /* Darker red on hover */
 }
 
-
-.rooms {
-    width: 226px;
-    height: 231px;
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-   
-    margin: 2px 0 8px 10px;
-    border-radius: 8px;/* Increased border radius for a softer look */
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px; /* Increased padding for better spacing */
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
-    position: relative;
-    overflow: hidden; /* Prevents overflow for any child elements */
-}
-
-
-.rooms.selected-room {
-    border: 7px solid #00f; /* Keep this as border highlight */
-    background-color: #e6eff2; /* Soft background for selected room */
-    transition: all 0.3s ease; /* Smooth transition effect */
-}
-.rooms.selected-room .type-image-valstis,
-.rooms.selected-room .type-image-sports,
-.rooms.selected-room .type-image-matemātika {
-    transform: scale(1.05); /* Scale only when the room is selected */
-    transition: transform 0.3s ease-in-out; /* Smooth transition */
-}
 
 .tooltip {
     background-color: rgba(0, 0, 0, 0.8);

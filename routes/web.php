@@ -9,12 +9,21 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PrivilegeController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ContinentController;
 use App\Models\Room;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\ChatMessageController;
 
 
+Route::get('/continent/europe', [ContinentController::class, 'europe'])->name('continent.europe');
+Route::get('/continent/americas', [ContinentController::class, 'americas'])->name('continent.americas');
+Route::get('/continent/asia', [ContinentController::class, 'asia'])->name('continent.asia');
+Route::get('/continent/africa', [ContinentController::class, 'africa'])->name('continent.africa');
+
+Route::get('/lobby/valstis', function () {
+    return Inertia::render('Lobby/Valstis'); 
+})->name('lobby.valstis');
 
 Route::middleware('auth')->get('/user', [UserController::class, 'getUserData']);
 

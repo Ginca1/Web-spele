@@ -9,7 +9,6 @@ const Create = ({ players = [], onStartGame }) => {
     const [isPrivateRoom, setIsPrivateRoom] = useState(false);
     const [region, setRegion] = useState('Visi'); 
     const [hasRoom, setHasRoom] = useState(false); 
-
     const { props } = usePage();
     const currentUserId = props.auth.user.id; 
 
@@ -46,7 +45,6 @@ const Create = ({ players = [], onStartGame }) => {
 
     const handleCreateRoom = async () => {
         if (hasRoom || !selectedRoom) return; 
-
         const roomData = {
             theme: selectedRoom,
             region: region,
@@ -88,15 +86,18 @@ const Create = ({ players = [], onStartGame }) => {
                 </div>
 
                 <div className="rowW-M2">
-                    <div className="lobby-container">
-                        <div className="lobby-head">
+                    <div className="bg-[#fdfdfb] w-[90vw] max-w-[1050px] h-auto max-h-[80vh] p-5 rounded-lg min-h-[70vh]
+                     shadow-md relative text-center overflow-hidden flex flex-col z-[2001]">
+                       <div className="flex items-center justify-center relative border-b-2 border-gray-300">
                             <Link href={route('lobby')} className="react-icon">
                                 <IoArrowBackCircleSharp /> 
                             </Link>
                             <div className="room-title">IZVEIDOT</div>
                         </div>
-                        <div className="room-create-background">
-                            <div className="scrollElements">
+                        <div className="bg-gradient-to-br from-[#9fb0c9] to-[#6a8b9a] flex p-5 border-2 border-[#5d6c99] 
+                            min-h-[50vh] h-auto rounded-[15px] overflow-hidden relative 
+                            shadow-md transition-transform duration-300 ease-in-out">
+                            <div className="flex flex-row items-center justify-center w-full flex-wrap my-2 gap-2 max-h-[394px] overflow-y-auto pr-4">
                                 <div className="settings-box">
                                     <div className="rowW">
                                         <div className="create-lobby-text">
@@ -137,7 +138,7 @@ const Create = ({ players = [], onStartGame }) => {
                                             Tēmas
                                         </div>
                                     </div>
-                                    <div className="scrollElements">  
+                                    <div className="flex flex-row items-center justify-center w-full flex-wrap my-2 gap-2 max-h-[394px] overflow-y-auto pr-4">
                                         <div 
                                             className={`rooms-create ${selectedRoom === 'Valstis' ? 'selected-room' : ''}`} 
                                             onClick={() => handleRoomClick('Valstis')}
