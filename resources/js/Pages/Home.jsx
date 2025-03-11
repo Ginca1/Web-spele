@@ -392,7 +392,7 @@ const Home = () => {
                                 <div className="row">
                                 <div className="priv-price">
                                     <div className="rowH-M">
-                                    <div className="nauda"  onClick={() => handlePurchasePrivilege('power', 150)}>
+                                    <div className="nauda"  onClick={() => handlePurchasePrivilege('skip', 150)}>
                                         150
                                     </div>
                                     </div>
@@ -404,7 +404,7 @@ const Home = () => {
                                 <div className="row">
                                 <div className="priv-price">
                                 <div className="rowH-M">
-                                    <div className="nauda"  onClick={() => handlePurchasePrivilege('freeze', 200)}>
+                                    <div className="nauda"  onClick={() => handlePurchasePrivilege('flag', 200)}>
                                         200
                                     </div>
                                     </div>
@@ -435,7 +435,7 @@ const Home = () => {
                                     <div className="priv-value">
                                         <div className="rowH-M">
                                             <div className="nauda">
-                                            {privileges ? privileges.power_quantity : 0} 
+                                            {privileges ? privileges.skip_quantity : 0} 
                                             </div>
                                         </div>
                                     </div>
@@ -448,7 +448,7 @@ const Home = () => {
                                     <div className="priv-value">
                                         <div className="rowH-M">
                                             <div className="nauda">
-                                            {privileges ? privileges.freeze_quantity : 0}
+                                            {privileges ? privileges.flag_quantity : 0}
                                             </div>
                                         </div>
                                     </div>

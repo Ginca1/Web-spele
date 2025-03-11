@@ -14,6 +14,14 @@ use App\Models\Room;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\ChatMessageController;
+use App\Http\Controllers\HintController;
+use App\Http\Controllers\SkipController;
+use App\Http\Controllers\FlagController;
+
+
+Route::post('/use-flag', [FlagController::class, 'useFlag']);
+Route::post('/use-skip', [SkipController::class, 'useSkip']);
+Route::post('/use-hint', [HintController::class, 'useHint']);
 
 
 Route::get('/continent/europe', [ContinentController::class, 'europe'])->name('continent.europe');

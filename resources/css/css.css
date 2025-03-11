@@ -1251,9 +1251,9 @@ position: relative;
 }
 
 .clock{
-    width:115px;
+    width:100px;
     height:114px;
-    background-image: url('../../public/images/clock.png');
+    background-image: url('../../public/images/icons/skip.png');
     background-size: cover; /* Ensures the image covers the div */
     background-position: center; /* Centers the image */
     margin-top:10%;
@@ -1262,7 +1262,7 @@ position: relative;
 .freeze{
     width:115px;
     height:114px;
-    background-image: url('../../public/images/freeze.png');
+    background-image: url('../../public/images/icons/flag.png');
     background-size: cover; /* Ensures the image covers the div */
     background-position: center; /* Centers the image */
     border-radius:50%;

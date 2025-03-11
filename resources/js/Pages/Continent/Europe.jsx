@@ -5,6 +5,7 @@ import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 're
 import axios from 'axios';
 import { motion, AnimatePresence } from "framer-motion";
 
+
 const europePictureMap = {
     1: '/images/dog.png',
     2: '/images/cat.png',
@@ -18,10 +19,12 @@ const europePictureMap = {
 };
 
 
-
 const Europe = ({ auth }) => {
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [currentCountry, setCurrentCountry] = useState(null);
+        // all countries
+    const [countryIndex, setCountryIndex] = useState(0);
+
     const [score, setScore] = useState(0);
     const [message, setMessage] = useState(null);
     const [countries, setCountries] = useState([]);
@@ -47,11 +50,173 @@ const Europe = ({ auth }) => {
     const correctSound = new Audio('/sounds/correct.mp3');
     const wrongSound = new Audio('/sounds/error.mp3');
     const failSound = new Audio('/sounds/fail.mp3');
+    const hintSound = new Audio('/sounds/hint.mp3');
+    const skipSound = new Audio('/sounds/skip.mp3');
+    const flagSound = new Audio('/sounds/flag.mp3');
+    const startSound = new Audio('/sounds/start.mp3');
+    const guessedSound = new Audio('/sounds/guessed.mp3');
+    const winSound = new Audio('/sounds/win.mp3');
+
+    const [privileges, setPrivileges] = useState(null);
+
+    const [hintedCountry, setHintedCountry] = useState(null);
+
+    const [flaggedCountry, setFlaggedCountry] = useState(null);
+    const [hasUsedFlagForCurrentCountry, setHasUsedFlagForCurrentCountry] = useState(false);
+
+    const handleFlagClick = async () => {
+        if (hasUsedFlagForCurrentCountry) return; // ✅ prevent spamming
+    
+        if (privileges?.flag_quantity > 0) {
+            flagSound.play();
+    
+            setFlaggedCountry({
+                name: currentCountry?.name,
+                code: currentCountry?.code?.toLowerCase(),
+            });
+    
+            setHasUsedFlagForCurrentCountry(true); // ✅ mark as used
+    
+            try {
+                const response = await fetch('/use-flag', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({ user_id: user.id }),
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    setPrivileges(prev => ({
+                        ...prev,
+                        flag_quantity: data.flag_quantity,
+                    }));
+                } else {
+                    console.error("Flag error:", data);
+                }
+            } catch (error) {
+                console.error("Flag fetch failed:", error);
+            }
+        } else {
+            alert("Tev vairs nav šīs privilēģijas");
+        }
+    };
+
+    const skipToNextCountry = () => {
+
+        setFlaggedCountry(null);
+
+        const guessedCountries = [
+            ...correctlyGuessed,
+            ...semiCorrectGuessed,
+            ...failedGuessedCountries,
+        ];
+    
+        const totalCountries = countries.length;
+        let nextIndex = countryIndex;
+    
+        for (let i = 1; i <= totalCountries; i++) {
+            const potentialIndex = (countryIndex + i) % totalCountries;
+            const potentialCountry = countries[potentialIndex];
+    
+            if (!guessedCountries.includes(potentialCountry.name)) {
+                setCountryIndex(potentialIndex);
+                setCurrentCountry(potentialCountry);
+                return;
+            }
+        }
+    
+        setCurrentCountry(null);
+        alert("No more unguessed countries to skip to.");
+    };
+
+    const handleUseSkip = async () => {
+        try {
+            const response = await fetch('/use-skip', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({
+                    user_id: privileges?.user_id,
+                }),
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                if (data.skip_quantity !== undefined) {
+                    setPrivileges(prev => ({
+                        ...prev,
+                        skip_quantity: data.skip_quantity,
+                    }));
+                    skipSound.play();
+                    skipToNextCountry();
+                }
+            } else {
+                alert(data.message || 'Unable to use skip.');
+            }
+        } catch (error) {
+            console.error('Failed to use skip:', error);
+            alert('Something went wrong while using skip.');
+        }
+    };
+
+    const handleHintClick = async () => {
+        if (privileges?.hint_quantity > 0) {
+            hintSound.play();
+            setHintedCountry(currentCountry?.name);
+            setTimeout(() => {
+                setHintedCountry(false);
+            }, 1000);
+
+            try {
+                const response = await fetch('/use-hint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({ user_id: user.id }),
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    setPrivileges(prev => ({
+                        ...prev,
+                        hint_quantity: data.hint_quantity,
+                    }));
+                } else {
+                    console.error("Hint error:", data);
+                }
+            } catch (error) {
+                console.error("Hint fetch failed:", error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+          axios.get(`/privileges/${user.id}`)
+            .then(response => {
+              setPrivileges(response.data);
+            })
+            .catch(error => {
+              console.error('Error fetching privileges:', error);
+            });
+        }
+      }, [user]);
     
 
     const handleStartGame = () => {
-        setIsGameStarted(true);  // Hide the overlay and start the game
-        setIsTimerRunning(true);  // Start the timer
+        setIsGameStarted(true); 
+        startSound.play();
+        setIsTimerRunning(true);  
     };
 
     useEffect(() => {
@@ -99,51 +264,52 @@ const Europe = ({ auth }) => {
     
     useEffect(() => {
         const europeanCountries = [
-            { name: 'Albania', coordinates: [20.1683, 41.1533] },
-            { name: 'Austria', coordinates: [14.5501, 47.5162] },
-            { name: 'Belarus', coordinates: [27.9534, 53.7098] },
-            { name: 'Belgium', coordinates: [4.4699, 50.5039] },
-            { name: 'Bosnia and Herzegovina', coordinates: [17.6791, 43.9159] },
-            { name: 'Bulgaria', coordinates: [25.4858, 42.7339] },
-            { name: 'Croatia', coordinates: [15.2, 45.1] },
-            { name: 'Cyprus', coordinates: [33.4299, 35.1264] },
-            { name: 'Czech Republic', coordinates: [15.473, 49.8175] },
-            { name: 'Denmark', coordinates: [9.5018, 56.2639] },
-            { name: 'Estonia', coordinates: [25.0136, 58.5953] },
-            { name: 'Finland', coordinates: [25.7482, 61.9241] },
-            { name: 'France', coordinates: [2.2137, 46.2276] },
-            { name: 'Germany', coordinates: [10.4515, 51.1657] },
-            { name: 'Greece', coordinates: [21.8243, 39.0742] },
-            { name: 'Hungary', coordinates: [19.5033, 47.1625] },
-            { name: 'Iceland', coordinates: [-19.0208, 64.9631] },
-            { name: 'Ireland', coordinates: [-8.2439, 53.4129] },
-            { name: 'Italy', coordinates: [12.5674, 41.8719] },
-            { name: 'Kosovo', coordinates: [20.9029, 42.6026] },
-            { name: 'Latvia', coordinates: [24.6032, 56.8796] },
-            { name: 'Lithuania', coordinates: [23.8813, 55.1694] },
-            { name: 'Luxembourg', coordinates: [6.1296, 49.8153] },
-            { name: 'Moldova', coordinates: [28.3699, 47.4116] },
-            { name: 'Montenegro', coordinates: [19.3744, 42.7087] },
-            { name: 'Netherlands', coordinates: [5.2913, 52.1326] },
-            { name: 'North Macedonia', coordinates: [21.7453, 41.6086] },
-            { name: 'Norway', coordinates: [8.4689, 60.472] },
-            { name: 'Poland', coordinates: [19.1451, 51.9194] },
-            { name: 'Portugal', coordinates: [-8.2245, 39.3999] },
-            { name: 'Romania', coordinates: [24.9668, 45.9432] },
-            { name: 'Russia', coordinates: [37.6184, 55.7512] },
-            { name: 'Serbia', coordinates: [21.0059, 44.0165] },
-            { name: 'Slovakia', coordinates: [19.699, 48.669] },
-            { name: 'Slovenia', coordinates: [14.9955, 46.1512] },
-            { name: 'Spain', coordinates: [-3.7492, 40.4637] },
-            { name: 'Sweden', coordinates: [18.6435, 60.1282] },
-            { name: 'Switzerland', coordinates: [8.2275, 46.8182] },
-            { name: 'Turkey', coordinates: [35.2433, 38.9637] },
-            { name: 'Ukraine', coordinates: [31.1656, 48.3794] },
-            { name: 'United Kingdom', coordinates: [-3.436, 55.3781] },
-        ];
+            { name: 'Albānija', code: 'al', coordinates: [20.1683, 41.1533] },
+            { name: 'Austrija', code: 'at', coordinates: [14.5501, 47.5162] },
+            { name: 'Baltkrievija', code: 'by', coordinates: [27.9534, 53.7098] },
+            { name: 'Beļģija', code: 'be', coordinates: [4.4699, 50.5039] },
+            { name: 'Bosnija un Hercegovina', code: 'ba', coordinates: [17.6791, 43.9159] },
+            { name: 'Bulgārija', code: 'bg', coordinates: [25.4858, 42.7339] },
+            { name: 'Horvātija', code: 'hr', coordinates: [15.2, 45.1] },
+            { name: 'Kipra', code: 'cy', coordinates: [33.4299, 35.1264] },
+            { name: 'Čehija', code: 'cz', coordinates: [15.473, 49.8175] },
+            { name: 'Dānija', code: 'dk', coordinates: [9.5018, 56.2639] },
+            { name: 'Igaunija', code: 'ee', coordinates: [25.0136, 58.5953] },
+            { name: 'Somija', code: 'fi', coordinates: [25.7482, 61.9241] },
+            { name: 'Francija', code: 'fr', coordinates: [2.2137, 46.2276] },
+            { name: 'Vācija', code: 'de', coordinates: [10.4515, 51.1657] },
+            { name: 'Grieķija', code: 'gr', coordinates: [21.8243, 39.0742] },
+            { name: 'Ungārija', code: 'hu', coordinates: [19.5033, 47.1625] },
+            { name: 'Islande', code: 'is', coordinates: [-19.0208, 64.9631] },
+            { name: 'Īrija', code: 'ie', coordinates: [-8.2439, 53.4129] },
+            { name: 'Itālija', code: 'it', coordinates: [12.5674, 41.8719] },
+            { name: 'Kosova', code: 'xk', coordinates: [20.9029, 42.6026] }, // XK is unofficial but used
+            { name: 'Latvija', code: 'lv', coordinates: [24.6032, 56.8796] },
+            { name: 'Lietuva', code: 'lt', coordinates: [23.8813, 55.1694] },
+            { name: 'Luksemburga', code: 'lu', coordinates: [6.1296, 49.8153] },
+            { name: 'Moldova', code: 'md', coordinates: [28.3699, 47.4116] },
+            { name: 'Melnkalne', code: 'me', coordinates: [19.3744, 42.7087] },
+            { name: 'Nīderlande', code: 'nl', coordinates: [5.2913, 52.1326] },
+            { name: 'Ziemeļmaķedonija', code: 'mk', coordinates: [21.7453, 41.6086] },
+            { name: 'Norvēģija', code: 'no', coordinates: [8.4689, 60.472] },
+            { name: 'Polija', code: 'pl', coordinates: [19.1451, 51.9194] },
+            { name: 'Portugāle', code: 'pt', coordinates: [-8.2245, 39.3999] },
+            { name: 'Rumānija', code: 'ro', coordinates: [24.9668, 45.9432] },
+            { name: 'Krievija', code: 'ru', coordinates: [37.6184, 55.7512] },
+            { name: 'Serbija', code: 'rs', coordinates: [21.0059, 44.0165] },
+            { name: 'Slovākija', code: 'sk', coordinates: [19.699, 48.669] },
+            { name: 'Slovēnija', code: 'si', coordinates: [14.9955, 46.1512] },
+            { name: 'Spānija', code: 'es', coordinates: [-3.7492, 40.4637] },
+            { name: 'Zviedrija', code: 'se', coordinates: [18.6435, 60.1282] },
+            { name: 'Šveice', code: 'ch', coordinates: [8.2275, 46.8182] },
+            { name: 'Turcija', code: 'tr', coordinates: [35.2433, 38.9637] },
+            { name: 'Ukraina', code: 'ua', coordinates: [31.1656, 48.3794] },
+            { name: 'Lielbritānija', code: 'gb', coordinates: [-3.436, 55.3781] }
+          ];
         setCountries(europeanCountries);
         selectRandomCountry(europeanCountries);
     }, []);
+    
 
 
     const selectRandomCountry = (countries) => {
@@ -163,97 +329,128 @@ const Europe = ({ auth }) => {
     const handleMapClick = (geo) => {
         if (!currentCountry) return;
         if (message) setMessage(null);
-    
+      
         const clickedCountry = countries.find((country) => country.name === geo.properties.name);
-    
         if (!clickedCountry) return;
-    
+      
         const allAnswered = new Set([
-            ...correctlyGuessed,
-            ...semiCorrectGuessed,
-            ...failedGuessedCountries,
+          ...correctlyGuessed,
+          ...semiCorrectGuessed,
+          ...failedGuessedCountries,
         ]);
-    
+      
+        // Check if the clicked country has already been guessed
         if (allAnswered.has(clickedCountry.name)) {
-            setMessage({ text: 'Šī valsts jau ir uzminēta!', type: 'info' });
-        
-            setTimeout(() => {
-                setMessage({ text: '', type: '' });
-            }, 500);  
-            return;
+          setMessage({ text: 'Šī valsts jau ir uzminēta!', type: 'info' });
+          guessedSound.play();
+          setTimeout(() => {
+            setMessage({ text: '', type: '' });
+          }, 500);
+          return;
         }
-    
+      
+        // Check if the clicked country is the correct one
         if (clickedCountry.name === currentCountry.name) {
-            let earnedScore = 1;
-    
-            if (wrongGuessCount <= 2) {
-                correctSound.play();
-            }
-    
-            if (wrongGuessCount === 1 || wrongGuessCount === 2) {
-                earnedScore = 0.5;
-                setSemiCorrectGuessed((prev) => [...prev, clickedCountry.name]);
-            } else {
-        
-                setCorrectlyGuessed((prevGuessed) => [...prevGuessed, clickedCountry.name]);
-            }
-    
-            setScore((prev) => prev + earnedScore);
-            setCorrectGuesses((prev) => prev + 1);
-            setMessage({
-                text: wrongGuessCount === 0 ? 'Pareizi!' : 'Pareizi (ar atkārtotu mēģinājumu)!',
-                type: 'correct',
+          let earnedScore = 1;
+      
+          if (wrongGuessCount <= 2) {
+            correctSound.play();
+          }
+      
+          if (wrongGuessCount === 1 || wrongGuessCount === 2) {
+            earnedScore = 0.5;
+            setSemiCorrectGuessed((prev) => [...prev, clickedCountry.name]);
+          } else {
+            setCorrectlyGuessed((prevGuessed) => [...prevGuessed, clickedCountry.name]);
+          }
+      
+          setScore((prev) => prev + earnedScore);
+          setCorrectGuesses((prev) => prev + 1);
+          setMessage({
+            text: wrongGuessCount === 0 ? 'Pareizi!' : 'Pareizi (ar atkārtotu mēģinājumu)!',
+            type: 'correct',
+          });
+      
+          // Clear flagged country and reset flag usage
+          setFlaggedCountry(null);
+          setHasUsedFlagForCurrentCountry(false);
+      
+          const remainingCountries = countries.filter(
+            (country) => !allAnswered.has(country.name) && country.name !== clickedCountry.name
+          );
+      
+          if (remainingCountries.length > 0) {
+            const randomIndex = Math.floor(Math.random() * remainingCountries.length);
+            setCurrentCountry(remainingCountries[randomIndex]);
+      
+            // Reset flag usage for new country
+            setHasUsedFlagForCurrentCountry(false);
+            setFlaggedCountry(null);
+          } else {
+            // No more countries left to guess
+            setCurrentCountry(null);
+            setIsTimerRunning(false);
+      
+            // Play win sound
+            winSound.play().catch((e) => {
+              console.warn('Could not play win sound:', e);
             });
-    
-            const remainingCountries = countries.filter(
-                (country) => !allAnswered.has(country.name) && country.name !== clickedCountry.name
-            );
-
-            if (remainingCountries.length > 0) {
-                const randomIndex = Math.floor(Math.random() * remainingCountries.length);
-                setCurrentCountry(remainingCountries[randomIndex]); 
-            } else {
-                setCurrentCountry(null); 
-                setIsTimerRunning(false);
-            }
-
-            setWrongGuessCount(0);
+      
+            setMessage({ text: 'Bravo tu izvēlējies visas valstis!', type: 'correct' });
+          }
+      
+          setWrongGuessCount(0);
         } else {
-            setIncorrectGuesses((prev) => prev + 1);
-            const newCount = wrongGuessCount + 1;
-            setWrongGuessCount(newCount);
-    
-            if (newCount >= 3) {
-                setMessage({ text: 'Pārsniegts mēģinājumu limits!', type: 'incorrect' });
-                failSound.play();
-    
-                setFailedGuessedCountries((prevFailed) => {
-                    const updatedFailed = [...prevFailed, currentCountry.name];
-
-                    const remainingCountries = countries.filter(
-                        (country) => !allAnswered.has(country.name) && country.name !== currentCountry.name
-                    );
-
-                    if (remainingCountries.length > 0) {
-                        const randomIndex = Math.floor(Math.random() * remainingCountries.length);
-                        setCurrentCountry(remainingCountries[randomIndex]); 
-                    } else {
-                        setCurrentCountry(null); 
-                        setIsTimerRunning(false);
-                    }
-    
-                    return updatedFailed;
+          setIncorrectGuesses((prev) => prev + 1);
+          const newCount = wrongGuessCount + 1;
+          setWrongGuessCount(newCount);
+      
+          if (newCount >= 3) {
+            setMessage({ text: 'Pārsniegts mēģinājumu limits!', type: 'incorrect' });
+            failSound.play();
+      
+            setFailedGuessedCountries((prevFailed) => {
+              const updatedFailed = [...prevFailed, currentCountry.name];
+      
+              // Clear flagged country and reset flag usage
+              setFlaggedCountry(null);
+              setHasUsedFlagForCurrentCountry(false);
+      
+              const remainingCountries = countries.filter(
+                (country) => !allAnswered.has(country.name) && country.name !== currentCountry.name
+              );
+      
+              if (remainingCountries.length > 0) {
+                const randomIndex = Math.floor(Math.random() * remainingCountries.length);
+                setCurrentCountry(remainingCountries[randomIndex]);
+      
+                // Reset flag usage for new country
+                setHasUsedFlagForCurrentCountry(false);
+                setFlaggedCountry(null);
+              } else {
+                setCurrentCountry(null);
+                setIsTimerRunning(false);
+      
+                // Play win sound if all countries are guessed
+                winSound.play().catch((e) => {
+                  console.warn('Could not play win sound:', e);
                 });
-    
-                setWrongGuessCount(0);
-            } else {
-                setMessage({ text: 'Nepareizi!', type: 'incorrect' });
-                wrongSound.play();
-            }
+      
+                setMessage({ text: 'Bravo tu izvēlējies visas valstis!', type: 'correct' });
+              }
+      
+              return updatedFailed;
+            });
+      
+            setWrongGuessCount(0);
+          } else {
+            setMessage({ text: 'Nepareizi!', type: 'incorrect' });
+            wrongSound.play();
+          }
         }
-    
+      
         setTimeout(() => setMessage(null), 500);
-    };
+      };
     
 
     if (!europeTopoJSON) {
@@ -293,7 +490,7 @@ const Europe = ({ auth }) => {
             </div>
                 
             <div className="flex flex-row justify-center items-center w-full px-3 mt-[1%]">
-            {/* Grid Contaienr s*/}
+            {/* Grid Contaieners*/}
             <div className="grid grid-cols-[17%_65%_16%] gap-4 w-full">
                 {/* Left BboxesS */}
                 <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md w-full">
@@ -327,12 +524,22 @@ const Europe = ({ auth }) => {
                 <img
                     src={europePicUrl}
                     alt="Europe"
-                    className="w-[50px] h-[50px] rounded-full bg-cover bg-center shadow-lg"
+                    className="w-[50px] h-[50px] rounded-full bg-cover shadow-md bg-center shadow-lg"
                 />
                 </div>
             </div>
 
             <div className="w-full h-[515px] mt-4 flex justify-center items-center relative">
+                     {flaggedCountry && (
+                        <div className="absolute top-0 left-0 m-2 z-10 flagged-country">
+                        <img
+                            src={`https://flagcdn.com/w80/${flaggedCountry.code}.png`}
+                            alt={`Flag of ${flaggedCountry.name}`}
+                            width="84"
+                            height="88"
+                        />
+                        </div>
+                    )}
 
                     {!isGameStarted && (
                         <div className="absolute inset-0 bg-black bg-opacity-50 z-20">
@@ -395,47 +602,52 @@ const Europe = ({ auth }) => {
 
                                     return (
                                         <Geography
-                                            key={geo.rsmKey}
-                                            geography={geo}
-                                            onClick={() => handleMapClick(geo)}
-                                            style={{
-                                                default: {
-                                                    fill: isGuessed
+                                        key={geo.rsmKey}
+                                        geography={geo}
+                                        onClick={() => handleMapClick(geo)}
+                                        style={{
+                                            default: {
+                                                fill:
+                                                    isGuessed
                                                         ? '#4CAF50'
                                                         : isSemiGuessed
                                                         ? '#FFD700'
                                                         : isFailedGuess
                                                         ? '#FF5733'
+                                                        : hintedCountry === name
+                                                        ? '#a020f0' // <-- purple when hint is active
                                                         : '#D6D6DA',
-                                                    stroke: '#5a5c5f', 
-                                                    strokeWidth: 0.6, 
-                                                    outline: 'none',
-                                                },
-                                                hover: {
-                                                    fill: isGuessed
+                                                stroke: '#5a5c5f',
+                                                strokeWidth: 0.6,
+                                                outline: 'none',
+                                            },
+                                            hover: {
+                                                fill:
+                                                    isGuessed
                                                         ? '#4CAF50'
                                                         : isSemiGuessed
                                                         ? '#FFD700'
                                                         : isFailedGuess
                                                         ? '#FF5733'
                                                         : '#0c6ae1',
-                                                        stroke: '#5a5c5f', // Light gray border on hover
-                                                        strokeWidth: 1, 
-                                                    outline: 'none',
-                                                    cursor: isGuessed || isSemiGuessed || isFailedGuess ? 'default' : 'pointer',
-                                                },
-                                                pressed: {
-                                                    fill: isGuessed
+                                                stroke: '#5a5c5f',
+                                                strokeWidth: 1,
+                                                outline: 'none',
+                                                cursor: isGuessed || isSemiGuessed || isFailedGuess ? 'default' : 'pointer',
+                                            },
+                                            pressed: {
+                                                fill:
+                                                    isGuessed
                                                         ? '#4CAF50'
                                                         : isSemiGuessed
                                                         ? '#FFD700'
                                                         : isFailedGuess
                                                         ? '#FF5733'
                                                         : '#E42E',
-                                                    outline: 'none', 
-                                                },
-                                            }}
-                                        />
+                                                outline: 'none',
+                                            },
+                                        }}
+                                    />
                                     );
                                 })
                             }
@@ -467,12 +679,57 @@ const Europe = ({ auth }) => {
                 </div>
             </div>
             <div className="flex items-center justify-center relative border-b-2 border-gray-300">
-            <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex items-center map">
-            <span className="text-[#f90a0a]"> | </span> 
-            Punkti <span className="text-[#08ff00]">{score} / 41 </span> 
-            <span className="text-[#f90a0a]"> | </span> 
+                <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex items-center map">
+                    <span className="text-[#f90a0a]"> | </span> 
+                        Punkti <span className="text-[#08ff00]">{score} / 41 </span> 
+                    <span className="text-[#f90a0a]"> | </span> 
+                </div>
             </div>
+            <div className="flex items-center justify-between relative border-b-2 border-gray-300">
+                {/* flag */}
+                <div className="text-2xl font-bold gap-2 pt-3 pb-1 flex flex-col items-center map gap-y-1">
+                    <img 
+                        src="/images/hint.png" 
+                        alt="Hint"
+                        onClick={handleFlagClick}
+                        className={`w-[3rem] h-[3rem] bg-[#e4e3a9] hover:bg-[#e4de81] p-2 object-cover rounded-full shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 
+                            ${hasUsedFlagForCurrentCountry ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}`}
+                        />
+                    
+                    <span>{privileges ? privileges.flag_quantity : 0}</span>
+                </div>
+
+                {/* Skip */}
+                <div className="text-2xl font-bold gap-2 pt-3 pb-1 flex flex-col items-center map gap-y-1">
+                  <img
+                        src="/images/icons/skip.png"
+                        alt="Skip"
+                        onClick={privileges?.skip_quantity > 0 ? handleUseSkip : null}
+                        className={`w-[3rem] h-[3rem] p-2 object-fit rounded-md shadow-md transition-all duration-300 ease-in-out transform ${privileges?.skip_quantity > 0 ? 'bg-[#a9e4ae] hover:bg-[#81e493] cursor-pointer hover:scale-105' : 'bg-gray-300 opacity-60 cursor-not-allowed'}`}
+                        />
+                    <span>{privileges ? privileges.skip_quantity : 0}</span>
+                </div>
+
+                {/* hint */}
+                <div className="text-2xl font-bold gap-2 pt-3 pb-1 flex flex-col items-center map gap-y-1">
+                    <img 
+                        src="/images/icons/flag.png" 
+                        alt="Flag" 
+                        onClick={handleHintClick}
+                        className="w-[3rem] h-[3rem] bg-[#a9b0e4] hover:bg-[#818de4] p-2 object-cover rounded-full shadow-md cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105"
+                    />
+                    <span>{privileges ? privileges.hint_quantity : 0}</span>
+                    </div>
+
+                {/* Overlay & Start Button */}
+                {!isGameStarted && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 z-20">
+                        
+                    </div>
+                )}
             </div>
+            
+            
         </div>
 
     </div>

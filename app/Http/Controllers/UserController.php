@@ -107,8 +107,8 @@ class UserController extends Controller
        
         $privilegePrices = [
             'hint' => 100,
-            'power' => 150,
-            'freeze' => 200,
+            'skip' => 150,
+            'flag' => 200,
         ];
     
         if (!array_key_exists($privilegeName, $privilegePrices)) {
@@ -127,16 +127,16 @@ class UserController extends Controller
     
         $privilege = Privilege::firstOrCreate(
             ['user_id' => $user->id],
-            ['hint_quantity' => 0, 'power_quantity' => 0, 'freeze_quantity' => 0]
+            ['hint_quantity' => 0, 'skip_quantity' => 0, 'flag_quantity' => 0]
         );
     
         
         if ($privilegeName === 'hint') {
             $privilege->hint_quantity++;
-        } elseif ($privilegeName === 'power') {
-            $privilege->power_quantity++;
-        } elseif ($privilegeName === 'freeze') {
-            $privilege->freeze_quantity++;
+        } elseif ($privilegeName === 'skip') {
+            $privilege->skip_quantity++;
+        } elseif ($privilegeName === 'flag') {
+            $privilege->flag_quantity++;
         }
 
         $privilege->save();
@@ -146,8 +146,8 @@ class UserController extends Controller
             'updatedCoins' => $user->coins,
             'updatedPrivileges' => [
                 'hint_quantity' => $privilege->hint_quantity,
-                'power_quantity' => $privilege->power_quantity,
-                'freeze_quantity' => $privilege->freeze_quantity,
+                'skip_quantity' => $privilege->skip_quantity,
+                'flag_quantity' => $privilege->flag_quantity,
             ],
         ]);
     }

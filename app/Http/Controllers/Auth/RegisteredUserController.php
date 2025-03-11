@@ -49,7 +49,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'coins' => 2000,
+            'coins' => 5000,
             'picture_id' => rand(1, 3), 
         ]);
 
