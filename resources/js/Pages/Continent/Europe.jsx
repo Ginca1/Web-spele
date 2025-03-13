@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Missions, { allMissions } from '../../Components/Missions';
 import { Head, Link } from '@inertiajs/react';
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
@@ -64,49 +65,83 @@ const Europe = ({ auth }) => {
     const [flaggedCountry, setFlaggedCountry] = useState(null);
     const [hasUsedFlagForCurrentCountry, setHasUsedFlagForCurrentCountry] = useState(false);
 
-    const handleFlagClick = async () => {
-        if (hasUsedFlagForCurrentCountry) return; // ✅ prevent spamming
-    
-        if (privileges?.flag_quantity > 0) {
-            flagSound.play();
-    
-            setFlaggedCountry({
-                name: currentCountry?.name,
-                code: currentCountry?.code?.toLowerCase(),
-            });
-    
-            setHasUsedFlagForCurrentCountry(true); // ✅ mark as used
-    
-            try {
-                const response = await fetch('/use-flag', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    },
-                    body: JSON.stringify({ user_id: user.id }),
-                });
-    
-                const data = await response.json();
-    
-                if (response.ok) {
-                    setPrivileges(prev => ({
-                        ...prev,
-                        flag_quantity: data.flag_quantity,
-                    }));
-                } else {
-                    console.error("Flag error:", data);
-                }
-            } catch (error) {
-                console.error("Flag fetch failed:", error);
-            }
+    const [missionProgress, setMissionProgress] = useState(() => {
+        const savedProgress = localStorage.getItem('missionProgress');
+        return savedProgress ? JSON.parse(savedProgress) : {};
+      });
+
+  // Function to update mission progress
+  const handleUpdateMissionProgress = (missionType, increment = 1) => {
+    console.log(`Updating mission type: ${missionType}, increment: ${increment}`);
+
+    const missionsToUpdate = Object.values(allMissions)
+      .flat()
+      .filter((mission) => mission.type === missionType);
+
+    setMissionProgress((prevProgress) => {
+      // Start with a fresh clone of the previous progress
+      const newProgress = { ...prevProgress };
+
+      // Loop over each mission and calculate fresh progress individually
+      missionsToUpdate.forEach((mission) => {
+        const current = prevProgress[mission.id] || 0;
+        newProgress[mission.id] = current + increment;
+        console.log(`Updated mission ${mission.id}: ${newProgress[mission.id]}`);
+      });
+
+      // Save the updated progress to localStorage
+      localStorage.setItem('missionProgress', JSON.stringify(newProgress));
+
+      return newProgress;
+    });
+  };
+
+  const handleFlagClick = async () => {
+    if (hasUsedFlagForCurrentCountry) return;
+  
+    if (privileges?.flag_quantity > 0) {
+      flagSound.play();
+  
+      // Update mission progress for "flag" type missions
+      handleUpdateMissionProgress('flag', 1); // Increment by 1 for each flag used
+  
+      setFlaggedCountry({
+        name: currentCountry?.name,
+        code: currentCountry?.code?.toLowerCase(),
+      });
+  
+      setHasUsedFlagForCurrentCountry(true);
+  
+      try {
+        const response = await fetch('/use-flag', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          },
+          body: JSON.stringify({ user_id: user.id }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          setPrivileges((prev) => ({
+            ...prev,
+            flag_quantity: data.flag_quantity,
+          }));
         } else {
-            alert("Tev vairs nav šīs privilēģijas");
+          console.error('Flag error:', data);
         }
-    };
+      } catch (error) {
+        console.error('Flag fetch failed:', error);
+      }
+    } else {
+      alert('Tev vairs nav šīs privilēģijas');
+    }
+  };
 
     const skipToNextCountry = () => {
-
+        
         setFlaggedCountry(null);
 
         const guessedCountries = [
@@ -168,37 +203,41 @@ const Europe = ({ auth }) => {
 
     const handleHintClick = async () => {
         if (privileges?.hint_quantity > 0) {
-            hintSound.play();
-            setHintedCountry(currentCountry?.name);
-            setTimeout(() => {
-                setHintedCountry(false);
-            }, 1000);
-
-            try {
-                const response = await fetch('/use-hint', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    },
-                    body: JSON.stringify({ user_id: user.id }),
-                });
-    
-                const data = await response.json();
-    
-                if (response.ok) {
-                    setPrivileges(prev => ({
-                        ...prev,
-                        hint_quantity: data.hint_quantity,
-                    }));
-                } else {
-                    console.error("Hint error:", data);
-                }
-            } catch (error) {
-                console.error("Hint fetch failed:", error);
+          hintSound.play();
+      
+          // Update mission progress for "hint" type missions
+          handleUpdateMissionProgress('hint', 1); // Increment by 1 for each hint used
+      
+          setHintedCountry(currentCountry?.name);
+          setTimeout(() => {
+            setHintedCountry(false);
+          }, 1000);
+      
+          try {
+            const response = await fetch('/use-hint', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+              },
+              body: JSON.stringify({ user_id: user.id }),
+            });
+      
+            const data = await response.json();
+      
+            if (response.ok) {
+              setPrivileges((prev) => ({
+                ...prev,
+                hint_quantity: data.hint_quantity,
+              }));
+            } else {
+              console.error('Hint error:', data);
             }
+          } catch (error) {
+            console.error('Hint fetch failed:', error);
+          }
         }
-    };
+      };
 
     useEffect(() => {
         if (user) {
@@ -371,6 +410,9 @@ const Europe = ({ auth }) => {
             type: 'correct',
           });
       
+          // Update mission progress for "country" type missions
+          handleUpdateMissionProgress('country', 1);
+      
           // Clear flagged country and reset flag usage
           setFlaggedCountry(null);
           setHasUsedFlagForCurrentCountry(false);
@@ -492,13 +534,24 @@ const Europe = ({ auth }) => {
             <div className="flex flex-row justify-center items-center w-full px-3 mt-[1%]">
             {/* Grid Contaieners*/}
             <div className="grid grid-cols-[17%_65%_16%] gap-4 w-full">
-                {/* Left BboxesS */}
-                <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md w-full">
-                    <h3 className="text-lg font-bold mb-2">Left Box</h3>
-                    <p>This is the left box content.</p>
-                </div>
 
-                {/* Middle Comoletion */}
+                {/* Left Box */}
+            <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md w-full">
+            <div className="flex items-center justify-center relative border-b-2 border-gray-300">
+                <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
+                <span className="text-[#f90a0a]">|</span>
+                <span className="text-4xl font-mono">Misijas</span>
+                <span className="text-[#f90a0a]">|</span>
+                </div>
+            </div>
+
+           
+            <Missions missionProgress={missionProgress} setMissionProgress={setMissionProgress} />
+
+        
+    </div>
+
+                {/* Midddele Cometn */}
                 <div className="bg-[#fdfdfb] h-auto p-5 w-full rounded-lg shadow-md relative text-center overflow-hidden flex flex-col z-[2001]">
             <Head title={`Valstis`} />
             <div className="flex items-center justify-between relative border-b-2 border-gray-300">
@@ -721,15 +774,61 @@ const Europe = ({ auth }) => {
                     <span>{privileges ? privileges.hint_quantity : 0}</span>
                     </div>
 
-                {/* Overlay & Start Button */}
+                {/* Overlay & Start Botto*/}
                 {!isGameStarted && (
                     <div className="absolute inset-0 bg-black bg-opacity-50 z-20">
                         
                     </div>
                 )}
             </div>
-            
-            
+            <div className="flex items-center justify-left relative font border-b-2 border-gray-300">
+                <div className="text-md gap-2 pt-2 pb-2 flex items-center w-full">
+                    <div className="flex flex-wrap gap-2 w-full max-h-[22rem] overflow-y-auto pr-2">
+                        {correctlyGuessed.map((countryName, index) => {
+                        const country = countries.find((c) => c.name === countryName);
+                        return (
+                            <div key={`correct-${index}`} className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-md">
+                            <img
+                                src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                                alt={`Flag of ${country.name}`}
+                                className="w-6 h-4"
+                            />
+                            <span className="text-[#4CAF50] text-sm">{country.name}</span>
+                            </div>
+                        );
+                        })}
+
+                        {semiCorrectGuessed.map((countryName, index) => {
+                        const country = countries.find((c) => c.name === countryName);
+                        return (
+                            <div key={`semi-${index}`} className="flex items-center gap-1 bg-orange-100 px-2 py-1 rounded-md">
+                            <img
+                                src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                                alt={`Flag of ${country.name}`}
+                                className="w-6 h-4"
+                            />
+                            <span className="text-[#FFD700] text-sm">{country.name}</span>
+                            </div>
+                        );
+                        })}
+
+                        {failedGuessedCountries.map((countryName, index) => {
+                        const country = countries.find((c) => c.name === countryName);
+                        return (
+                            <div key={`failed-${index}`} className="flex items-center gap-1 bg-red-100 px-2 py-1 rounded-md">
+                            <img
+                                src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                                alt={`Flag of ${country.name}`}
+                                className="w-6 h-4"
+                            />
+                            <span className="text-[#FF5733] text-sm">{country.name}</span>
+                            </div>
+                        );
+                        })}
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
