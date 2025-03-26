@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Missions, { allMissions } from '../../Components/Missions';
+import Level from '../../Components/Level';
 import { Head, Link } from '@inertiajs/react';
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
@@ -19,11 +20,11 @@ const europePictureMap = {
     9: '/images/deer.png',
 };
 
+// europe fvfv yopy
 
 const Europe = ({ auth }) => {
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [currentCountry, setCurrentCountry] = useState(null);
-        // all countries
     const [countryIndex, setCountryIndex] = useState(0);
 
     const [score, setScore] = useState(0);
@@ -70,7 +71,7 @@ const Europe = ({ auth }) => {
         return savedProgress ? JSON.parse(savedProgress) : {};
       });
 
-  // Function to update mission progress
+  // Funcioon to update mission progs
   const handleUpdateMissionProgress = (missionType, increment = 1) => {
     console.log(`Updating mission type: ${missionType}, increment: ${increment}`);
 
@@ -79,17 +80,16 @@ const Europe = ({ auth }) => {
       .filter((mission) => mission.type === missionType);
 
     setMissionProgress((prevProgress) => {
-      // Start with a fresh clone of the previous progress
       const newProgress = { ...prevProgress };
 
-      // Loop over each mission and calculate fresh progress individually
+      // Loop over eaech mi
       missionsToUpdate.forEach((mission) => {
         const current = prevProgress[mission.id] || 0;
         newProgress[mission.id] = current + increment;
         console.log(`Updated mission ${mission.id}: ${newProgress[mission.id]}`);
       });
 
-      // Save the updated progress to localStorage
+      // Sav
       localStorage.setItem('missionProgress', JSON.stringify(newProgress));
 
       return newProgress;
@@ -101,9 +101,8 @@ const Europe = ({ auth }) => {
   
     if (privileges?.flag_quantity > 0) {
       flagSound.play();
-  
-      // Update mission progress for "flag" type missions
-      handleUpdateMissionProgress('flag', 1); // Increment by 1 for each flag used
+  //uzlabo misiju kur pievieno +1 KAROGU
+      handleUpdateMissionProgress('flag', 1); 
   
       setFlaggedCountry({
         name: currentCountry?.name,
@@ -205,8 +204,8 @@ const Europe = ({ auth }) => {
         if (privileges?.hint_quantity > 0) {
           hintSound.play();
       
-          // Update mission progress for "hint" type missions
-          handleUpdateMissionProgress('hint', 1); // Increment by 1 for each hint used
+          // Update mose
+          handleUpdateMissionProgress('hint', 1); 
       
           setHintedCountry(currentCountry?.name);
           setTimeout(() => {
@@ -322,7 +321,7 @@ const Europe = ({ auth }) => {
             { name: 'Islande', code: 'is', coordinates: [-19.0208, 64.9631] },
             { name: 'Īrija', code: 'ie', coordinates: [-8.2439, 53.4129] },
             { name: 'Itālija', code: 'it', coordinates: [12.5674, 41.8719] },
-            { name: 'Kosova', code: 'xk', coordinates: [20.9029, 42.6026] }, // XK is unofficial but used
+            { name: 'Kosova', code: 'xk', coordinates: [20.9029, 42.6026] }, 
             { name: 'Latvija', code: 'lv', coordinates: [24.6032, 56.8796] },
             { name: 'Lietuva', code: 'lt', coordinates: [23.8813, 55.1694] },
             { name: 'Luksemburga', code: 'lu', coordinates: [6.1296, 49.8153] },
@@ -348,7 +347,7 @@ const Europe = ({ auth }) => {
         setCountries(europeanCountries);
         selectRandomCountry(europeanCountries);
     }, []);
-    
+    //sds sd sd sdff dfdsdasdasdnjbche j 
 
 
     const selectRandomCountry = (countries) => {
@@ -387,8 +386,7 @@ const Europe = ({ auth }) => {
           }, 500);
           return;
         }
-      
-        // Check if the clicked country is the correct one
+        
         if (clickedCountry.name === currentCountry.name) {
           let earnedScore = 1;
       
@@ -410,10 +408,8 @@ const Europe = ({ auth }) => {
             type: 'correct',
           });
       
-          // Update mission progress for "country" type missions
           handleUpdateMissionProgress('country', 1);
       
-          // Clear flagged country and reset flag usage
           setFlaggedCountry(null);
           setHasUsedFlagForCurrentCountry(false);
       
@@ -425,15 +421,13 @@ const Europe = ({ auth }) => {
             const randomIndex = Math.floor(Math.random() * remainingCountries.length);
             setCurrentCountry(remainingCountries[randomIndex]);
       
-            // Reset flag usage for new country
             setHasUsedFlagForCurrentCountry(false);
             setFlaggedCountry(null);
           } else {
-            // No more countries left to guess
+            
             setCurrentCountry(null);
             setIsTimerRunning(false);
       
-            // Play win sound
             winSound.play().catch((e) => {
               console.warn('Could not play win sound:', e);
             });
@@ -454,7 +448,6 @@ const Europe = ({ auth }) => {
             setFailedGuessedCountries((prevFailed) => {
               const updatedFailed = [...prevFailed, currentCountry.name];
       
-              // Clear flagged country and reset flag usage
               setFlaggedCountry(null);
               setHasUsedFlagForCurrentCountry(false);
       
@@ -466,14 +459,12 @@ const Europe = ({ auth }) => {
                 const randomIndex = Math.floor(Math.random() * remainingCountries.length);
                 setCurrentCountry(remainingCountries[randomIndex]);
       
-                // Reset flag usage for new country
                 setHasUsedFlagForCurrentCountry(false);
                 setFlaggedCountry(null);
               } else {
                 setCurrentCountry(null);
                 setIsTimerRunning(false);
       
-                // Play win sound if all countries are guessed
                 winSound.play().catch((e) => {
                   console.warn('Could not play win sound:', e);
                 });
@@ -510,10 +501,12 @@ const Europe = ({ auth }) => {
                         <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
                     </Link>
                 </div>
+                <div className="flex items-center gap-4">
+                <Level/>
                 <Link href={route('lobby.valstis')} className="bg-white p-1 rounded-lg text-[56px] text-[#084fd3] transform">
                         <IoArrowBackCircleSharp /> 
                     </Link>
-
+                </div>
                 <div className="absolute top-3 left-1/2 transform -translate-x-1/2">
                     <div className="relative">
                         {/* Imag */}
@@ -574,12 +567,14 @@ const Europe = ({ auth }) => {
                     <span className="text-[#ffff00] ml-1">|</span>
                 </div>
                 <span>{user.name}</span>
+                
                 <img
                     src={europePicUrl}
                     alt="Europe"
                     className="w-[50px] h-[50px] rounded-full bg-cover shadow-md bg-center shadow-lg"
                 />
                 </div>
+
             </div>
 
             <div className="w-full h-[515px] mt-4 flex justify-center items-center relative">

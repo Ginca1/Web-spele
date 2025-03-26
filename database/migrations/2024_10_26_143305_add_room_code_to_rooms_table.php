@@ -9,7 +9,7 @@ class AddRoomCodeToRoomsTable extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-            $table->string('room_code')->unique()->after('status'); // Add the unique room_code column
+            $table->string('room_code')->unique()->after('status'); // Add the unique room_code
         });
     }
 

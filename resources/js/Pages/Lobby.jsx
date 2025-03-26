@@ -66,7 +66,7 @@ const Lobby = () => {
                         <div className="bg-gradient-to-br from-[#9fb0c9] to-[#6a8b9a] border-2 border-[#5d6c99] min-h-[50vh] h-auto rounded-[15px]
                         overflow-hidden relative shadow-lg transition-transform duration-300 ease-in-out">
                             <div className="flex flex-row items-center justify-center w-full flex-wrap my-2 gap-2 max-h-[394px] overflow-y-auto pr-4">
-                                {/* Static Room  Valstis */}
+                                {/* Static Roomm */}
                                 <div 
                                     className={`w-[226px] h-[231px] bg-gradient-to-br from-[#ffffff] to-[#f0f0f0] m-[2px_0_8px_10px] 
                                     rounded-lg cursor-pointer flex flex-col items-center justify-center p-5 transition-all duration-300 
@@ -89,7 +89,7 @@ const Lobby = () => {
                                     </div>
                                 </div>
 
-                                {/* Fetched Rooms from Database */}
+                                {/* Fetched Rooms from Database uwu */}
                                 {rooms.map((room, index) => (
                                     <div
                                         key={room.id} 

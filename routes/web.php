@@ -17,7 +17,10 @@ use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\HintController;
 use App\Http\Controllers\SkipController;
 use App\Http\Controllers\FlagController;
+use App\Http\Controllers\MissionController;
+//routes
 
+Route::post('/claim-mission-reward', [MissionController::class, 'claimReward'])->middleware('auth');
 
 Route::post('/use-flag', [FlagController::class, 'useFlag']);
 Route::post('/use-skip', [SkipController::class, 'useSkip']);

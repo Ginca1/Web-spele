@@ -47,7 +47,7 @@ const Home = () => {
                 console.error('Error fetching picture_id:', error);
             });
     }, []);
-
+//sds ff ddd how is this possible: sddfss
     useEffect(() => {
         axios.get('/user/get-user-owned-pictures')
             .then(response => {

@@ -14,6 +14,7 @@ class FlagController extends Controller
             $user = User::findOrFail($request->user_id);
             $privilege = Privilege::where('user_id', $user->id)->first();
 
+            //minusd the flag
             if (!$privilege) {
                 return response()->json([
                     'message' => 'Privileges not found for this user.'

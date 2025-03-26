@@ -29,7 +29,7 @@ const Valstis = () => {
                         <div className="flex flex-row items-center justify-center w-full flex-wrap pt-[2.5rem] gap-2 max-h-[394px] overflow-y-auto pr-4">
                             {/* Europe */}
                             <Link 
-                                href={route('continent.europe')} // Navigate to the Euro page
+                                href={route('continent.europe')} // Navgte 
                                 className="relative group overflow-hidden rounded-lg shadow-md cursor-pointer transform transition-transform duration-300 hover:-translate-y-2"
                             >
                                 <img
@@ -50,7 +50,7 @@ const Valstis = () => {
 
                             {/* Americas */}
                             <Link 
-                                href={route('continent.americas')} // Navigat to the Americs page
+                                href={route('continent.americas')} // Navigate
                                 className="relative group overflow-hidden rounded-lg shadow-md cursor-pointer transform transition-transform duration-300 hover:-translate-y-2"
                             >
                                 <img
@@ -71,7 +71,7 @@ const Valstis = () => {
 
                             {/* Asia */}
                             <Link 
-                                href={route('continent.asia')} // Navigatto thee Asia page
+                                href={route('continent.asia')} // Navigato thee Asia page
                                 className="relative group overflow-hidden rounded-lg shadow-md cursor-pointer transform transition-transform duration-300 hover:-translate-y-2"
                             >
                                 <img

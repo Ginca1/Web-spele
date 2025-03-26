@@ -1245,7 +1245,7 @@ position: relative;
     width:115px;
     height:114px;
     background-image: url('../../public/images/hint.png');
-    background-size: cover; /* Ensures the image covers the div */
+    background-size: cover; /* Ensures the image  */
     background-position: center; /* Centers the image */
     margin-top:10%;
 }
@@ -1254,7 +1254,7 @@ position: relative;
     width:100px;
     height:114px;
     background-image: url('../../public/images/icons/skip.png');
-    background-size: cover; /* Ensures the image covers the div */
+    background-size: cover; /*  */
     background-position: center; /* Centers the image */
     margin-top:10%;
 }
