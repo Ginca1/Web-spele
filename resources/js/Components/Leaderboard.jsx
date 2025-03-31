@@ -6,7 +6,7 @@ const Leaderboard = ({}) => {
     const togglePopup = () => {
         setShowPopup(!showPopup);
     };
-
+//sdsd bb bb vv cc nn xx zznn nn bb vv v b ff hid ssd hhbbb
     return (
         <>
             <div className="leaderboard" onClick={togglePopup}>

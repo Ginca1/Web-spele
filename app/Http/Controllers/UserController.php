@@ -171,5 +171,22 @@ public function getOwnedPictures(): JsonResponse
         return response()->json(['error' => 'Internal Server Error'], 500);
     }
 }
+
+public function getUserData()
+{
+    $user = auth()->user();
+    
+    // Bypass all caching
+    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+    header("Cache-Control: post-check=0, pre-check=0", false);
+    header("Pragma: no-cache");
+    
+    return response()->json([
+        'level' => $user->level,
+        'xp' => $user->xp,
+        'xpneeded' => floor(100 * (1.2 ** ($user->level - 1))),
+        'timestamp' => microtime(true) // High precisio g ff vv vb bb   xx cc mm
+    ]);
+}
     
 }

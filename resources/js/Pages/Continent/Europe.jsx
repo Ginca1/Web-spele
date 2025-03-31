@@ -20,7 +20,7 @@ const europePictureMap = {
     9: '/images/deer.png',
 };
 
-// europe fvfv yopy
+// europe fvfv yopy bbgo xx  vv zz n rr cc dd zz mm hh
 
 const Europe = ({ auth }) => {
     const [isGameStarted, setIsGameStarted] = useState(false);
@@ -769,60 +769,68 @@ const Europe = ({ auth }) => {
                     <span>{privileges ? privileges.hint_quantity : 0}</span>
                     </div>
 
-                {/* Overlay & Start Botto*/}
+                {/**/}
                 {!isGameStarted && (
                     <div className="absolute inset-0 bg-black bg-opacity-50 z-20">
                         
                     </div>
                 )}
             </div>
-            <div className="flex items-center justify-left relative font border-b-2 border-gray-300">
-                <div className="text-md gap-2 pt-2 pb-2 flex items-center w-full">
-                    <div className="flex flex-wrap gap-2 w-full max-h-[22rem] overflow-y-auto pr-2">
-                        {correctlyGuessed.map((countryName, index) => {
-                        const country = countries.find((c) => c.name === countryName);
-                        return (
-                            <div key={`correct-${index}`} className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-md">
-                            <img
-                                src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-                                alt={`Flag of ${country.name}`}
-                                className="w-6 h-4"
-                            />
-                            <span className="text-[#4CAF50] text-sm">{country.name}</span>
-                            </div>
-                        );
-                        })}
-
-                        {semiCorrectGuessed.map((countryName, index) => {
-                        const country = countries.find((c) => c.name === countryName);
-                        return (
-                            <div key={`semi-${index}`} className="flex items-center gap-1 bg-orange-100 px-2 py-1 rounded-md">
-                            <img
-                                src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-                                alt={`Flag of ${country.name}`}
-                                className="w-6 h-4"
-                            />
-                            <span className="text-[#FFD700] text-sm">{country.name}</span>
-                            </div>
-                        );
-                        })}
-
-                        {failedGuessedCountries.map((countryName, index) => {
-                        const country = countries.find((c) => c.name === countryName);
-                        return (
-                            <div key={`failed-${index}`} className="flex items-center gap-1 bg-red-100 px-2 py-1 rounded-md">
-                            <img
-                                src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-                                alt={`Flag of ${country.name}`}
-                                className="w-6 h-4"
-                            />
-                            <span className="text-[#FF5733] text-sm">{country.name}</span>
-                            </div>
-                        );
-                        })}
-                    </div>
+            <div className="flex flex-col items-center relative font border-b-2 border-gray-300">
+                {/* top side*/}
+                <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex justify-center items-center map">
+                  <span className="text-[#f90a0a]"> | </span> 
+                  Valstis <span className="text-[#08ff00]"></span> 
+                  <span className="text-[#f90a0a]"> | </span> 
                 </div>
-            </div>
+
+                {/* Country list below, aligned to the left */}
+                <div className="text-md gap-2 pt-2 pb-2 flex justify-start w-full">
+                  <div className="flex flex-wrap gap-2 w-full max-h-[18.7rem] overflow-y-auto pr-2">
+                    {correctlyGuessed.map((countryName, index) => {
+                      const country = countries.find((c) => c.name === countryName);
+                      return (
+                        <div key={`correct-${index}`} className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-md">
+                          <img
+                            src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                            alt={`Flag of ${country.name}`}
+                            className="w-6 h-4"
+                          />
+                          <span className="text-[#4CAF50] text-sm">{country.name}</span>
+                        </div>
+                      );
+                    })}
+
+                    {semiCorrectGuessed.map((countryName, index) => {
+                      const country = countries.find((c) => c.name === countryName);
+                      return (
+                        <div key={`semi-${index}`} className="flex items-center gap-1 bg-orange-100 px-2 py-1 rounded-md">
+                          <img
+                            src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                            alt={`Flag of ${country.name}`}
+                            className="w-6 h-4"
+                          />
+                          <span className="text-[#FFD700] text-sm">{country.name}</span>
+                        </div>
+                      );
+                    })}
+
+                    {failedGuessedCountries.map((countryName, index) => {
+                      const country = countries.find((c) => c.name === countryName);
+                      return (
+                        <div key={`failed-${index}`} className="flex items-center gap-1 bg-red-100 px-2 py-1 rounded-md">
+                          <img
+                            src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                            alt={`Flag of ${country.name}`}
+                            className="w-6 h-4"
+                          />
+                          <span className="text-[#FF5733] text-sm">{country.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
 
         </div>
 

@@ -85,4 +85,23 @@ public function equipPicture($pictureId)
         ];
     }
 
+    public function checkLevelUp()
+    {
+        $xpNeeded = 100 * (1.2 ** ($this->level - 1));
+        
+        if ($this->xp >= $xpNeeded) {
+            $this->xp -= $xpNeeded;
+            $this->level++;
+            $this->save();
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public function getXpNeededAttribute()
+    {
+        return 100 * (1.2 ** ($this->level - 1));
+    }
+
 }

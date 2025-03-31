@@ -34,7 +34,6 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
   const [showAllTimeCompleted, setShowAllTimeCompleted] = useState({});
   const [timeLeft, setTimeLeft] = useState({ daily: 0, weekly: 0 }); 
 
-  // sound that is ve
   const rewardSound = new Audio('/sounds/reward.mp3');
   
 
@@ -61,7 +60,7 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
     localStorage.setItem(`${type}ResetDate`, resetDate);
     localStorage.setItem(`${type}Missions`, JSON.stringify(selectedMissions));
   
-    // Clear progress for reset missions
+    // Clear progress for reset missi
     const storedProgress = JSON.parse(localStorage.getItem('missionProgress')) || {};
     const updatedProgress = { ...storedProgress };
   
@@ -200,7 +199,7 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
         setShowAllTimeCompleted(updatedShowAllTimeCompleted);
         localStorage.setItem(`showAllTimeCompleted_${missionId}`, JSON.stringify(true));
         
-        // Optionally update user's coins/xp in your global state if you have one
+        // Optionally update user's coins/xp in your global sta ff cc cc nn  bb
       }
     } catch (error) {
       console.error('Error claiming reward:', error);

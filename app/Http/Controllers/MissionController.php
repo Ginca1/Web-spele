@@ -17,7 +17,7 @@ class MissionController extends Controller
             'mission_id' => 'required|integer'
         ]);
         
-        // Update user's coins and XP
+        // Update user's coins and XP ggg nn
         $user->coins += $validated['coins'];
         $user->xp += $validated['xp'];
         
@@ -34,4 +34,6 @@ class MissionController extends Controller
             'newXp' => $user->xp
         ]);
     }
+
+ 
 }

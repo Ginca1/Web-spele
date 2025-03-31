@@ -18,8 +18,12 @@ use App\Http\Controllers\HintController;
 use App\Http\Controllers\SkipController;
 use App\Http\Controllers\FlagController;
 use App\Http\Controllers\MissionController;
-//routes
+use App\Http\Controllers\LevelController;
+//routes 35
 
+
+Route::post('/level-up', [LevelController::class, 'levelUp'])->middleware('auth');
+Route::get('/user-data', [UserController::class, 'getUserData'])->middleware('auth');
 Route::post('/claim-mission-reward', [MissionController::class, 'claimReward'])->middleware('auth');
 
 Route::post('/use-flag', [FlagController::class, 'useFlag']);
