@@ -11,9 +11,9 @@ class ContinentController extends Controller
         return Inertia::render('Continent/Europe'); // Renders the europel
     }
 
-    public function americas()
+    public function america()
     {
-        return Inertia::render('Continent/Americas'); // Renders the americasdc
+        return Inertia::render('Continent/America'); // Renders the americasdc
     }
 
     public function asia()
@@ -24,5 +24,10 @@ class ContinentController extends Controller
     public function africa()
     {
         return Inertia::render('Continent/Africa'); // Renders the africa
+    }
+
+    public function all()
+    {
+        return Inertia::render('Continent/All'); // Renders the africa
     }
 }

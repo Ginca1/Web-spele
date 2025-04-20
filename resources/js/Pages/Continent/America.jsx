@@ -22,16 +22,15 @@ const europePictureMap = {
 };
 
 
-const Europe = ({ auth }) => {
+const America = ({ auth }) => {
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [currentCountry, setCurrentCountry] = useState(null);
     const [countryIndex, setCountryIndex] = useState(0);
-    const [coins, setCoins] = useState(0);
 
     const [score, setScore] = useState(0);
     const [message, setMessage] = useState(null);
     const [countries, setCountries] = useState([]);
-    const [europeTopoJSON, setEuropeTopoJSON] = useState(null);
+    const [americaTopoJSON, setAmericaTopoJSON] = useState(null);
     const [correctlyGuessed, setCorrectlyGuessed] = useState([]); 
    
     const user = auth.user;
@@ -315,56 +314,48 @@ const Europe = ({ auth }) => {
     useEffect(() => {
         fetch('/data/countries-110m.json')
             .then((response) => response.json())
-            .then((data) => setEuropeTopoJSON(data))
+            .then((data) => setAmericaTopoJSON(data))
             .catch((error) => console.error('Error loading TopoJSON:', error));
     }, []);
     
     useEffect(() => {
-        const europeanCountries = [
-            { name: 'Albānija', code: 'al', coordinates: [20.1683, 41.1533] },
-            { name: 'Austrija', code: 'at', coordinates: [14.5501, 47.5162] },
-            { name: 'Baltkrievija', code: 'by', coordinates: [27.9534, 53.7098] },
-            { name: 'Beļģija', code: 'be', coordinates: [4.4699, 50.5039] },
-            { name: 'Bosnija un Hercegovina', code: 'ba', coordinates: [17.6791, 43.9159] },
-            { name: 'Bulgārija', code: 'bg', coordinates: [25.4858, 42.7339] },
-            { name: 'Horvātija', code: 'hr', coordinates: [15.2, 45.1] },
-            { name: 'Kipra', code: 'cy', coordinates: [33.4299, 35.1264] },
-            { name: 'Čehija', code: 'cz', coordinates: [15.473, 49.8175] },
-            { name: 'Dānija', code: 'dk', coordinates: [9.5018, 56.2639] },
-            { name: 'Igaunija', code: 'ee', coordinates: [25.0136, 58.5953] },
-            { name: 'Somija', code: 'fi', coordinates: [25.7482, 61.9241] },
-            { name: 'Francija', code: 'fr', coordinates: [2.2137, 46.2276] },
-            { name: 'Vācija', code: 'de', coordinates: [10.4515, 51.1657] },
-            { name: 'Grieķija', code: 'gr', coordinates: [21.8243, 39.0742] },
-            { name: 'Ungārija', code: 'hu', coordinates: [19.5033, 47.1625] },
-            { name: 'Islande', code: 'is', coordinates: [-19.0208, 64.9631] },
-            { name: 'Īrija', code: 'ie', coordinates: [-8.2439, 53.4129] },
-            { name: 'Itālija', code: 'it', coordinates: [12.5674, 41.8719] },
-            { name: 'Kosova', code: 'xk', coordinates: [20.9029, 42.6026] }, 
-            { name: 'Latvija', code: 'lv', coordinates: [24.6032, 56.8796] },
-            { name: 'Lietuva', code: 'lt', coordinates: [23.8813, 55.1694] },
-            { name: 'Luksemburga', code: 'lu', coordinates: [6.1296, 49.8153] },
-            { name: 'Moldova', code: 'md', coordinates: [28.3699, 47.4116] },
-            { name: 'Melnkalne', code: 'me', coordinates: [19.3744, 42.7087] },
-            { name: 'Nīderlande', code: 'nl', coordinates: [5.2913, 52.1326] },
-            { name: 'Ziemeļmaķedonija', code: 'mk', coordinates: [21.7453, 41.6086] },
-            { name: 'Norvēģija', code: 'no', coordinates: [8.4689, 60.472] },
-            { name: 'Polija', code: 'pl', coordinates: [19.1451, 51.9194] },
-            { name: 'Portugāle', code: 'pt', coordinates: [-8.2245, 39.3999] },
-            { name: 'Rumānija', code: 'ro', coordinates: [24.9668, 45.9432] },
-            { name: 'Krievija', code: 'ru', coordinates: [37.6184, 55.7512] },
-            { name: 'Serbija', code: 'rs', coordinates: [21.0059, 44.0165] },
-            { name: 'Slovākija', code: 'sk', coordinates: [19.699, 48.669] },
-            { name: 'Slovēnija', code: 'si', coordinates: [14.9955, 46.1512] },
-            { name: 'Spānija', code: 'es', coordinates: [-3.7492, 40.4637] },
-            { name: 'Zviedrija', code: 'se', coordinates: [18.6435, 60.1282] },
-            { name: 'Šveice', code: 'ch', coordinates: [8.2275, 46.8182] },
-            { name: 'Turcija', code: 'tr', coordinates: [35.2433, 38.9637] },
-            { name: 'Ukraina', code: 'ua', coordinates: [31.1656, 48.3794] },
-            { name: 'Lielbritānija', code: 'gb', coordinates: [-3.436, 55.3781] }
-          ];
-        setCountries(europeanCountries);
-        selectRandomCountry(europeanCountries);
+        const americanCountries = [           
+            { name: 'Argentīna', code: 'ar', coordinates: [-63.6167, -38.4161] },
+            { name: 'Bahamu salas', code: 'bs', coordinates: [-77.39628, 25.03428] },
+            { name: 'Beliza', code: 'bz', coordinates: [-88.4976, 17.1899] },
+            { name: 'Bolīvija', code: 'bo', coordinates: [-63.5887, -16.2902] },
+            { name: 'Brazīlija', code: 'br', coordinates: [-51.9253, -14.2350] },
+            { name: 'Kanāda', code: 'ca', coordinates: [-106.3468, 56.1304] },
+            { name: 'Čīle', code: 'cl', coordinates: [-71.5430, -35.6751] },
+            { name: 'Kolumbija', code: 'co', coordinates: [-74.2973, 4.5709] },
+            { name: 'Kostarika', code: 'cr', coordinates: [-83.7534, 9.7489] },
+            { name: 'Kuba', code: 'cu', coordinates: [-77.7812, 21.5218] },
+            { name: 'Dominikāna', code: 'do', coordinates: [-70.1627, 18.7357] },
+            { name: 'Ekvadora', code: 'ec', coordinates: [-78.1834, -1.8312] },
+            { name: 'Salvadora', code: 'sv', coordinates: [-88.8965, 13.7942] },
+            { name: 'Gvatemala', code: 'gt', coordinates: [-90.2308, 15.7835] },
+            { name: 'Gajāna', code: 'gy', coordinates: [-58.9302, 4.8604] },
+            { name: 'Haiti', code: 'ht', coordinates: [-72.2852, 18.9712] },
+            { name: 'Hondurasa', code: 'hn', coordinates: [-86.2419, 15.2000] },
+            { name: 'Jamaika', code: 'jm', coordinates: [-77.2975, 18.1096] },
+            { name: 'Meksika', code: 'mx', coordinates: [-102.5528, 23.6345] },
+            { name: 'Nikaragva', code: 'ni', coordinates: [-85.2072, 12.8654] },
+            { name: 'Panama', code: 'pa', coordinates: [-80.7821, 8.5380] },
+            { name: 'Paragvaja', code: 'py', coordinates: [-58.4438, -23.4425] },
+            { name: 'Peru', code: 'pe', coordinates: [-75.0152, -9.1899] },  
+            { name: 'Surinama', code: 'sr', coordinates: [-56.0278, 3.9193] },
+            { name: 'Trinidāda un Tobāgo', code: 'tt', coordinates: [-61.2225, 10.6918] },
+            { name: 'Amerikas Savienotās Valstis', code: 'us', coordinates: [-95.7129, 37.0902] },
+            { name: 'Urugvaja', code: 'uy', coordinates: [-55.7658, -32.5228] },
+            { name: 'Venecuēla', code: 've', coordinates: [-66.5897, 6.4238] },
+
+            { name: 'Puertoriko', code: 'pr', coordinates: [-66.5901, 18.2208] },
+            { name: 'Folklendu salas', code: 'fk', coordinates: [-59.5236, -51.7963] },
+            { name: 'Grenlande', code: 'gl', coordinates: [-42.6043, 71.7069] }
+        ];
+        //dsd  sds sds sds sdsd sdds
+        setCountries(americanCountries);
+        selectRandomCountry(americanCountries);
     }, []);
 
 
@@ -556,7 +547,7 @@ const Europe = ({ auth }) => {
   };
     
 
-    if (!europeTopoJSON) {
+    if (!americaTopoJSON) {
         return <div>Lādē mapi...</div>;
     }
 
@@ -584,13 +575,13 @@ const Europe = ({ auth }) => {
                       <div className="relative">
                           {/* Imag */}
                           <img 
-                              src="/images/icons/banner-green.png" 
+                              src="/images/icons/banner-orange.png" 
                               alt="Asia" 
                               className="w-[16rem] h-[15.9rem] object-cover rounded-lg"
                           />
                           <div className="absolute inset-0 top-2 flex items-start justify-center z-50">
                               <h1 className="room-title1 text-[#f7f7f7] text-3xl font-bold p-4 drop-shadow-lg">
-                                  Eiropa
+                                  Amerika
                               </h1>
                           </div>  
                       </div>
@@ -601,12 +592,12 @@ const Europe = ({ auth }) => {
               {showFinishScreen && (
                   <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-[2002]">
                       <Finish 
-                          gameType="europe"
+                          gameType="america" 
                           gameStats={gameStats} 
                           onClose={() => setShowFinishScreen(false)}
                           user={user}           
                           europePicUrl={europePicUrl} 
-                          europeTopoJSON={europeTopoJSON} 
+                          americaTopoJSON={americaTopoJSON} 
                       />
                   </div>
               )}
@@ -623,8 +614,7 @@ const Europe = ({ auth }) => {
                               <span className="text-[#f90a0a]">|</span>
                               </div>
                           </div>
-                          <Missions missionProgress={missionProgress} setMissionProgress={setMissionProgress} setCoins={setCoins}
-                                coins={coins} />
+                          <Missions missionProgress={missionProgress} setMissionProgress={setMissionProgress} />
                       </div>
   
                       {/* Mid box */}
@@ -704,92 +694,92 @@ const Europe = ({ auth }) => {
                               </AnimatePresence>
   
                               <ComposableMap
-                                  projection="geoMercator"
-                                  projectionConfig={{ center: [10, 45], scale: 500 }}
-                                  width={800}
-                                  height={500}
-                                  style={{ width: '100%', height: '100%' }}
-                              >
-                                  <ZoomableGroup
-                                      zoom={1}
-                                      minZoom={1}
-                                      maxZoom={5}
-                                      translateExtent={[[100, -300], [700, 400]]}
-                                  >
-                                      <Geographies geography={europeTopoJSON}>
-                                          {({ geographies }) =>
-                                              geographies.map((geo) => {
-                                                  const name = geo.properties.name;
-                                                  const isGuessed = correctlyGuessed.includes(name);
-                                                  const isSemiGuessed = semiCorrectGuessed.includes(name);
-                                                  const isAutoGuessed = autoGuessedCountries.includes(name);
-                                                  const isFailedGuess = failedGuessedCountries.includes(geo.properties.name);
-  
-                                                  let fillColor = '#D6D6DA';
-                                                  if (isGuessed) fillColor = '#4CAF50';
-                                                  else if (isSemiGuessed) fillColor = '#FFD700';
-                                                  else if (isAutoGuessed) fillColor = '#FF5733';
-  
-                                                  return (
-                                                      <Geography
-                                                      key={geo.rsmKey}
-                                                      geography={geo}
-                                                      onClick={() => handleMapClick(geo)}
-                                                      style={{
-                                                          default: {
-                                                              fill:
-                                                                  isGuessed
-                                                                      ? '#4CAF50'
-                                                                      : isSemiGuessed
-                                                                      ? '#FFD700'
-                                                                      : isFailedGuess
-                                                                      ? '#FF5733'
-                                                                      : hintedCountry === name
-                                                                      ? '#a020f0' // <-- purple when hint is active
-                                                                      : '#D6D6DA',
-                                                              stroke: '#5a5c5f',
-                                                              strokeWidth: 0.6,
-                                                              outline: 'none',
-                                                          },
-                                                          hover: {
-                                                              fill:
-                                                                  isGuessed
-                                                                      ? '#4CAF50'
-                                                                      : isSemiGuessed
-                                                                      ? '#FFD700'
-                                                                      : isFailedGuess
-                                                                      ? '#FF5733'
-                                                                      : '#0c6ae1',
-                                                              stroke: '#5a5c5f',
-                                                              strokeWidth: 1,
-                                                              outline: 'none',
-                                                              cursor: isGuessed || isSemiGuessed || isFailedGuess ? 'default' : 'pointer',
-                                                          },
-                                                          pressed: {
-                                                              fill:
-                                                                  isGuessed
-                                                                      ? '#4CAF50'
-                                                                      : isSemiGuessed
-                                                                      ? '#FFD700'
-                                                                      : isFailedGuess
-                                                                      ? '#FF5733'
-                                                                      : '#E42E',
-                                                              outline: 'none',
-                                                          },
-                                                      }}
-                                                  />
-                                                  );
-                                              })
-                                          }
-                                      </Geographies>
-  
-                                      {countries.map((country, index) => (
-                                          <Marker key={index} coordinates={country.coordinates}>
-                                              <circle r={1.7} fill="#FF5733" stroke="#fff" strokeWidth={0.7} />
-                                          </Marker>
-                                      ))}
-                                  </ZoomableGroup>
-                              </ComposableMap>
+                                    projection="geoMercator"
+                                    projectionConfig={{ center: [-80, 15], scale: 400 }}
+                                    width={800}
+                                    height={500}
+                                    style={{ width: '100%', height: '100%' }}
+                                >
+                                    <ZoomableGroup
+                                        zoom={1}
+                                        minZoom={1}
+                                        maxZoom={5}
+                                        translateExtent={[[-200, -600], [900, 900]]}
+                                    >
+                                        <Geographies geography={americaTopoJSON}>  
+                                            {({ geographies }) =>
+                                                geographies.map((geo) => {
+                                                    const name = geo.properties.name;
+                                                    const isGuessed = correctlyGuessed.includes(name);
+                                                    const isSemiGuessed = semiCorrectGuessed.includes(name);
+                                                    const isAutoGuessed = autoGuessedCountries.includes(name);
+                                                    const isFailedGuess = failedGuessedCountries.includes(geo.properties.name);
+
+                                                    let fillColor = '#D6D6DA';
+                                                    if (isGuessed) fillColor = '#4CAF50';
+                                                    else if (isSemiGuessed) fillColor = '#FFD700';
+                                                    else if (isAutoGuessed) fillColor = '#FF5733';
+
+                                                    return (
+                                                        <Geography
+                                                            key={geo.rsmKey}
+                                                            geography={geo}
+                                                            onClick={() => handleMapClick(geo)}
+                                                            style={{
+                                                                default: {
+                                                                    fill:
+                                                                        isGuessed
+                                                                            ? '#4CAF50'
+                                                                            : isSemiGuessed
+                                                                            ? '#FFD700'
+                                                                            : isFailedGuess
+                                                                            ? '#FF5733'
+                                                                            : hintedCountry === name
+                                                                            ? '#a020f0'
+                                                                            : '#D6D6DA',
+                                                                    stroke: '#5a5c5f',
+                                                                    strokeWidth: 0.6,
+                                                                    outline: 'none',
+                                                                },
+                                                                hover: {
+                                                                    fill:
+                                                                        isGuessed
+                                                                            ? '#4CAF50'
+                                                                            : isSemiGuessed
+                                                                            ? '#FFD700'
+                                                                            : isFailedGuess
+                                                                            ? '#FF5733'
+                                                                            : '#0c6ae1',
+                                                                    stroke: '#5a5c5f',
+                                                                    strokeWidth: 1,
+                                                                    outline: 'none',
+                                                                    cursor: isGuessed || isSemiGuessed || isFailedGuess ? 'default' : 'pointer',
+                                                                },
+                                                                pressed: {
+                                                                    fill:
+                                                                        isGuessed
+                                                                            ? '#4CAF50'
+                                                                            : isSemiGuessed
+                                                                            ? '#FFD700'
+                                                                            : isFailedGuess
+                                                                            ? '#FF5733'
+                                                                            : '#E42E',
+                                                                    outline: 'none',
+                                                                },
+                                                            }}
+                                                        />
+                                                    );
+                                                })
+                                            }
+                                        </Geographies>
+
+                                        {countries.map((country, index) => (
+                                            <Marker key={index} coordinates={country.coordinates}>
+                                                <circle r={1.7} fill="#FF5733" stroke="#fff" strokeWidth={0.7} />
+                                            </Marker>
+                                        ))}
+                                    </ZoomableGroup>
+                                </ComposableMap>
                           </div>
                       </div>
   
@@ -810,7 +800,7 @@ const Europe = ({ auth }) => {
                           <div className="flex items-center justify-center relative border-b-2 border-gray-300">
                               <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex items-center map">
                                   <span className="text-[#f90a0a]"> | </span> 
-                                      Punkti <span className="text-[#08ff00]">{score} / 41 </span> 
+                                      Punkti <span className="text-[#08ff00]">{score} / 32 </span> 
                                   <span className="text-[#f90a0a]"> | </span> 
                               </div>
                           </div>
@@ -920,4 +910,4 @@ const Europe = ({ auth }) => {
   );
 };
 
-export default Europe;
+export default America;

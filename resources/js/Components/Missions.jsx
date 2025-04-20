@@ -27,7 +27,7 @@ export const allMissions = {
   ],
 };
 
-const Missions = ({ missionProgress, setMissionProgress }) => {
+const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33rem", setCoins = () => {}, coins = 0 }) => {
   const [dailyMissions, setDailyMissions] = useState([]);
   const [weeklyMissions, setWeeklyMissions] = useState([]);
   const [showTimeLeft, setShowTimeLeft] = useState({});
@@ -82,7 +82,7 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
   const handleResetMissions = () => {
     const updatedMissionProgress = { ...missionProgress };
   
-    //bold shee iocv
+    //boBOLO
     dailyMissions.forEach((mission) => {
       delete updatedMissionProgress[mission.id];
       localStorage.removeItem(`showTimeLeft_${mission.id}`);
@@ -119,10 +119,8 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
       });
     };
 
-    // Update immediately
     updateTimeLeft();
 
-    // Set up interval to update every second
     const interval = setInterval(updateTimeLeft, 1000);
 
     return () => clearInterval(interval);
@@ -146,6 +144,11 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
     try {
       const mission = [...dailyMissions, ...weeklyMissions].find(m => m.id === missionId);
       
+      if (!mission) {
+        console.error('Mission not found');
+        return;
+      }
+  
       const response = await fetch('/claim-mission-reward', {
         method: 'POST',
         headers: {
@@ -159,15 +162,25 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
         })
       });
   
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
       const data = await response.json();
       
       if (data.success) {
-        rewardSound.play();
+        rewardSound.play().catch(e => console.error('Error playing sound:', e));
+        
+        // Safely update coins
+        if (typeof setCoins === 'function') {
+          setCoins(prevCoins => prevCoins + mission.reward.coins);
+        } else {
+          console.warn('setCoins is not a function');
+        }
+  
         const updatedShowTimeLeft = { ...showTimeLeft, [missionId]: true };
         setShowTimeLeft(updatedShowTimeLeft);
         localStorage.setItem(`showTimeLeft_${missionId}`, JSON.stringify(true));
-        
-        // Optionally update user's coins/xp in your global state if you have one
       }
     } catch (error) {
       console.error('Error claiming reward:', error);
@@ -178,6 +191,11 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
     try {
       const mission = allMissions.allTime.find(m => m.id === missionId);
       
+      if (!mission) {
+        console.error('Mission not found');
+        return;
+      }
+  
       const response = await fetch('/claim-mission-reward', {
         method: 'POST',
         headers: {
@@ -191,15 +209,25 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
         })
       });
   
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
       const data = await response.json();
       
       if (data.success) {
-        rewardSound.play();
+        rewardSound.play().catch(e => console.error('Error playing sound:', e));
+        
+        // Safely update coins
+        if (typeof setCoins === 'function') {
+          setCoins(prevCoins => prevCoins + mission.reward.coins);
+        } else {
+          console.warn('setCoins is not a function');
+        }
+  
         const updatedShowAllTimeCompleted = { ...showAllTimeCompleted, [missionId]: true };
         setShowAllTimeCompleted(updatedShowAllTimeCompleted);
         localStorage.setItem(`showAllTimeCompleted_${missionId}`, JSON.stringify(true));
-        
-        // Optionally update user's coins/xp in your global sta ff cc cc nn  bb
       }
     } catch (error) {
       console.error('Error claiming reward:', error);
@@ -298,15 +326,16 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
 
   return (
     <div className="text-md gap-2 border-b-2 border-gray-300 pb-2 flex items-center w-full">
-      <div className="flex flex-wrap gap-2 w-full max-h-[33rem] overflow-y-auto">
+      <div className="flex flex-wrap gap-2 w-full overflow-y-auto custom-scrollbar pr-3"
+        style={{ maxHeight: containerHeight }}>
         <button
-          className="bg-blue-500 text-white w-full px-4 py-2 rounded-lg mb-4"
+          className="bg-blue-500 text-white w-full px-4 py-2 rounded-lg"
           onClick={handleResetMissions}
         >
           Reset Daily Missions
         </button>
-        {/*number 1 */}
-        <div className="mt-4 space-y-4">
+
+        <div className="mt-4 w-full space-y-4">
           {/* Daily Missio */}
           <div className="ena">
             <h3 className="text-2xl font-semibold mb-2">Dienas</h3>
@@ -323,8 +352,7 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
                       ) : (
                         <button
                           className="text-white bg-blue-500 px-4 py-2 rounded-lg"
-                          onClick={() => handleShowTimeLeft(mission.id, 'daily')}
-                        >
+                          onClick={() => handleShowTimeLeft(mission.id, 'daily')}>
                           Claim 
                         </button>
                       )}
@@ -344,7 +372,7 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
                       {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
                     </span>
                   </div>
-                  <div className="flex items-center mt-2">
+                  <div className="flex justify-center items-center mt-2">
                     <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
                     <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
                   </div>
@@ -369,8 +397,7 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
                       ) : (
                         <button
                           className="text-white bg-blue-500 px-4 py-2 rounded-lg"
-                          onClick={() => handleShowTimeLeft(mission.id, 'weekly')}
-                        >
+                          onClick={() => handleShowTimeLeft(mission.id, 'weekly')}>
                           Claim
                         </button>
                       )}
@@ -390,7 +417,7 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
                       {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
                     </span>
                   </div>
-                  <div className="flex items-center mt-2">
+                  <div className="flex justify-center items-center mt-2">
                     <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
                     <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
                   </div>
@@ -435,7 +462,7 @@ const Missions = ({ missionProgress, setMissionProgress }) => {
                       {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
                     </span>
                   </div>
-                  <div className="flex items-center mt-2">
+                  <div className="flex justify-center items-center mt-2">
                     <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
                     <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
                   </div>

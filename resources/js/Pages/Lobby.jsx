@@ -6,7 +6,7 @@ import { LuUserCircle } from "react-icons/lu";
 import { IoGlobe } from "react-icons/io5";
 import axios from 'axios'; 
 import React from 'react';
-
+//lobby bb nngg cxsd dhhh ff gg bbb
 const Lobby = () => {
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [rooms, setRooms] = useState([]); 

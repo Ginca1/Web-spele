@@ -29,7 +29,6 @@ const Level = () => {
 
   const getCsrfToken = () => document.querySelector('meta[name="csrf-token"]').content;
 
-  // Ollopll  bbl hnnbb jj gg gg dd vv c bb  bb ff bb xxx bb vv nn nn bb nn cc noop
   const fetchData = useCallback(async (signal) => {
     try {
       const res = await fetch('/user-data', {
@@ -87,15 +86,13 @@ const Level = () => {
     }
   }, []);
 
-  // Initial load and real-time updates
   useEffect(() => {
     const abortController = new AbortController();
     
     // Fast initial load
     fetchData(abortController.signal);
     
-    // Adaptive polling
-    let retryDelay = 500; // Start with 500ms
+    let retryDelay = 500;
     let retryTimer;
     
     const pollData = () => {
@@ -129,13 +126,18 @@ const Level = () => {
   }
 
   return (
-    <div className="flex items-center bg-white p-2 rounded-lg space-x-2">
-      <div className={`text-[22px] ena font-mono font-bold ${
-        levelingUp ? 'text-yellow-500 scale-110' : 'text-gray-800'
-      } transition-all duration-400`}>
-        {levelData.level}
-        {levelingUp && <span className="ml-1 text-xs animate-pulse">↑</span>}
-      </div>
+    <div className="flex items-center space-x-2">
+      <div className={`flex items-center gap-1 text-[22px] ena font-mono font-bold ${
+          levelingUp ? 'text-yellow-500 scale-110' : 'text-gray-800'
+        } transition-all duration-400`}>
+          {levelData.level}
+          <img 
+            src="/images/icons/level.png" 
+            alt="level" 
+            className="w-[1.3rem] h-[1.3rem] object-contain"
+          />
+          {levelingUp && <span className="text-xs animate-pulse">↑</span>}
+        </div>
       
       <div className="relative w-[90px] h-[16px] rounded-full border-2 border-gray-400 bg-gray-200 shadow-sm">
         <div

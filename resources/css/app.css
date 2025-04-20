@@ -2,3 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide system cursor */
+html, body, * {
+  cursor: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+  
+  /* Custom animations */
+  @keyframes bounce {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(0.9); }
+  }
+  
+  .animate-bounce {
+    animation: bounce 0.3s ease;
+  }

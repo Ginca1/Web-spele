@@ -106,9 +106,9 @@ class UserController extends Controller
         $privilegeName = $request->input('privilege_name');
        
         $privilegePrices = [
-            'hint' => 100,
+            'flag' => 100,
             'skip' => 150,
-            'flag' => 200,
+            'hint' => 200,
         ];
     
         if (!array_key_exists($privilegeName, $privilegePrices)) {

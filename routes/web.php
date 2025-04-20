@@ -19,8 +19,19 @@ use App\Http\Controllers\SkipController;
 use App\Http\Controllers\FlagController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\LevelController;
-//routes 35
+use App\Http\Controllers\GameController;
+use App\Http\Controllers\GameHistoryController;
+use App\Http\Controllers\LeaderboardController;
+//ssd d
 
+// routes/web.php
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
+
+Route::get('/game-history', [GameHistoryController::class, 'index'])->middleware('auth');
+
+
+Route::post('/save-game-results', [GameController::class, 'saveResults'])
+    ->middleware(['web', 'auth']);
 
 Route::post('/level-up', [LevelController::class, 'levelUp'])->middleware('auth');
 Route::get('/user-data', [UserController::class, 'getUserData'])->middleware('auth');
@@ -32,9 +43,10 @@ Route::post('/use-hint', [HintController::class, 'useHint']);
 
 
 Route::get('/continent/europe', [ContinentController::class, 'europe'])->name('continent.europe');
-Route::get('/continent/americas', [ContinentController::class, 'americas'])->name('continent.americas');
+Route::get('/continent/america', [ContinentController::class, 'america'])->name('continent.america');
 Route::get('/continent/asia', [ContinentController::class, 'asia'])->name('continent.asia');
 Route::get('/continent/africa', [ContinentController::class, 'africa'])->name('continent.africa');
+Route::get('/continent/all', [ContinentController::class, 'all'])->name('continent.all');
 
 Route::get('/lobby/valstis', function () {
     return Inertia::render('Lobby/Valstis'); 
