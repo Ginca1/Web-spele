@@ -26,6 +26,7 @@ const Africa = ({ auth }) => {
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [currentCountry, setCurrentCountry] = useState(null);
     const [countryIndex, setCountryIndex] = useState(0);
+    const [coins, setCoins] = useState(0);
 
     const [score, setScore] = useState(0);
     const [message, setMessage] = useState(null);
@@ -573,7 +574,7 @@ const Africa = ({ auth }) => {
 
     return (
       <div className="background-container">
-          <div className="main">
+          <div className="relative flex flex-col items-center h-screen text-center overflow-hidden">
               <div className="relative flex justify-between items-center px-4 w-full">
                   <div className="flex flex-row justify-start items-center flex-wrap pl-4"> 
                       <Link href={route('home')} className="game2">
@@ -622,23 +623,31 @@ const Africa = ({ auth }) => {
                   </div>
               )}
   
-              <div className="flex flex-row justify-center items-center w-full px-3 mt-[1%]">
+              <div className="flex flex-row justify-center items-stretch w-full flex-1 mt-5 min-h-0 px-3 pb-3">
                   {/* Grid Contaieners*/}
-                  <div className="grid grid-cols-[17%_65%_16%] gap-4 w-full">
+                  <div className="grid grid-cols-[17%_65%_16%] gap-4 w-full h-full min-h-0">
                       {/* Left Box */}
-                      <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md w-full">
-                          <div className="flex items-center justify-center relative border-b-2 border-gray-300">
-                              <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
-                              <span className="text-[#f90a0a]">|</span>
-                              <span className="text-4xl font-mono">Misijas</span>
-                              <span className="text-[#f90a0a]">|</span>
-                              </div>
-                          </div>
-                          <Missions missionProgress={missionProgress} setMissionProgress={setMissionProgress} />
-                      </div>
+                      <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+                        <div className="flex items-center justify-center relative border-b-2 border-gray-300">
+                            <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
+                            <span className="text-[#f90a0a]">|</span>
+                            <span className="text-4xl font-mono">Misijas</span>
+                            <span className="text-[#f90a0a]">|</span>
+                            </div>
+                        </div>
+                        <div className="flex-1 overflow-auto">
+                            <Missions 
+                            missionProgress={missionProgress} 
+                            setMissionProgress={setMissionProgress} 
+                            setCoins={setCoins}
+                            coins={coins}
+                            containerHeight="100%"
+                            />
+                        </div>
+                        </div>
   
                       {/* Mid box */}
-                      <div className="bg-[#fdfdfb] h-auto p-5 w-full rounded-lg shadow-md relative text-center overflow-hidden flex flex-col z-[2001]">
+                      <div className="bg-[#fdfdfb] h-full p-5 w-full rounded-lg shadow-md relative text-center overflow-hidden flex flex-col z-[2001]">
                           <Head title={`Valstis`} />
                           <div className="flex items-center justify-between relative border-b-2 border-gray-300">
                           <h2 className="text-2xl font-bold map mb-4 flex items-center gap-2">
@@ -669,7 +678,7 @@ const Africa = ({ auth }) => {
                               </div>
                           </div>
   
-                          <div className="w-full h-[515px] mt-4 flex justify-center items-center relative">
+                          <div className="flex-1 min-h-0 relative">
                                   {flaggedCountry && (
                                       <div className="absolute top-0 left-0 m-2 z-10 flagged-country">
                                       <img
@@ -697,22 +706,23 @@ const Africa = ({ auth }) => {
                                   )}
   
                               <AnimatePresence>
-                                  {message && (
-                                      <motion.div
-                                          key={message.text} 
-                                          initial={{ opacity: 0, y: 50 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                          exit={{ opacity: 0, y: -50 }}
-                                          transition={{ duration: 0.2 }}
-                                          className="absolute top-4 map left-50 transform -translate-x-1/2 text-lg font-bold z-10"
-                                      >
-                                          <span className={message.type === 'correct' ? 'text-[#55ff00]' : 'text-[#ff0017]'}>
-                                              {message.text}
-                                          </span>
-                                      </motion.div>
+                                {message && (
+                                    <motion.div
+                                                 key={message.text} 
+                                                 initial={{ opacity: 0, y: 50 }}
+                                                 animate={{ opacity: 1, y: 0 }}
+                                                 exit={{ opacity: 0, y: -50 }}
+                                                 transition={{ duration: 0.2 }}
+                                                 className="absolute top-4 left-1/2 map transform -translate-x-1/2 text-lg font-bold z-10"
+                                             >
+                                         <span className={message.type === 'correct' ? 'text-[#55ff00]' : 'text-[#ff0017]'}>
+                                            {message.text}
+                                         </span>
+                                     </motion.div>
                                   )}
-                              </AnimatePresence>
-  
+                             </AnimatePresence>
+
+                             <div className="w-full h-full">
                               <ComposableMap
                                     projection="geoMercator"
                                     projectionConfig={{ 
@@ -798,11 +808,12 @@ const Africa = ({ auth }) => {
                                         ))}
                                     </ZoomableGroup>
                                 </ComposableMap>
+                            </div>
                           </div>
                       </div>
   
                       {/* Right Box */}
-                      <div className="bg-[#fdfdfb] p-5 rounded-lg shadow-md w-full">
+                      <div className="bg-[#fdfdfb] p-5 rounded-lg shadow-md w-full h-full flex flex-col overflow-hidden">
                           <div className="flex items-center justify-center relative border-b-2 border-gray-300">
                               <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
                                   <span className="text-[#f90a0a]">|</span>
@@ -865,17 +876,17 @@ const Africa = ({ auth }) => {
                                   </div>
                               )}
                           </div>
-                          <div className="flex flex-col items-center relative font border-b-2 border-gray-300">
+                          <div className="flex-1 flex flex-col font overflow-hidden">
                               {/* top side*/}
                               <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex justify-center items-center map">
-                              <span className="text-[#f90a0a]"> | </span> 
-                              Valstis <span className="text-[#08ff00]"></span> 
-                              <span className="text-[#f90a0a]"> | </span> 
+                                <span className="text-[#f90a0a]"> | </span> 
+                                Valstis <span className="text-[#08ff00]"></span> 
+                                <span className="text-[#f90a0a]"> | </span> 
                               </div>
   
                               {/* Country list below, aligned to the left */}
-                              <div className="text-md gap-2 pt-2 pb-2 flex justify-start w-full">
-                              <div className="flex flex-wrap gap-2 w-full max-h-[18.7rem] overflow-y-auto pr-2">
+                              <div className="flex-1 overflow-auto custom-scrollbar">
+                                <div className="flex flex-wrap gap-2 p-2">
                                   {correctlyGuessed.map((countryName, index) => {
                                   const country = countries.find((c) => c.name === countryName);
                                   return (

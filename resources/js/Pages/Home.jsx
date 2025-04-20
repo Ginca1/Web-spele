@@ -150,7 +150,8 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div class="w-full h-screen grid grid-cols-3 gap-6 justify-items-center p-4">
+                <div class="w-full h-full max-h-[900px] grid grid-cols-3 gap-6 justify-items-center p-4">
+
                     {/* picture shop starts */}
                     <div className="col-span-1 w-full h-full flex flex-col rounded-md">
                         <div className="flex flex-row justify-center items-center flex-wrap w-full">
@@ -335,15 +336,17 @@ const Home = () => {
                             </div>
                         </div>
 
-                        <div className="relative h-full bg-[#FFF5EA] rounded-lg p-2 mt-4">
+                        <div className="relative h-full max-h-[800px] bg-[#FFF5EA] rounded-lg p-2 mt-4 flex flex-col">
                             <Missions 
                                 missionProgress={missionProgress}
                                 setMissionProgress={setMissionProgress}
-                                containerHeight="20rem" 
+                                containerHeight="100%" 
                                 setCoins={setCoins} 
                                 coins={coins}
                             />
-                            </div>
+                        </div>
+
+
 
                  <div className="flex-grow flex items-center mt-3 justify-center">
                     <Link href={route('lobby')} 

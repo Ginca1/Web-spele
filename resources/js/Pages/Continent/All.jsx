@@ -26,6 +26,7 @@ const All = ({ auth }) => {
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [currentCountry, setCurrentCountry] = useState(null);
     const [countryIndex, setCountryIndex] = useState(0);
+    const [coins, setCoins] = useState(0);
 
     const [score, setScore] = useState(0);
     const [message, setMessage] = useState(null);
@@ -710,7 +711,7 @@ const All = ({ auth }) => {
 
     return (
       <div className="background-container">
-          <div className="main">
+          <div className="relative flex flex-col items-center h-screen text-center overflow-hidden">
               <div className="relative flex justify-between items-center px-4 w-full">
                   <div className="flex flex-row justify-start items-center flex-wrap pl-4"> 
                       <Link href={route('home')} className="game2">
@@ -759,23 +760,31 @@ const All = ({ auth }) => {
                   </div>
               )}
   
-              <div className="flex flex-row justify-center items-center w-full px-3 mt-[1%]">
+              <div className="flex flex-row justify-center items-stretch w-full flex-1 mt-5 min-h-0 px-3 pb-3">
                   {/* Grid Contaieners*/}
-                  <div className="grid grid-cols-[17%_65%_16%] gap-4 w-full">
+                  <div className="grid grid-cols-[17%_65%_16%] gap-4 w-full h-full min-h-0">
                       {/* Left Box */}
-                      <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md w-full">
-                          <div className="flex items-center justify-center relative border-b-2 border-gray-300">
-                              <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
-                              <span className="text-[#f90a0a]">|</span>
-                              <span className="text-4xl font-mono">Misijas</span>
-                              <span className="text-[#f90a0a]">|</span>
-                              </div>
-                          </div>
-                          <Missions missionProgress={missionProgress} setMissionProgress={setMissionProgress} />
-                      </div>
+                      <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+                        <div className="flex items-center justify-center relative border-b-2 border-gray-300">
+                            <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
+                            <span className="text-[#f90a0a]">|</span>
+                            <span className="text-4xl font-mono">Misijas</span>
+                            <span className="text-[#f90a0a]">|</span>
+                            </div>
+                        </div>
+                        <div className="flex-1 overflow-auto">
+                            <Missions 
+                            missionProgress={missionProgress} 
+                            setMissionProgress={setMissionProgress} 
+                            setCoins={setCoins}
+                            coins={coins}
+                            containerHeight="100%"
+                            />
+                        </div>
+                    </div>
   
                       {/* Mid box */}
-                      <div className="bg-[#fdfdfb] h-auto p-5 w-full rounded-lg shadow-md relative text-center overflow-hidden flex flex-col z-[2001]">
+                      <div className="bg-[#fdfdfb] h-full p-5 w-full rounded-lg shadow-md relative text-center overflow-hidden flex flex-col z-[2001]">
                           <Head title={`Valstis`} />
                           <div className="flex items-center justify-between relative border-b-2 border-gray-300">
                           <h2 className="text-2xl font-bold map mb-4 flex items-center gap-2">
@@ -806,7 +815,7 @@ const All = ({ auth }) => {
                               </div>
                           </div>
   
-                          <div className="w-full h-[515px] mt-4 flex justify-center items-center relative">
+                          <div className="flex-1 min-h-0 relative">
                                   {flaggedCountry && (
                                       <div className="absolute top-0 left-0 m-2 z-10 flagged-country">
                                       <img
@@ -841,7 +850,7 @@ const All = ({ auth }) => {
                                           animate={{ opacity: 1, y: 0 }}
                                           exit={{ opacity: 0, y: -50 }}
                                           transition={{ duration: 0.2 }}
-                                          className="absolute top-4 map left-50 transform -translate-x-1/2 text-lg font-bold z-10"
+                                          className="absolute top-4 left-1/2 map transform -translate-x-1/2 text-lg font-bold z-10"
                                       >
                                           <span className={message.type === 'correct' ? 'text-[#55ff00]' : 'text-[#ff0017]'}>
                                               {message.text}
@@ -850,6 +859,7 @@ const All = ({ auth }) => {
                                   )}
                               </AnimatePresence>
   
+                              <div className="w-full h-full">
                               <ComposableMap
                                 projection="geoMercator"
                                 projectionConfig={{ 
@@ -935,129 +945,132 @@ const All = ({ auth }) => {
                                     ))}
                                 </ZoomableGroup>
                             </ComposableMap>
+                            </div>
                           </div>
                       </div>
   
                       {/* Right Box */}
-                      <div className="bg-[#fdfdfb] p-5 rounded-lg shadow-md w-full">
-                          <div className="flex items-center justify-center relative border-b-2 border-gray-300">
-                              <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
-                                  <span className="text-[#f90a0a]">|</span>
-                                  <span className="text-4xl font-mono">
-                                      {Math.floor(timeElapsed / 60)
-                                      .toString()
-                                      .padStart(1, '0')}:
-                                      {(timeElapsed % 60).toString().padStart(2, '0')}
-                                  </span>
-                                  <span className="text-[#f90a0a]">|</span>
-                              </div>
-                          </div>
-                          <div className="flex items-center justify-center relative border-b-2 border-gray-300">
-                              <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex items-center map">
-                                  <span className="text-[#f90a0a]"> | </span> 
-                                      Punkti <span className="text-[#08ff00]">{score} / 178 </span> 
-                                  <span className="text-[#f90a0a]"> | </span> 
-                              </div>
-                          </div>
-                          <div className="flex items-center justify-between relative border-b-2 border-gray-300">
-                              {/* flag */}
-                              <div className="text-2xl font-bold gap-2 pt-3 pb-1 flex flex-col items-center map gap-y-1">
-                                  <img 
-                                      src="/images/hint.png" 
-                                      alt="Hint"
-                                      onClick={handleFlagClick}
-                                      className={`w-[3rem] h-[3rem] bg-[#e4e3a9] hover:bg-[#e4de81] p-2 object-cover rounded-full shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 
-                                          ${hasUsedFlagForCurrentCountry ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}`}
-                                      />
-                                  
-                                  <span>{privileges ? privileges.flag_quantity : 0}</span>
-                              </div>
-  
-                              {/* Skip */}
-                              <div className="text-2xl font-bold gap-2 pt-3 pb-1 flex flex-col items-center map gap-y-1">
-                                  <img
-                                      src="/images/icons/skip.png"
-                                      alt="Skip"
-                                      onClick={privileges?.skip_quantity > 0 ? handleUseSkip : null}
-                                      className={`w-[3rem] h-[3rem] p-2 object-fit rounded-md shadow-md transition-all duration-300 ease-in-out transform ${privileges?.skip_quantity > 0 ? 'bg-[#a9e4ae] hover:bg-[#81e493] cursor-pointer hover:scale-105' : 'bg-gray-300 opacity-60 cursor-not-allowed'}`}
-                                      />
-                                  <span>{privileges ? privileges.skip_quantity : 0}</span>
-                              </div>
-  
-                              {/* hint */}
-                              <div className="text-2xl font-bold gap-2 pt-3 pb-1 flex flex-col items-center map gap-y-1">
-                                  <img 
-                                      src="/images/icons/flag.png" 
-                                      alt="Flag" 
-                                      onClick={handleHintClick}
-                                      className="w-[3rem] h-[3rem] bg-[#a9b0e4] hover:bg-[#818de4] p-2 object-cover rounded-full shadow-md cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105"
-                                  />
-                                  <span>{privileges ? privileges.hint_quantity : 0}</span>
-                                  </div>
-  
-                              {/**/}
-                              {!isGameStarted && (
-                                  <div className="absolute inset-0 bg-black bg-opacity-50 z-20">
-                                      
-                                  </div>
-                              )}
-                          </div>
-                          <div className="flex flex-col items-center relative font border-b-2 border-gray-300">
-                              {/* top side*/}
-                              <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex justify-center items-center map">
-                              <span className="text-[#f90a0a]"> | </span> 
-                              Valstis <span className="text-[#08ff00]"></span> 
-                              <span className="text-[#f90a0a]"> | </span> 
-                              </div>
-  
-                              {/* Country list below, aligned to the left */}
-                              <div className="text-md gap-2 pt-2 pb-2 flex justify-start w-full">
-                              <div className="flex flex-wrap gap-2 w-full max-h-[18.7rem] overflow-y-auto pr-2">
-                                  {correctlyGuessed.map((countryName, index) => {
-                                  const country = countries.find((c) => c.name === countryName);
-                                  return (
-                                      <div key={`correct-${index}`} className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-md">
-                                      <img
-                                          src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-                                          alt={`Flag of ${country.name}`}
-                                          className="w-6 h-4"
-                                      />
-                                      <span className="text-[#4CAF50] text-sm">{country.name}</span>
-                                      </div>
-                                  );
-                                  })}
-  
-                                  {semiCorrectGuessed.map((countryName, index) => {
-                                  const country = countries.find((c) => c.name === countryName);
-                                  return (
-                                      <div key={`semi-${index}`} className="flex items-center gap-1 bg-orange-100 px-2 py-1 rounded-md">
-                                      <img
-                                          src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-                                          alt={`Flag of ${country.name}`}
-                                          className="w-6 h-4"
-                                      />
-                                      <span className="text-[#FFD700] text-sm">{country.name}</span>
-                                      </div>
-                                  );
-                                  })}
-  
-                                  {failedGuessedCountries.map((countryName, index) => {
-                                  const country = countries.find((c) => c.name === countryName);
-                                  return (
-                                      <div key={`failed-${index}`} className="flex items-center gap-1 bg-red-100 px-2 py-1 rounded-md">
-                                      <img
-                                          src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
-                                          alt={`Flag of ${country.name}`}
-                                          className="w-6 h-4"
-                                      />
-                                      <span className="text-[#FF5733] text-sm">{country.name}</span>
-                                      </div>
-                                  );
-                                  })}
-                              </div>
-                              </div>
-                          </div>
-                      </div>
+                    <div className="bg-[#fdfdfb] p-5 rounded-lg shadow-md w-full h-full flex flex-col overflow-hidden">
+                        {/* Timer Section */}
+                        <div className="flex items-center justify-center relative border-b-2 border-gray-300">
+                            <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
+                                <span className="text-[#f90a0a]">|</span>
+                                <span className="text-4xl font-mono">
+                                    {Math.floor(timeElapsed / 60)
+                                    .toString()
+                                    .padStart(1, '0')}:
+                                    {(timeElapsed % 60).toString().padStart(2, '0')}
+                                </span>
+                                <span className="text-[#f90a0a]">|</span>
+                            </div>
+                        </div>
+                        
+                        {/* Score Section */}
+                        <div className="flex items-center justify-center relative border-b-2 border-gray-300">
+                            <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex items-center map">
+                                <span className="text-[#f90a0a]"> | </span> 
+                                Punkti <span className="text-[#08ff00]">{score} / 178 </span> 
+                                <span className="text-[#f90a0a]"> | </span> 
+                            </div>
+                        </div>
+                        
+                        {/* Privileges Section */}
+                        <div className="flex items-center justify-between relative border-b-2 border-gray-300 py-3">
+                            {/* Flag */}
+                            <div className="text-2xl font-bold gap-2 flex flex-col items-center map gap-y-1">
+                                <img 
+                                    src="/images/hint.png" 
+                                    alt="Hint"
+                                    onClick={handleFlagClick}
+                                    className={`w-[3rem] h-[3rem] bg-[#e4e3a9] hover:bg-[#e4de81] p-2 object-cover rounded-full shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 
+                                        ${hasUsedFlagForCurrentCountry ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}`}
+                                    />
+                                <span>{privileges ? privileges.flag_quantity : 0}</span>
+                            </div>
+
+                            {/* Skip */}
+                            <div className="text-2xl font-bold gap-2 flex flex-col items-center map gap-y-1">
+                                <img
+                                    src="/images/icons/skip.png"
+                                    alt="Skip"
+                                    onClick={privileges?.skip_quantity > 0 ? handleUseSkip : null}
+                                    className={`w-[3rem] h-[3rem] p-2 object-fit rounded-md shadow-md transition-all duration-300 ease-in-out transform ${privileges?.skip_quantity > 0 ? 'bg-[#a9e4ae] hover:bg-[#81e493] cursor-pointer hover:scale-105' : 'bg-gray-300 opacity-60 cursor-not-allowed'}`}
+                                    />
+                                <span>{privileges ? privileges.skip_quantity : 0}</span>
+                            </div>
+
+                            {/* Hint */}
+                            <div className="text-2xl font-bold gap-2 flex flex-col items-center map gap-y-1">
+                                <img 
+                                    src="/images/icons/flag.png" 
+                                    alt="Flag" 
+                                    onClick={handleHintClick}
+                                    className="w-[3rem] h-[3rem] bg-[#a9b0e4] hover:bg-[#818de4] p-2 object-cover rounded-full shadow-md cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105"
+                                />
+                                <span>{privileges ? privileges.hint_quantity : 0}</span>
+                            </div>
+
+                            {!isGameStarted && (
+                                <div className="absolute inset-0 bg-black bg-opacity-50 z-20"></div>
+                            )}
+                        </div>
+                        
+                        {/* Countries List Section */}
+                        <div className="flex-1 flex flex-col font overflow-hidden ">
+                            <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex justify-center items-center map border-b-2 border-gray-300">
+                                <span className="text-[#f90a0a]"> | </span> 
+                                Valstis <span className="text-[#08ff00]"></span> 
+                                <span className="text-[#f90a0a]"> | </span> 
+                            </div>
+                            
+                            {/* Scrollable Country List */}
+                            <div className="flex-1 overflow-auto custom-scrollbar">
+                                <div className="flex flex-wrap gap-2 p-2">
+                                    {correctlyGuessed.map((countryName, index) => {
+                                        const country = countries.find((c) => c.name === countryName);
+                                        return (
+                                            <div key={`correct-${index}`} className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-md">
+                                                <img
+                                                    src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                                                    alt={`Flag of ${country.name}`}
+                                                    className="w-6 h-4"
+                                                />
+                                                <span className="text-[#4CAF50] text-sm">{country.name}</span>
+                                            </div>
+                                        );
+                                    })}
+
+                                    {semiCorrectGuessed.map((countryName, index) => {
+                                        const country = countries.find((c) => c.name === countryName);
+                                        return (
+                                            <div key={`semi-${index}`} className="flex items-center gap-1 bg-orange-100 px-2 py-1 rounded-md">
+                                                <img
+                                                    src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                                                    alt={`Flag of ${country.name}`}
+                                                    className="w-6 h-4"
+                                                />
+                                                <span className="text-[#FFD700] text-sm">{country.name}</span>
+                                            </div>
+                                        );
+                                    })}
+
+                                    {failedGuessedCountries.map((countryName, index) => {
+                                        const country = countries.find((c) => c.name === countryName);
+                                        return (
+                                            <div key={`failed-${index}`} className="flex items-center gap-1 bg-red-100 px-2 py-1 rounded-md">
+                                                <img
+                                                    src={`https://flagcdn.com/24x18/${country.code.toLowerCase()}.png`}
+                                                    alt={`Flag of ${country.name}`}
+                                                    className="w-6 h-4"
+                                                />
+                                                <span className="text-[#FF5733] text-sm">{country.name}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                   </div>
               </div>
           </div>

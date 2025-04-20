@@ -146,9 +146,7 @@ const Europe = ({ auth }) => {
       } catch (error) {
         console.error('Flag fetch failed:', error);
       }
-    } else {
-      alert('Tev vairs nav šīs privilēģijas');
-    }
+    } 
   };
 
     const skipToNextCountry = () => {
@@ -561,240 +559,241 @@ const Europe = ({ auth }) => {
     }
 
     return (
-      <div className="background-container">
-          <div className="main">
-              <div className="relative flex justify-between items-center px-4 w-full">
-                  <div className="flex flex-row justify-start items-center flex-wrap pl-4"> 
-                      <Link href={route('home')} className="game2">
-                          <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
-                          <span>&nbsp;</span>
-                          <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
-                      </Link>
-                  </div>
-                  <div className="flex items-center gap-4">
-                  <div className="flex items-center bg-white p-2 rounded-lg space-x-2">
-                  <Level/>
-                  </div>
-                      
-                      <Link href={route('lobby.valstis')} className="bg-white p-1 rounded-lg text-[56px] text-[#084fd3] transform">
-                          <IoArrowBackCircleSharp /> 
-                      </Link>
-                  </div>
-                  <div className="absolute top-3 left-1/2 transform -translate-x-1/2">
-                      <div className="relative">
-                          {/* Imag */}
-                          <img 
-                              src="/images/icons/banner-green.png" 
-                              alt="Asia" 
-                              className="w-[16rem] h-[15.9rem] object-cover rounded-lg"
-                          />
-                          <div className="absolute inset-0 top-2 flex items-start justify-center z-50">
-                              <h1 className="room-title1 text-[#f7f7f7] text-3xl font-bold p-4 drop-shadow-lg">
-                                  Eiropa
-                              </h1>
-                          </div>  
-                      </div>
-                  </div>
+        <div className="background-container">
+       <div className="relative flex flex-col items-center h-screen text-center overflow-hidden">
+          {/* Header Section (unchanged) */}
+          <div className="relative flex justify-between items-center px-4 w-full">
+            <div className="flex flex-row justify-start items-center flex-wrap pl-4"> 
+              <Link href={route('home')} className="game2">
+                <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
+                <span>&nbsp;</span>
+                <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
+              </Link>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center bg-white p-2 rounded-lg space-x-2">
+                <Level/>
               </div>
-              
-              {/* Finish Screen - Moved outside the header and before the main content */}
-              {showFinishScreen && (
-                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-[2002]">
-                      <Finish 
-                          gameType="europe"
-                          gameStats={gameStats} 
-                          onClose={() => setShowFinishScreen(false)}
-                          user={user}           
-                          europePicUrl={europePicUrl} 
-                          europeTopoJSON={europeTopoJSON} 
-                      />
-                  </div>
-              )}
-  
-              <div className="flex flex-row justify-center items-center w-full px-3 mt-[1%]">
-                  {/* Grid Contaieners*/}
-                  <div className="grid grid-cols-[17%_65%_16%] gap-4 w-full">
-                      {/* Left Box */}
-                      <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md w-full">
-                          <div className="flex items-center justify-center relative border-b-2 border-gray-300">
-                              <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
-                              <span className="text-[#f90a0a]">|</span>
-                              <span className="text-4xl font-mono">Misijas</span>
-                              <span className="text-[#f90a0a]">|</span>
-                              </div>
-                          </div>
-                          <Missions missionProgress={missionProgress} setMissionProgress={setMissionProgress} setCoins={setCoins}
-                                coins={coins} />
-                      </div>
-  
+              <Link href={route('lobby.valstis')} className="bg-white p-1 rounded-lg text-[56px] text-[#084fd3] transform">
+                <IoArrowBackCircleSharp /> 
+              </Link>
+            </div>
+            <div className="absolute top-3 left-1/2 transform -translate-x-1/2">
+              <div className="relative">
+                <img 
+                  src="/images/icons/banner-green.png" 
+                  alt="Asia" 
+                  className="w-[16rem] h-[15.9rem] object-cover rounded-lg"
+                />
+                <div className="absolute inset-0 top-2 flex items-start justify-center z-50">
+                  <h1 className="room-title1 text-[#f7f7f7] text-3xl font-bold p-4 drop-shadow-lg">
+                    Eiropa
+                  </h1>
+                </div>  
+              </div>
+            </div>
+          </div>
+          
+          {/* Finish Screen */}
+          {showFinishScreen && (
+            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-[2002]">
+              <Finish 
+                gameType="europe"
+                gameStats={gameStats} 
+                onClose={() => setShowFinishScreen(false)}
+                user={user}           
+                europePicUrl={europePicUrl} 
+                europeTopoJSON={europeTopoJSON} 
+              />
+            </div>
+          )}
+      
+          {/* Main Content Area - Updated for full height */}
+          <div className="flex flex-row justify-center items-stretch w-full flex-1 mt-5 min-h-0 px-3 pb-3">
+            {/* Grid Container - now takes available space */}
+            <div className="grid grid-cols-[17%_65%_16%] gap-4 w-full h-full min-h-0">
+              {/* Left Box - Missions */}
+                <div className="bg-[#fdfdfb] p-4 rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+                    <div className="flex items-center justify-center relative border-b-2 border-gray-300">
+                        <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
+                        <span className="text-[#f90a0a]">|</span>
+                        <span className="text-4xl font-mono">Misijas</span>
+                        <span className="text-[#f90a0a]">|</span>
+                        </div>
+                    </div>
+                    <div className="flex-1 overflow-auto">
+                        <Missions 
+                        missionProgress={missionProgress} 
+                        setMissionProgress={setMissionProgress} 
+                        setCoins={setCoins}
+                        coins={coins}
+                        containerHeight="100%"
+                        />
+                    </div>
+                </div>
                       {/* Mid box */}
-                      <div className="bg-[#fdfdfb] h-auto p-5 w-full rounded-lg shadow-md relative text-center overflow-hidden flex flex-col z-[2001]">
-                          <Head title={`Valstis`} />
-                          <div className="flex items-center justify-between relative border-b-2 border-gray-300">
-                          <h2 className="text-2xl font-bold map mb-4 flex items-center gap-2">
-                                  Izvēlies valsti:
-                                  <span className={`text-[#ffff00] ${!currentCountry ? 'text-3xl' : 'text-4xl'}`}>
-                                      {currentCountry?.name || 'Bravo tu izvēlējies visas valstis!'}
-                                  </span>
-                              </h2>
-                              <div className="text-2xl font-bold gap-4 mb-4 flex items-center ">
-                              <div className="flex items-center space-x-2 map">
-                                  <span className="text-[#ffff00]">|</span>
-                                  <span className="text-[#f90a0a] ml-1">
-                                  <span className="text-sm align-middle">❌</span> {incorrectGuesses}
-                                  </span>
-                                  <span className="mx-1">:</span>
-                                  <span className="text-[#08ff00]">
-                                  <span className="text-sm align-middle">✅</span> {correctGuesses}
-                                  </span>
-                                  <span className="text-[#ffff00] ml-1">|</span>
-                              </div>
-                              <span className="name text-white font-semibold" >{user.name}</span>
-                              
-                              <img
-                                  src={europePicUrl}
-                                  alt="Europe"
-                                  className="w-[50px] h-[50px] rounded-full bg-cover shadow-md bg-center shadow-lg"
-                              />
-                              </div>
-                          </div>
-  
-                          <div className="w-full h-[515px] mt-4 flex justify-center items-center relative">
-                                  {flaggedCountry && (
-                                      <div className="absolute top-0 left-0 m-2 z-10 flagged-country">
-                                      <img
-                                          src={`https://flagcdn.com/w80/${flaggedCountry.code}.png`}
-                                          alt={`Flag of ${flaggedCountry.name}`}
-                                          width="84"
-                                          height="88"
-                                      />
-                                      </div>
-                                  )}
-  
-                                  {!isGameStarted && (
-                                      <div className="absolute inset-0 bg-black bg-opacity-50 z-20">
-                                          <div className="absolute inset-0 flex justify-center items-center">
-                                              <button 
-                                                  onClick={handleStartGame} 
-                                                  className="bg-gradient-to-r cool from-yellow-400 via-yellow-500 to-yellow-600 text-white text-xl font-mono py-2 px-4 rounded-lg font-semibold 
-                                                          transition-all duration-300 ease-in-out 
-                                                          hover:bg-gradient-to-l hover:from-yellow-500 hover:to-yellow-400"
-                                              >
-                                                  Sākt spēli!
-                                              </button>
-                                          </div>
-                                      </div>
-                                  )}
-  
-                              <AnimatePresence>
-                                  {message && (
-                                      <motion.div
-                                          key={message.text} 
-                                          initial={{ opacity: 0, y: 50 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                          exit={{ opacity: 0, y: -50 }}
-                                          transition={{ duration: 0.2 }}
-                                          className="absolute top-4 map left-50 transform -translate-x-1/2 text-lg font-bold z-10"
-                                      >
-                                          <span className={message.type === 'correct' ? 'text-[#55ff00]' : 'text-[#ff0017]'}>
-                                              {message.text}
-                                          </span>
-                                      </motion.div>
-                                  )}
-                              </AnimatePresence>
-  
-                              <ComposableMap
-                                  projection="geoMercator"
-                                  projectionConfig={{ center: [10, 45], scale: 500 }}
-                                  width={800}
-                                  height={500}
-                                  style={{ width: '100%', height: '100%' }}
-                              >
-                                  <ZoomableGroup
-                                      zoom={1}
-                                      minZoom={1}
-                                      maxZoom={5}
-                                      translateExtent={[[100, -300], [700, 400]]}
-                                  >
-                                      <Geographies geography={europeTopoJSON}>
-                                          {({ geographies }) =>
-                                              geographies.map((geo) => {
-                                                  const name = geo.properties.name;
-                                                  const isGuessed = correctlyGuessed.includes(name);
-                                                  const isSemiGuessed = semiCorrectGuessed.includes(name);
-                                                  const isAutoGuessed = autoGuessedCountries.includes(name);
-                                                  const isFailedGuess = failedGuessedCountries.includes(geo.properties.name);
-  
-                                                  let fillColor = '#D6D6DA';
-                                                  if (isGuessed) fillColor = '#4CAF50';
-                                                  else if (isSemiGuessed) fillColor = '#FFD700';
-                                                  else if (isAutoGuessed) fillColor = '#FF5733';
-  
-                                                  return (
-                                                      <Geography
-                                                      key={geo.rsmKey}
-                                                      geography={geo}
-                                                      onClick={() => handleMapClick(geo)}
-                                                      style={{
-                                                          default: {
-                                                              fill:
-                                                                  isGuessed
-                                                                      ? '#4CAF50'
-                                                                      : isSemiGuessed
-                                                                      ? '#FFD700'
-                                                                      : isFailedGuess
-                                                                      ? '#FF5733'
-                                                                      : hintedCountry === name
-                                                                      ? '#a020f0' // <-- purple when hint is active
-                                                                      : '#D6D6DA',
-                                                              stroke: '#5a5c5f',
-                                                              strokeWidth: 0.6,
-                                                              outline: 'none',
-                                                          },
-                                                          hover: {
-                                                              fill:
-                                                                  isGuessed
-                                                                      ? '#4CAF50'
-                                                                      : isSemiGuessed
-                                                                      ? '#FFD700'
-                                                                      : isFailedGuess
-                                                                      ? '#FF5733'
-                                                                      : '#0c6ae1',
-                                                              stroke: '#5a5c5f',
-                                                              strokeWidth: 1,
-                                                              outline: 'none',
-                                                              cursor: isGuessed || isSemiGuessed || isFailedGuess ? 'default' : 'pointer',
-                                                          },
-                                                          pressed: {
-                                                              fill:
-                                                                  isGuessed
-                                                                      ? '#4CAF50'
-                                                                      : isSemiGuessed
-                                                                      ? '#FFD700'
-                                                                      : isFailedGuess
-                                                                      ? '#FF5733'
-                                                                      : '#E42E',
-                                                              outline: 'none',
-                                                          },
-                                                      }}
-                                                  />
-                                                  );
-                                              })
-                                          }
-                                      </Geographies>
-  
-                                      {countries.map((country, index) => (
-                                          <Marker key={index} coordinates={country.coordinates}>
-                                              <circle r={1.7} fill="#FF5733" stroke="#fff" strokeWidth={0.7} />
-                                          </Marker>
-                                      ))}
-                                  </ZoomableGroup>
-                              </ComposableMap>
-                          </div>
-                      </div>
+                        <div className="bg-[#fdfdfb] h-full p-5 w-full rounded-lg shadow-md relative text-center overflow-hidden flex flex-col z-[2001]">
+                            <Head title={`Valstis`} />
+                            <div className="flex items-center justify-between relative border-b-2 border-gray-300">
+                                <h2 className="text-2xl font-bold map mb-4 flex items-center gap-2">
+                                    Izvēlies valsti:
+                                    <span className={`text-[#ffff00] ${!currentCountry ? 'text-3xl' : 'text-4xl'}`}>
+                                        {currentCountry?.name || 'Bravo tu izvēlējies visas valstis!'}
+                                    </span>
+                                </h2>
+                                <div className="text-2xl font-bold gap-4 mb-4 flex items-center">
+                                    <div className="flex items-center space-x-2 map">
+                                        <span className="text-[#ffff00]">|</span>
+                                        <span className="text-[#f90a0a] ml-1">
+                                            <span className="text-sm align-middle">❌</span> {incorrectGuesses}
+                                        </span>
+                                        <span className="mx-1">:</span>
+                                        <span className="text-[#08ff00]">
+                                            <span className="text-sm align-middle">✅</span> {correctGuesses}
+                                        </span>
+                                        <span className="text-[#ffff00] ml-1">|</span>
+                                    </div>
+                                    <span className="name text-white font-semibold">{user.name}</span>
+                                    
+                                    <img
+                                        src={europePicUrl}
+                                        alt="Europe"
+                                        className="w-[50px] h-[50px] rounded-full bg-cover shadow-md bg-center shadow-lg"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Map Container - updated for full height */}
+                            <div className="flex-1 min-h-0 relative">
+                                {flaggedCountry && (
+                                    <div className="absolute top-0 left-0 m-2 z-10 flagged-country">
+                                        <img
+                                            src={`https://flagcdn.com/w80/${flaggedCountry.code}.png`}
+                                            alt={`Flag of ${flaggedCountry.name}`}
+                                            width="84"
+                                            height="88"
+                                        />
+                                    </div>
+                                )}
+
+                                {!isGameStarted && (
+                                    <div className="absolute inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center">
+                                        <button 
+                                            onClick={handleStartGame} 
+                                            className="bg-gradient-to-r cool from-yellow-400 via-yellow-500 to-yellow-600 text-white text-xl font-mono py-2 px-4 rounded-lg font-semibold 
+                                                    transition-all duration-300 ease-in-out 
+                                                    hover:bg-gradient-to-l hover:from-yellow-500 hover:to-yellow-400"
+                                        >
+                                            Sākt spēli!
+                                        </button>
+                                    </div>
+                                )}
+
+                                <AnimatePresence>
+                                    {message && (
+                                        <motion.div
+                                            key={message.text} 
+                                            initial={{ opacity: 0, y: 50 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -50 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="absolute top-4 left-1/2 map transform -translate-x-1/2 text-lg font-bold z-10"
+                                        >
+                                            <span className={message.type === 'correct' ? 'text-[#55ff00]' : 'text-[#ff0017]'}>
+                                                {message.text}
+                                            </span>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                {/* Full-height map container */}
+                                <div className="w-full h-full">
+                                    <ComposableMap
+                                        projection="geoMercator"
+                                        projectionConfig={{ center: [10, 45], scale: 500 }}
+                                        className="w-full h-full"
+                                    >
+                                        <ZoomableGroup
+                                            zoom={1}
+                                            minZoom={1}
+                                            maxZoom={5}
+                                            translateExtent={[[100, -300], [700, 500]]}
+                                        >
+                                            <Geographies geography={europeTopoJSON}>
+                                                {({ geographies }) =>
+                                                    geographies.map((geo) => {
+                                                        const name = geo.properties.name;
+                                                        const isGuessed = correctlyGuessed.includes(name);
+                                                        const isSemiGuessed = semiCorrectGuessed.includes(name);
+                                                        const isAutoGuessed = autoGuessedCountries.includes(name);
+                                                        const isFailedGuess = failedGuessedCountries.includes(geo.properties.name);
+
+                                                        return (
+                                                            <Geography
+                                                                key={geo.rsmKey}
+                                                                geography={geo}
+                                                                onClick={() => handleMapClick(geo)}
+                                                                style={{
+                                                                    default: {
+                                                                        fill:
+                                                                            isGuessed
+                                                                                ? '#4CAF50'
+                                                                                : isSemiGuessed
+                                                                                ? '#FFD700'
+                                                                                : isFailedGuess
+                                                                                ? '#FF5733'
+                                                                                : hintedCountry === name
+                                                                                ? '#a020f0'
+                                                                                : '#D6D6DA',
+                                                                        stroke: '#5a5c5f',
+                                                                        strokeWidth: 0.6,
+                                                                        outline: 'none',
+                                                                    },
+                                                                    hover: {
+                                                                        fill:
+                                                                            isGuessed
+                                                                                ? '#4CAF50'
+                                                                                : isSemiGuessed
+                                                                                ? '#FFD700'
+                                                                                : isFailedGuess
+                                                                                ? '#FF5733'
+                                                                                : '#0c6ae1',
+                                                                        stroke: '#5a5c5f',
+                                                                        strokeWidth: 1,
+                                                                        outline: 'none',
+                                                                        cursor: isGuessed || isSemiGuessed || isFailedGuess ? 'default' : 'pointer',
+                                                                    },
+                                                                    pressed: {
+                                                                        fill:
+                                                                            isGuessed
+                                                                                ? '#4CAF50'
+                                                                                : isSemiGuessed
+                                                                                ? '#FFD700'
+                                                                                : isFailedGuess
+                                                                                ? '#FF5733'
+                                                                                : '#E42E',
+                                                                        outline: 'none',
+                                                                    },
+                                                                }}
+                                                            />
+                                                        );
+                                                    })
+                                                }
+                                            </Geographies>
+
+                                            {countries.map((country, index) => (
+                                                <Marker key={index} coordinates={country.coordinates}>
+                                                    <circle r={1.7} fill="#FF5733" stroke="#fff" strokeWidth={0.7} />
+                                                </Marker>
+                                            ))}
+                                        </ZoomableGroup>
+                                    </ComposableMap>
+                                </div>
+                            </div>
+                        </div>
   
                       {/* Right Box */}
-                      <div className="bg-[#fdfdfb] p-5 rounded-lg shadow-md w-full">
+                      <div className="bg-[#fdfdfb] p-5 rounded-lg shadow-md w-full h-full flex flex-col overflow-hidden">
                           <div className="flex items-center justify-center relative border-b-2 border-gray-300">
                               <div className="text-2xl font-bold gap-2 mb-5 mt-1 flex items-center map">
                                   <span className="text-[#f90a0a]">|</span>
@@ -857,17 +856,17 @@ const Europe = ({ auth }) => {
                                   </div>
                               )}
                           </div>
-                          <div className="flex flex-col items-center relative font border-b-2 border-gray-300">
+                          <div className="flex-1 flex flex-col font overflow-hidden ">
                               {/* top side*/}
                               <div className="text-2xl font-bold gap-2 pt-4 pb-2 flex justify-center items-center map">
-                              <span className="text-[#f90a0a]"> | </span> 
-                              Valstis <span className="text-[#08ff00]"></span> 
-                              <span className="text-[#f90a0a]"> | </span> 
+                                    <span className="text-[#f90a0a]"> | </span> 
+                                    Valstis <span className="text-[#08ff00]"></span> 
+                                    <span className="text-[#f90a0a]"> | </span> 
                               </div>
   
                               {/* Country list below, aligned to the left */}
-                              <div className="text-md gap-2 pt-2 pb-2 flex justify-start w-full">
-                              <div className="flex flex-wrap gap-2 w-full max-h-[18.7rem] overflow-y-auto pr-2">
+                            <div className="flex-1 overflow-auto custom-scrollbar">
+                              <div className="flex flex-wrap gap-2 p-2">
                                   {correctlyGuessed.map((countryName, index) => {
                                   const country = countries.find((c) => c.name === countryName);
                                   return (

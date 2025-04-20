@@ -123,7 +123,7 @@ const Finish = ({  gameStats: initialGameStats, onClose, user, europePicUrl, eur
             <motion.div 
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
-                className="bg-[#F8FAFC] p-6 pb-5 rounded-2xl max-w-5xl w-full mx-4 max-h-[90vh] flex flex-col"
+                className="bg-[#F8FAFC] p-6 pb-5 rounded-2xl max-w-[60%] w-full mx-4 max-h-[90vh] flex flex-col"
             >
                 {/* Scrollable content area with proper */}
                 <div className="overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scrollbar-thumb-rounded-full">
@@ -152,7 +152,7 @@ const Finish = ({  gameStats: initialGameStats, onClose, user, europePicUrl, eur
                         <div className="flex flex-col gap-2">
                         <div className="flex justify-center items-center">
                             <div className="relative w-32 h-32">
-                            <svg className="w-full h-full" viewBox="0 0 100 100">
+                                <svg className="w-full h-full" viewBox="0 0 100 100">
                                 <defs>
                                     <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" style={{ stopColor: "#32f60f", stopOpacity: 1 }} />
@@ -167,12 +167,14 @@ const Finish = ({  gameStats: initialGameStats, onClose, user, europePicUrl, eur
                                 </svg>
 
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <p className={` ena2 font-bold text-[#32f60f] ${gameType === 'all' ? 'md:text-md' : 'text-xl'}`}>
-                                        {gameStats.score.toFixed(1)} / {gameStats.totalCountries}
-                                    </p>
-                                    <p className="text-sm ena2 font-semibold text-[#32f60f]">
-                                        {((gameStats.score / gameStats.totalCountries) * 100).toFixed(1)} %
-                                    </p>
+                                <p className={`ena2 font-bold text-[#32f60f] ${gameType === 'all' ? 'md:text-md' : 'text-xl'}`}>
+                                    {gameStats.score % 1 === 0 ? gameStats.score.toFixed(0) : gameStats.score.toFixed(1)} / {gameStats.totalCountries}
+                                </p>
+                                <p className="text-sm ena2 font-semibold text-[#32f60f]">
+                                    {((gameStats.score / gameStats.totalCountries) * 100 % 1 === 0 ? 
+                                    ((gameStats.score / gameStats.totalCountries) * 100).toFixed(0) : 
+                                    ((gameStats.score / gameStats.totalCountries) * 100).toFixed(1))} %
+                                </p>
                                 </div>
                             </div>
                             </div>

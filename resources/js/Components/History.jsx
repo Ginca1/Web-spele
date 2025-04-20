@@ -155,7 +155,7 @@ const History = () => {
             
             {showPopup && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[2000]">
-                    <div className="bg-[#F8FAFC] w-[90vw] max-w-[900px] h-full max-h-[90vh] p-5 rounded-lg shadow-lg relative text-center overflow-hidden flex flex-col z-[2001]">
+                    <div className="bg-[#F8FAFC] w-[90vw] h-full max-h-[90vh] p-5 rounded-lg shadow-lg relative text-center overflow-hidden flex flex-col z-[2001]">
 
                         <img
                             src="../images/icons/close.png"
@@ -236,7 +236,7 @@ const History = () => {
                         </div>
 
                         <div className="flex flex-row justify-end items-center px-10 gap-2 mt-4">
-                            <div className="relative group w-45">
+                            <div className="relative group w-45 mr-[3.2%]">
                                 <select 
                                     className="appearance-none bg-white/95 backdrop-blur-sm border border-gray-300 rounded-lg shadow-sm pl-3 pr-8 
                                     py-2 text-sm font-medium text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 

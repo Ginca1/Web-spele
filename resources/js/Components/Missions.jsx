@@ -325,9 +325,11 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
   
 
   return (
-    <div className="text-md gap-2 border-b-2 border-gray-300 pb-2 flex items-center w-full">
-      <div className="flex flex-wrap gap-2 w-full overflow-y-auto custom-scrollbar pr-3"
-        style={{ maxHeight: containerHeight }}>
+    <div className="flex flex-col h-full w-full">
+  
+    <div
+        className="flex-1 flex flex-wrap gap-2 w-full overflow-y-auto custom-scrollbar pr-3"
+      >
         <button
           className="bg-blue-500 text-white w-full px-4 py-2 rounded-lg"
           onClick={handleResetMissions}
@@ -472,7 +474,9 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
           </div>
         </div>
       </div>
+      <div className="text-md gap-2 border-b-2 border-gray-300 pb-2 flex items-center w-full"></div>
     </div>
+    
   );
 };
 
