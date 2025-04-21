@@ -731,6 +731,10 @@
     font-family: 'Hanalei Fill', cursive;
     -webkit-text-stroke: 1px black; 
 }
+.name2{
+    font-family: 'Hanalei Fill', cursive;
+    -webkit-text-stroke: 1.5px black; 
+}
 
 .header {
     display: flex;

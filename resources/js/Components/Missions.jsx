@@ -27,7 +27,7 @@ export const allMissions = {
   ],
 };
 
-const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33rem", setCoins = () => {}, coins = 0 }) => {
+const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33rem", setCoins = () => {}, coins = 0, currentUserId = null  }) => {
   const [dailyMissions, setDailyMissions] = useState([]);
   const [weeklyMissions, setWeeklyMissions] = useState([]);
   const [showTimeLeft, setShowTimeLeft] = useState({});
@@ -42,6 +42,10 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
     return shuffled.slice(0, count);
   };
 
+  const getUserKey = (key) => {
+    return currentUserId ? `${currentUserId}_${key}` : key;
+  };
+
   const resetMissions = (type) => {
     const now = new Date();
     let resetDate;
@@ -49,7 +53,6 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
     if (type === 'daily') {
       resetDate = now.toDateString();
     } else if (type === 'weekly') {
-      
       const nextSunday = new Date(now);
       nextSunday.setDate(now.getDate() + (7 - now.getDay()) || 7); 
       nextSunday.setHours(0, 0, 0, 0);
@@ -57,19 +60,23 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
     }
   
     const selectedMissions = selectRandomMissions(allMissions[type], 3);
-    localStorage.setItem(`${type}ResetDate`, resetDate);
-    localStorage.setItem(`${type}Missions`, JSON.stringify(selectedMissions));
+    localStorage.setItem(`${currentUserId}_${type}ResetDate`, resetDate);
+    localStorage.setItem(`${currentUserId}_${type}Missions`, JSON.stringify(selectedMissions));
   
-    // Clear progress for reset missi
-    const storedProgress = JSON.parse(localStorage.getItem('missionProgress')) || {};
+    // Don't clear all progress - just progress for the missions being reset
+    const storedProgress = JSON.parse(localStorage.getItem(`${currentUserId}_missionProgress`)) || {};
     const updatedProgress = { ...storedProgress };
   
     selectedMissions.forEach((mission) => {
-      delete updatedProgress[mission.id];
-      localStorage.removeItem(`showTimeLeft_${mission.id}`);
+      // Only reset progress if this mission is being replaced
+      if (!selectedMissions.some(m => m.id === mission.id)) {
+        delete updatedProgress[mission.id];
+      }
+      localStorage.removeItem(`${currentUserId}_showTimeLeft_${mission.id}`);
+      localStorage.removeItem(`${currentUserId}_mission_claimed_${mission.id}`);
     });
   
-    localStorage.setItem('missionProgress', JSON.stringify(updatedProgress));
+    localStorage.setItem(`${currentUserId}_missionProgress`, JSON.stringify(updatedProgress));
     setMissionProgress(updatedProgress);
   
     if (type === 'daily') {
@@ -149,50 +156,9 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
         return;
       }
   
-      const response = await fetch('/claim-mission-reward', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-          coins: mission.reward.coins,
-          xp: mission.reward.xp,
-          mission_id: missionId
-        })
-      });
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-      const data = await response.json();
-      
-      if (data.success) {
-        rewardSound.play().catch(e => console.error('Error playing sound:', e));
-        
-        // Safely update coins
-        if (typeof setCoins === 'function') {
-          setCoins(prevCoins => prevCoins + mission.reward.coins);
-        } else {
-          console.warn('setCoins is not a function');
-        }
-  
-        const updatedShowTimeLeft = { ...showTimeLeft, [missionId]: true };
-        setShowTimeLeft(updatedShowTimeLeft);
-        localStorage.setItem(`showTimeLeft_${missionId}`, JSON.stringify(true));
-      }
-    } catch (error) {
-      console.error('Error claiming reward:', error);
-    }
-  };
-
-  const handleShowAllTimeCompleted = async (missionId) => {
-    try {
-      const mission = allMissions.allTime.find(m => m.id === missionId);
-      
-      if (!mission) {
-        console.error('Mission not found');
+      // Check if already claimed
+      const claimedKey = getUserKey(`mission_claimed_${missionId}`);
+      if (localStorage.getItem(claimedKey)) {
         return;
       }
   
@@ -218,16 +184,69 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
       if (data.success) {
         rewardSound.play().catch(e => console.error('Error playing sound:', e));
         
-        // Safely update coins
         if (typeof setCoins === 'function') {
           setCoins(prevCoins => prevCoins + mission.reward.coins);
-        } else {
-          console.warn('setCoins is not a function');
         }
   
+        // Mark as claimed
+        localStorage.setItem(claimedKey, 'true');
+        
+        const updatedShowTimeLeft = { ...showTimeLeft, [missionId]: true };
+        setShowTimeLeft(updatedShowTimeLeft);
+        localStorage.setItem(getUserKey(`showTimeLeft_${missionId}`), JSON.stringify(true));
+      }
+    } catch (error) {
+      console.error('Error claiming reward:', error);
+    }
+  };
+
+  const handleShowAllTimeCompleted = async (missionId) => {
+    try {
+      const mission = allMissions.allTime.find(m => m.id === missionId);
+      
+      if (!mission) {
+        console.error('Mission not found');
+        return;
+      }
+  
+      // Check if already claimed
+      const claimedKey = getUserKey(`mission_claimed_${missionId}`);
+      if (localStorage.getItem(claimedKey)) {
+        return;
+      }
+  
+      const response = await fetch('/claim-mission-reward', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          coins: mission.reward.coins,
+          xp: mission.reward.xp,
+          mission_id: missionId
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      
+      if (data.success) {
+        rewardSound.play().catch(e => console.error('Error playing sound:', e));
+        
+        if (typeof setCoins === 'function') {
+          setCoins(prevCoins => prevCoins + mission.reward.coins);
+        }
+  
+        // Mark as claimed
+        localStorage.setItem(claimedKey, 'true');
+        
         const updatedShowAllTimeCompleted = { ...showAllTimeCompleted, [missionId]: true };
         setShowAllTimeCompleted(updatedShowAllTimeCompleted);
-        localStorage.setItem(`showAllTimeCompleted_${missionId}`, JSON.stringify(true));
+        localStorage.setItem(getUserKey(`showAllTimeCompleted_${missionId}`), JSON.stringify(true));
       }
     } catch (error) {
       console.error('Error claiming reward:', error);
@@ -235,9 +254,13 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
   };
 
   const loadMissions = (type) => {
-    const lastReset = localStorage.getItem(`${type}ResetDate`);
-    const storedMissions = localStorage.getItem(`${type}Missions`);
+    const lastReset = localStorage.getItem(`${currentUserId}_${type}ResetDate`);
+    const storedMissions = localStorage.getItem(`${currentUserId}_${type}Missions`);
     const now = new Date();
+  
+    // Load mission progress with user prefix
+    const storedProgress = JSON.parse(localStorage.getItem(`${currentUserId}_missionProgress`)) || {};
+    setMissionProgress(storedProgress); // This updates the state with loaded progress
   
     if (type === 'daily') {
       const currentDate = now.toDateString();
@@ -245,10 +268,9 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
         const parsedMissions = JSON.parse(storedMissions);
         setDailyMissions(parsedMissions);
       } else {
-        resetMissions('daily');
+        resetMissions(type);
       }
     } else if (type === 'weekly') {
-      // For we
       if (lastReset) {
         const resetDate = new Date(lastReset);
         if (now < resetDate && storedMissions) {
@@ -257,66 +279,78 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
           return;
         }
       }
-      resetMissions('weekly');
+      resetMissions(type);
     }
   };
 
   useEffect(() => {
-  
     loadMissions('daily');
     loadMissions('weekly');
-  }, []);
+  }, [currentUserId]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Load mission progress when userId changes
+    const storedProgress = JSON.parse(localStorage.getItem(`${currentUserId}_missionProgress`)) || {};
+    setMissionProgress(storedProgress);
+  }, [currentUserId]);
+
+  useEffect(() => {
+    const checkReset = () => {
       const now = new Date();
       
-      // Check daily reset
-      const lastDailyReset = localStorage.getItem('dailyResetDate');
+      // Check daily reset - use user-specific key
+      const lastDailyReset = localStorage.getItem(`${currentUserId}_dailyResetDate`);
       if (!lastDailyReset || new Date(lastDailyReset).toDateString() !== now.toDateString()) {
         resetMissions('daily');
       }
-
-      // Check weekly reset
-      const lastWeeklyReset = localStorage.getItem('weeklyResetDate');
+  
+      // Check weekly reset - use user-specific key
+      const lastWeeklyReset = localStorage.getItem(`${currentUserId}_weeklyResetDate`);
       if (lastWeeklyReset) {
         const resetDate = new Date(lastWeeklyReset);
         if (now >= resetDate) {
           resetMissions('weekly');
         }
       }
-    }, 1000 * 60);
-
+    };
+  
+    // Run immediately on mount
+    checkReset();
+  
+    // Then set up interval to check periodically (every hour instead of every minute)
+    const interval = setInterval(checkReset, 1000 * 60 * 60);
+  
     return () => clearInterval(interval);
-  }, []);
+  }, [currentUserId]);
 
   useEffect(() => {
-
     const storedShowTimeLeft = {};
     const storedShowAllTimeCompleted = {};
-
+  
     dailyMissions.forEach((mission) => {
-      const storedValue = localStorage.getItem(`showTimeLeft_${mission.id}`);
+      const storedValue = localStorage.getItem(getUserKey(`showTimeLeft_${mission.id}`));
       if (storedValue) {
         storedShowTimeLeft[mission.id] = JSON.parse(storedValue);
       }
     });
+    
     weeklyMissions.forEach((mission) => {
-      const storedValue = localStorage.getItem(`showTimeLeft_${mission.id}`);
+      const storedValue = localStorage.getItem(getUserKey(`showTimeLeft_${mission.id}`));
       if (storedValue) {
         storedShowTimeLeft[mission.id] = JSON.parse(storedValue);
       }
     });
+    
     allMissions.allTime.forEach((mission) => {
-      const storedValue = localStorage.getItem(`showAllTimeCompleted_${mission.id}`);
+      const storedValue = localStorage.getItem(getUserKey(`showAllTimeCompleted_${mission.id}`));
       if (storedValue) {
         storedShowAllTimeCompleted[mission.id] = JSON.parse(storedValue);
       }
     });
-
+  
     setShowTimeLeft(storedShowTimeLeft);
     setShowAllTimeCompleted(storedShowAllTimeCompleted);
-  }, [dailyMissions, weeklyMissions]);
+  }, [dailyMissions, weeklyMissions, currentUserId]);
 
   const isMissionCompleted = (mission) => {
     return missionProgress[mission.id] >= mission.goal;
@@ -339,139 +373,159 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
 
         <div className="mt-4 w-full space-y-4">
           {/* Daily Missio */}
-          <div className="ena">
-            <h3 className="text-2xl font-semibold mb-2">Dienas</h3>
-            <div className="space-y-2">
-              {dailyMissions.map((mission) => (
-                <div key={mission.id} className="bg-green-100 p-3 rounded-lg shadow-md relative">
-                  {isMissionCompleted(mission) && (
-                    <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg flex items-center justify-center">
-                      {showTimeLeft[mission.id] ? (
-                        <span className="flex text-lg font-bold flex-col items-center">
-                          <span className="text-white">Jaunas misijas pēc</span>
-                          <span>{formatTimeLeft(timeLeft.daily)}</span>
-                        </span>
-                      ) : (
-                        <button
-                          className="text-white bg-blue-500 px-4 py-2 rounded-lg"
-                          onClick={() => handleShowTimeLeft(mission.id, 'daily')}>
-                          Claim 
-                        </button>
+            
+            <div className="ena">
+              <h3 className="text-2xl font-semibold mb-2">Dienas</h3>
+              <div className="space-y-2">
+                {dailyMissions.map((mission) => {
+                  const isClaimed = localStorage.getItem(getUserKey(`mission_claimed_${mission.id}`));
+                  const showClaimedState = isClaimed || showTimeLeft[mission.id];
+                  
+                  return (
+                    <div key={mission.id} className="bg-green-100 p-3 rounded-lg shadow-md relative">
+                      {isMissionCompleted(mission) && (
+                        <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg flex items-center justify-center">
+                          {showClaimedState ? (
+                            <span className="flex text-lg font-bold flex-col items-center">
+                              <span className="text-white">Jaunas misijas pēc</span>
+                              <span>{formatTimeLeft(timeLeft.daily)}</span>
+                            </span>
+                          ) : (
+                            <button
+                              className="text-white bg-blue-500 px-4 py-2 rounded-lg"
+                              onClick={() => handleShowTimeLeft(mission.id, 'daily')}
+                            >
+                              Claim 
+                            </button>
+                          )}
+                        </div>
                       )}
+                      <p className="text-md">{mission.description}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="h-2 rounded-full bg-gradient-to-r from-red-500 to-green-500"
+                            style={{
+                              width: `${(Math.min(missionProgress[mission.id] || 0, mission.goal) / mission.goal) * 100}%`,
+                            }}
+                          ></div>
+                        </div>
+                        <span className="text-sm ml-2">
+                          {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
+                        </span>
+                      </div>
+                      <div className="flex justify-center items-center mt-2">
+                        <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
+                        <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
+                      </div>
                     </div>
-                  )}
-                  <p className="text-md">{mission.description}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                     <div
-                      className="h-2 rounded-full bg-gradient-to-r from-red-500 to-green-500"
-                      style={{
-                        width: `${(Math.min(missionProgress[mission.id] || 0, mission.goal) / mission.goal) * 100}%`,
-                      }}
-                    ></div>
-                    </div>
-                    <span className="text-sm ml-2">
-                      {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
-                    </span>
-                  </div>
-                  <div className="flex justify-center items-center mt-2">
-                    <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
-                    <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          {/* Weekly Missions */}
-          <div className="ena">
-            <h3 className="text-2xl font-semibold mb-2">Nedēļas</h3>
-            <div className="space-y-2">
-              {weeklyMissions.map((mission) => (
-                <div key={mission.id} className="bg-orange-100 p-3 rounded-lg shadow-md relative">
-                  {isMissionCompleted(mission) && (
-                    <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg flex items-center justify-center">
-                      {showTimeLeft[mission.id] ? (
-                        <span className="flex text-lg font-bold flex-col items-center">
-                          <span className="text-white">Jaunas misijas pēc</span>
-                          <span>{formatTimeLeft(timeLeft.weekly)}</span>
-                        </span>
-                      ) : (
-                        <button
-                          className="text-white bg-blue-500 px-4 py-2 rounded-lg"
-                          onClick={() => handleShowTimeLeft(mission.id, 'weekly')}>
-                          Claim
-                        </button>
+            {/* Weekly Missions */}
+            <div className="ena">
+              <h3 className="text-2xl font-semibold mb-2">Nedēļas</h3>
+              <div className="space-y-2">
+                {weeklyMissions.map((mission) => {
+                  const isClaimed = localStorage.getItem(getUserKey(`mission_claimed_${mission.id}`));
+                  const showClaimedState = isClaimed || showTimeLeft[mission.id];
+                  
+                  return (
+                    <div key={mission.id} className="bg-orange-100 p-3 rounded-lg shadow-md relative">
+                      {isMissionCompleted(mission) && (
+                        <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg flex items-center justify-center">
+                          {showClaimedState ? (
+                            <span className="flex text-lg font-bold flex-col items-center">
+                              <span className="text-white">Jaunas misijas pēc</span>
+                              <span>{formatTimeLeft(timeLeft.weekly)}</span>
+                            </span>
+                          ) : (
+                            <button
+                              className="text-white bg-blue-500 px-4 py-2 rounded-lg"
+                              onClick={() => handleShowTimeLeft(mission.id, 'weekly')}
+                            >
+                              Claim
+                            </button>
+                          )}
+                        </div>
                       )}
+                      <p className="text-md">{mission.description}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-green-500 h-2 rounded-full"
+                            style={{
+                              width: `${(Math.min(missionProgress[mission.id] || 0, mission.goal) / mission.goal) * 100}%`,
+                            }}
+                          ></div>
+                        </div>
+                        <span className="text-sm ml-2">
+                          {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
+                        </span>
+                      </div>
+                      <div className="flex justify-center items-center mt-2">
+                        <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
+                        <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
+                      </div>
                     </div>
-                  )}
-                  <p className="text-md">{mission.description}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-green-500 h-2 rounded-full"
-                        style={{
-                          width: `${(Math.min(missionProgress[mission.id] || 0, mission.goal) / mission.goal) * 100}%`,
-                        }}
-                      ></div>
-                    </div>
-                    <span className="text-sm ml-2">
-                      {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
-                    </span>
-                  </div>
-                  <div className="flex justify-center items-center mt-2">
-                    <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
-                    <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          {/* All-Time Missions */}
-          <div className="ena">
-            <h3 className="text-2xl font-semibold mb-2">Visu Laiku</h3>
-            <div className="space-y-2">
-              {allMissions.allTime.map((mission) => (
-                <div key={mission.id} className="bg-red-100 p-3 rounded-lg shadow-md relative">
-                  {isMissionCompleted(mission) && (
-                    <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg flex items-center justify-center">
-                      {showAllTimeCompleted[mission.id] ? (
-                        <span className="flex text-lg font-bold flex-col items-center">
-                          <span className="text-white">Misija izpildīta</span>
-                        </span>
-                      ) : (
-                        <button
-                          className="text-white bg-blue-500 px-4 py-2 rounded-lg"
-                          onClick={() => handleShowAllTimeCompleted(mission.id)}
-                        >
-                          Claim 
-                        </button>
+            {/* All-Time Missions */}
+            <div className="ena">
+              <h3 className="text-2xl font-semibold mb-2">Visu Laiku</h3>
+              <div className="space-y-2">
+                {allMissions.allTime.map((mission) => {
+                  const isClaimed = localStorage.getItem(getUserKey(`mission_claimed_${mission.id}`));
+                  const showClaimedState = isClaimed || showAllTimeCompleted[mission.id];
+                  
+                  return (
+                    <div key={mission.id} className="bg-red-100 p-3 rounded-lg shadow-md relative">
+                      {isMissionCompleted(mission) && (
+                        <div className="absolute inset-0 bg-black bg-opacity-75 rounded-lg flex items-center justify-center">
+                          {showClaimedState ? (
+                            <span className="flex text-lg font-bold flex-col items-center">
+                              <span className="text-white">Misija izpildīta</span>
+                            </span>
+                          ) : (
+                            <button
+                              className="text-white bg-blue-500 px-4 py-2 rounded-lg"
+                              onClick={() => handleShowAllTimeCompleted(mission.id)}
+                            >
+                              Claim 
+                            </button>
+                          )}
+                        </div>
                       )}
+                      <p className="text-md">{mission.description}</p>
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-green-500 h-2 rounded-full"
+                            style={{
+                              width: `${(Math.min(missionProgress[mission.id] || 0, mission.goal) / mission.goal) * 100}%`,
+                            }}
+                          ></div>
+                        </div>
+                        <span className="text-sm ml-2">
+                          {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
+                        </span>
+                      </div>
+                      <div className="flex justify-center items-center mt-2">
+                        <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
+                        <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
+                      </div>
                     </div>
-                  )}
-                  <p className="text-md">{mission.description}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-green-500 h-2 rounded-full"
-                        style={{
-                          width: `${(Math.min(missionProgress[mission.id] || 0, mission.goal) / mission.goal) * 100}%`,
-                        }}
-                      ></div>
-                    </div>
-                    <span className="text-sm ml-2">
-                      {Math.min(missionProgress[mission.id] || 0, mission.goal)}/{mission.goal}
-                    </span>
-                  </div>
-                  <div className="flex justify-center items-center mt-2">
-                    <span className="text-[#ffff00]">+{mission.reward.coins} monētas</span>
-                    <span className="text-[#3eff00] ml-2">+{mission.reward.xp} XP</span>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+
+
         </div>
       </div>
       <div className="text-md gap-2 border-b-2 border-gray-300 pb-2 flex items-center w-full"></div>

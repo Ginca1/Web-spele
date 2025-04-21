@@ -155,7 +155,7 @@ const History = () => {
             
             {showPopup && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[2000]">
-                    <div className="bg-[#F8FAFC] w-[90vw] h-full max-h-[90vh] p-5 rounded-lg shadow-lg relative text-center overflow-hidden flex flex-col z-[2001]">
+                    <div className="bg-[#F8FAFC] w-[70vw] h-full max-h-[90vh] p-5 rounded-lg shadow-lg relative text-center overflow-hidden flex flex-col z-[2001]">
 
                         <img
                             src="../images/icons/close.png"
@@ -274,9 +274,9 @@ const History = () => {
                         </div>
 
 
-                        {/* C */}
-                        <div className="flex flex-col justify-center items-center w-full mt-3">
-                            <div className="w-[90%] h-[63vh] bg-[#eeeeee] rounded-md p-4 overflow-y-auto custom-scrollbar">
+        
+                        <div className="flex-1 flex flex-col overflow-hidden mt-3">
+                            <div className="flex-1 overflow-auto custom-scrollbar bg-[#eeeeee] rounded-xl p-6 pt-10">
                                 {isLoading ? (
                                         <div className="flex justify-center items-center h-full">
                                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>

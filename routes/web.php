@@ -22,10 +22,8 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameHistoryController;
 use App\Http\Controllers\LeaderboardController;
-//ssd d
 
-// routes/web.php
-Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
+Route::get('/api/leaderboard', [LeaderboardController::class, 'index'])->middleware('web');
 
 Route::get('/game-history', [GameHistoryController::class, 'index'])->middleware('auth');
 

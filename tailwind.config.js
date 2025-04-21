@@ -9,6 +9,18 @@ export default {
   ],
   theme: {
     extend: {
+
+      screens: {
+        'min-1300-max-1600': { raw: '(min-height: 1300px) and (max-height: 1600px)' },
+        'min-1000-max-1300': { raw: '(min-height: 1000px) and (max-height: 1300px)' },
+        'min-900-max-1000': { raw: '(min-height: 900px) and (max-height: 1000px)' },
+        'min-850-max-900': { raw: '(min-height: 850px) and (max-height: 900px)' },
+        'min-800-max-850': { raw: '(min-height: 800px) and (max-height: 850px)' },
+        'min-640-max-800': { raw: '(min-height: 640px) and (max-height: 800px)' },
+        'min-441-max-640': { raw: '(min-height: 441px) and (max-height: 640px)' },
+        'min-300-max-441': { raw: '(min-height: 300px) and (max-height: 441px)' },
+      },
+
       fontFamily: {
         nunito: ['Nunito', 'sans-serif'],
       },

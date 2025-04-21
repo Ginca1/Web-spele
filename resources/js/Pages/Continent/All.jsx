@@ -35,6 +35,7 @@ const All = ({ auth }) => {
     const [correctlyGuessed, setCorrectlyGuessed] = useState([]); 
    
     const user = auth.user;
+    const currentUserId = auth?.user?.id;
 
     const [userPictureId, setUserPictureId] = useState(null);
     const [europePicUrl, setEuropePicUrl] = useState('');
@@ -86,27 +87,29 @@ const All = ({ auth }) => {
       });
 
   // Funcioon to update mission progs
-  const handleUpdateMissionProgress = (missionType, increment = 1) => {
-    console.log(`Updating mission type: ${missionType}, increment: ${increment}`);
-
-    const missionsToUpdate = Object.values(allMissions)
-      .flat()
-      .filter((mission) => mission.type === missionType);
-
-    setMissionProgress((prevProgress) => {
-      const newProgress = { ...prevProgress };
-
-      missionsToUpdate.forEach((mission) => {
-        const current = prevProgress[mission.id] || 0;
-        newProgress[mission.id] = current + increment;
-        console.log(`Updated mission ${mission.id}: ${newProgress[mission.id]}`);
-      });
-
-      localStorage.setItem('missionProgress', JSON.stringify(newProgress));
-
-      return newProgress;
-    });
-  };
+    const handleUpdateMissionProgress = (missionType, increment = 1) => {
+        console.log(`Updating mission type: ${missionType}, increment: ${increment}`);
+      
+        const missionsToUpdate = Object.values(allMissions)
+          .flat()
+          .filter((mission) => mission.type === missionType);
+      
+        setMissionProgress((prevProgress) => {
+          const newProgress = { ...prevProgress };
+      
+          missionsToUpdate.forEach((mission) => {
+            const current = prevProgress[mission.id] || 0;
+            newProgress[mission.id] = current + increment;
+            console.log(`Updated mission ${mission.id}: ${newProgress[mission.id]}`);
+          });
+      
+          // Save with user-specific key
+          const storageKey = currentUserId ? `${currentUserId}_missionProgress` : 'missionProgress';
+          localStorage.setItem(storageKey, JSON.stringify(newProgress));
+      
+          return newProgress;
+        });
+      };
 
   const handleFlagClick = async () => {
     if (hasUsedFlagForCurrentCountry) return;
@@ -114,7 +117,7 @@ const All = ({ auth }) => {
     if (privileges?.flag_quantity > 0) {
       flagSound.play();
   
-      handleUpdateMissionProgress('flag', 1); 
+      handleUpdateMissionProgress('flag', 1, currentUserId); 
   
       setFlaggedCountry({
         name: currentCountry?.name,
@@ -216,7 +219,7 @@ const All = ({ auth }) => {
         if (privileges.hint_quantity > 0) {
             hintSound.play();
         
-            handleUpdateMissionProgress('hint', 1); 
+            handleUpdateMissionProgress('hint', 1, currentUserId); 
         
             setHintedCountry(currentCountry?.name);
             setTimeout(() => {
@@ -581,7 +584,7 @@ const All = ({ auth }) => {
               type: 'correct',
           });
       
-          handleUpdateMissionProgress('country', 1);
+          handleUpdateMissionProgress('country', 1, currentUserId);
       
           setFlaggedCountry(null);
           setHasUsedFlagForCurrentCountry(false);
@@ -779,6 +782,7 @@ const All = ({ auth }) => {
                             setCoins={setCoins}
                             coins={coins}
                             containerHeight="100%"
+                            currentUserId={auth.user.id}
                             />
                         </div>
                     </div>

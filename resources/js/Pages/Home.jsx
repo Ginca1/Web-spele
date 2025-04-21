@@ -32,6 +32,7 @@ const Home = () => {
     const [selectedPictureId, setSelectedPictureId] = useState(null); 
     const [coins, setCoins] = useState(user.coins);
     const [purchasedPictures, setPurchasedPictures] = useState([]);
+    const { auth } = usePage().props; 
 
     const buySound = new Audio('/sounds/buy.mp3');
     
@@ -73,7 +74,7 @@ const Home = () => {
         const cost = pictureCost[pictureId];
         
         if (!purchasedPictures.includes(pictureId) && coins < cost) {
-            alert("Nav pietiekami daudz liesmas, lai nopirktu šo bildi!");
+            alert("Nav pietiekami daudz monētas, lai nopirktu šo bildi!");
             return;
         }
 
@@ -98,7 +99,7 @@ const Home = () => {
 
     const handlePurchasePrivilege = async (privilegeName, price) => {
         if (coins < price) {
-            alert("Nav pietiekami daudz liesmas, lai iegādātos šo privilēģiju!");
+            alert("Nav pietiekami daudz monētas, lai iegādātos šo privilēģiju!");
             return;
         }
         
@@ -128,43 +129,44 @@ const Home = () => {
     }, []);
 
     return (
-        <HomeLayout>
-            <Head title="Homepage" />
-            <div className="main">
-                <div className="header">      
-                    <div className="rowL-">
+        <div className="background-container">
+        
+        <div className="relative flex flex-col items-center min-h-screen text-center overflow-hidden">
+            <div className="header">      
+                <div className="rowL-">
                     <Link href={route('home')} className="game2">
-                            <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
-                            <span>&nbsp;</span>
-                            <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
-                        </Link>
-                    </div>            
-                    <div className="flex flex-row justify-end items-center flex-wrap w-full pr-8">
-                        <div className="bg-white bg-opacity-80 rounded-lg py-1 px-3 mr-4">
-                             <Level/>
-                        </div>
-
-                            <CoinsDisplay coins={coins} />
-
-                        <Settings />
+                        <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
+                        <span>&nbsp;</span>
+                        <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
+                    </Link>
+                </div>            
+                <div className="flex flex-row justify-end items-center flex-wrap w-full pr-8">
+                    <div className="bg-white bg-opacity-80 rounded-lg py-1 px-3 mr-4">
+                        <Level />
                     </div>
+                    <CoinsDisplay coins={coins} />
+                    <Settings />
                 </div>
+            </div>
 
-                <div class="w-full h-full max-h-[900px] grid grid-cols-3 gap-6 justify-items-center p-4">
+            {/* Main Content Area */}
+            <div className="flex flex-row justify-center items-stretch w-full flex-1 mt-5 min-h-0 px-3 pb-3">     
+                {/* Grid Container */}
+                <div className="w-full h-full grid grid-cols-3 gap-6 justify-items-center p-4 min-h-0 ">
 
-                    {/* picture shop starts */}
-                    <div className="col-span-1 w-full h-full flex flex-col rounded-md">
+                    {/* 1 Section */}
+                    <div className="col-span-1 w-full flex flex-col rounded-md">
                         <div className="flex flex-row justify-center items-center flex-wrap w-full">
                             <div className="bg-[#FF5309] rounded-[7px] px-4">
-                            <div className="flex flex-row justify-center items-center flex-wrap w-full h-full">
-                                <div className="shop-title2">
-                                     Aksesuāri
-                                </div>
+                                <div className="flex flex-row justify-center items-center flex-wrap w-full h-full">
+                                    <div className="shop-title2">
+                                        Aksesuāri
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div className="flex-grow w-full bg-[#FFF5EA] p-2 px-4 rounded-[7px] overflow-y-auto">
-                        <div className="grid grid-cols-3 gap-2 justify-items-center h-full">
+                            <div className="grid grid-cols-3 gap-2 justify-items-center h-full">
 
                         <div className="flex flex-row justify-center items-center flex-wrap w-full h-full">
                             <div className={`value ${selectedPictureId === 1 ? 'selected' : ''}`} onClick={() => handlePictureClick(1)}>
@@ -309,11 +311,11 @@ const Home = () => {
                 </div>
                 </div>
                     {/* picture shop ends */}
-                    <div className="col-span-1 w-full h-full flex flex-col rounded-md p-4">
+                    <div className="col-span-1 w-full flex flex-col rounded-md p-4">
                         <div className="grid grid-cols-3 gap-2 justify-items-center">
                             <div className="flex flex-col justify-center items-center">
                                 <Leaderboard />
-                                <p className="hana ena2 text-white  mt-2">
+                                <p className="hana ena2 text-white mt-2">
                                     Līderi
                                 </p>
                             </div>
@@ -336,125 +338,173 @@ const Home = () => {
                             </div>
                         </div>
 
-                        <div className="relative h-full max-h-[800px] bg-[#FFF5EA] rounded-lg p-2 mt-4 flex flex-col">
+                        <div className="relative bg-[#FFF5EA] rounded-lg p-2 mt-4 flex flex-col overflow-y-auto 
+                                        min-1300-max-1600:h-[55vh] 
+                                        min-1000-max-1300:h-[45vh] 
+                                        min-900-max-1000:h-[35vh]  
+                                        min-850-max-900:h-[40vh] 
+                                        min-800-max-850:h-[35vh] 
+                                        min-640-max-800:h-[35vh] 
+                                        min-441-max-640:h-[30vh] 
+                                        min-300-max-441:h-[25vh]">
                             <Missions 
                                 missionProgress={missionProgress}
                                 setMissionProgress={setMissionProgress}
                                 containerHeight="100%" 
                                 setCoins={setCoins} 
                                 coins={coins}
+                                currentUserId={auth?.user?.id}
                             />
                         </div>
 
+                    
 
 
-                 <div className="flex-grow flex items-center mt-3 justify-center">
-                    <Link href={route('lobby')} 
-                         className="relative inline-flex items-center justify-center ena2 px-10 py-2 bg-gradient-to-r from-[#00A3FF] to-[#0066FF] text-white font-bold text-2xl
-                                rounded-xl shadow-lg cursor-pointer overflow-hidden group
-                                hover:shadow-xl hover:bg-gradient-to-r hover:from-[#0085cc] hover:to-[#0044cc]
-                                transition-all duration-300 transform hover:-translate-y-1 min-w-[120px]">
 
-                        <span className="absolute inset-0 bg-gradient-to-r from-[#00C6FF] to-[#0072FF] opacity-0 
-                                group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></span>
-                        
-                        <span className="absolute top-0 left-0 w-1/3 h-full bg-white opacity-10 -skew-x-12
-                                transform -translate-x-full group-hover:translate-x-[400%] transition-all duration-700"></span>
-                        
-                        <span className="relative z-10 flex items-center justify-center w-full">
-                        <span className="relative flex items-center">
-                            <span className="transition-all duration-300 group-hover:mr-4">
-                                Spēlēt
+                    <div className="flex-grow flex items-center mt-3 justify-center">
+                        <Link href={route('lobby')} 
+                            className="relative inline-flex items-center justify-center ena2 px-10 py-2 bg-gradient-to-r from-[#00A3FF] to-[#0066FF] text-white font-bold text-2xl
+                                    rounded-xl shadow-lg cursor-pointer overflow-hidden group
+                                    hover:shadow-xl hover:bg-gradient-to-r hover:from-[#0085cc] hover:to-[#0044cc]
+                                    transition-all duration-300 transform hover:-translate-y-1 min-w-[120px]">
+                            <span className="absolute inset-0 bg-gradient-to-r from-[#00C6FF] to-[#0072FF] opacity-0 
+                                    group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></span>
+                            <span className="absolute top-0 left-0 w-1/3 h-full bg-white opacity-10 -skew-x-12
+                                    transform -translate-x-full group-hover:translate-x-[400%] transition-all duration-700"></span>
+                            <span className="relative z-10 flex items-center justify-center w-full">
+                                <span className="relative flex items-center">
+                                    <span className="transition-all duration-300 group-hover:mr-4">
+                                        Spēlēt
+                                    </span>
+                                    <svg className="absolute left-full w-6 h-6 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out"
+                                        fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                                        <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                    </svg>
+                                </span>
                             </span>
-                            <svg className="absolute left-full w-6 h-6  opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out"
-                                fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                                <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </span>
-                        </span>
-                    </Link>
+                        </Link>
                     </div>
                 </div>
+               
 
-                    <div className="col-span-1 w-full h-full flex flex-col rounded-md">
-                        <div className="flex flex-row justify-center items-center flex-wrap w-full">
-                            <div className="bg-[#FF5309] rounded-[7px] px-4">
-                                <div className="flex flex-wrap justify-center items-center ">
-                                    <div className="shop-title2">
-                                        Privilēģijas
-                                    </div>
+                <div className="col-span-1 w-full flex flex-col rounded-md">
+                    <div className="flex flex-row justify-center items-center flex-wrap w-full">
+                        <div className="bg-[#FF5309] rounded-[7px] px-4">
+                            <div className="flex flex-wrap justify-center items-center">
+                                <div className="shop-title2">
+                                    Privilēģijas
                                 </div>
                             </div>
                         </div>
+                    </div>
                         <div className="flex-grow w-full bg-[#FFF5EA] rounded-lg shadow-lg shadow-black/30 flex justify-center items-center p-4 mb-4">
                             <div className="grid grid-cols-3 gap-2 w-full justify-items-center h-full">
                                 
-                                <div className="flex flex-col justify-center gap-10  items-center w-full h-full">
-                                    <div className="hint h-1/2"></div>
-                                    <div className="bg-gradient-to-r from-blue-400 to-blue-600 cursor-pointer px-4 py-2 rounded-md flex justify-center items-center 
-                                                hover:from-blue-500 hover:to-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105 ">
-                                        <div className="nauda ena2 mt-1" onClick={() => handlePurchasePrivilege('flag', 100)}>
-                                            100
-                                        </div>
+                            <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
+                            <div className="p-6 bg-[#e4e3a9] rounded-full shadow-md border-[4px] border-amber-400 ring-4 ring-amber-100/30">
+                                <div 
+                                    className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat"
+                                    style={{ backgroundImage: "url('/images/hint.png')" }}
+                                ></div>
+                                </div>
+                                <div className="bg-gradient-to-r from-blue-400 to-blue-600 cursor-pointer px-6 py-2 rounded-md flex justify-center items-center 
+                                                hover:from-blue-500 hover:to-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                                    <div className="text-white nauda ena2 mt-1 font-medium" onClick={() => handlePurchasePrivilege('flag', 100)}>
+                                    100
                                     </div>
                                 </div>
+                            </div>
                                 
-                                <div className="flex flex-col justify-center gap-10  items-center w-full h-full">
-                                    <div className="clock h-1/2"></div>
-                                    <div className="bg-gradient-to-r from-blue-400 to-blue-600 cursor-pointer px-4 py-2 rounded-md flex justify-center items-center 
-                                                hover:from-blue-500 hover:to-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
-                                        <div className="nauda ena2 mt-1" onClick={() => handlePurchasePrivilege('skip', 150)}>
-                                            150
-                                        </div>
+                            <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
+                                <div className="p-6 bg-[#a9e4ae] rounded-lg shadow-md border-[4px] border-emerald-400 ring-4 ring-emerald-100/30">
+                                    <div 
+                                        className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat"
+                                        style={{ backgroundImage: "url('/images/icons/skip.png')" }}
+                                    ></div>
+                                </div>
+                                <div className="bg-gradient-to-r from-blue-400 to-blue-600 cursor-pointer px-6 py-2 rounded-md flex justify-center items-center 
+                                            hover:from-blue-500 hover:to-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                                    <div className="text-white nauda ena2 mt-1 font-medium" onClick={() => handlePurchasePrivilege('skip', 150)}>
+                                    150
                                     </div>
                                 </div>
+                             </div>
 
-                                <div className="flex flex-col justify-center gap-10  items-center w-full h-full">
-                                    <div className="freeze h-1/2"></div>
-                                    <div className="bg-gradient-to-r from-blue-400 to-blue-600 cursor-pointer px-4 py-2 rounded-md flex justify-center items-center 
-                                                hover:from-blue-500 hover:to-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
-                                        <div className="nauda ena2 mt-1" onClick={() => handlePurchasePrivilege('hint', 200)}>
-                                            200
-                                        </div>
+                             <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
+                                 <div className="p-6 bg-[#a9b0e4] rounded-full shadow-md border-[4px] border-purple-400 ring-4 ring-blue-100/30">
+                                    <div 
+                                        className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat rounded-full"
+                                        style={{ backgroundImage: "url('/images/icons/flag.png')" }}
+                                    ></div>
+                                </div>
+                                <div className="bg-gradient-to-r from-blue-400 to-blue-600 cursor-pointer px-6 py-2 rounded-md flex justify-center items-center 
+                                            hover:from-blue-500 hover:to-blue-700 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                                    <div className="text-white nauda ena2 mt-1 font-medium" onClick={() => handlePurchasePrivilege('hint', 200)}>
+                                    200
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                             </div>
 
-                        {/* b */}
-                        <div className="flex-grow w-full bg-[#FFF5EA] rounded-[7px] shadow-[0_10px_20px_rgba(0,_0,_0,_0.3)] p-4">
-                            <div className="grid grid-cols-3 gap-2 w-full justify-items-center h-full">
-
-                                <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
-                                    <div className="hint h-1/2"></div>
-                                        <div className="py-2 px-5 bg-gradient-to-r from-[#615858] to-[#8a7e7e] rounded-full flex justify-center">
-                                            <div className="nauda ena2 mt-1"> {privileges ? privileges.flag_quantity : 0}</div>
-                                        </div>
-                                    </div>
-                            
-                                <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
-                                    <div className="clock h-1/2"></div>
-                                      <div className="py-2 px-5 bg-gradient-to-r from-[#615858] to-[#8a7e7e] rounded-full flex justify-center">
-                                        <div className="nauda ena2 mt-1"> {privileges ? privileges.skip_quantity : 0}</div>
-                                    </div>
-                                </div>
-                            
-                                <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
-                                    <div className="freeze h-1/2"></div>
-                                        <div className="py-2 px-5 bg-gradient-to-r from-[#615858] to-[#8a7e7e] rounded-full flex justify-center">
-                                            <div className="nauda ena2 mt-1"> {privileges ? privileges.hint_quantity : 0}</div>
-                                        </div>
-                                 </div>
-                            </div>
                         </div>
                     </div>
 
+                        {/* b */}
+                        <div className="flex-grow w-full bg-[#FFF5EA] rounded-[7px] shadow-[0_10px_20px_rgba(0,_0,_0,_0.3)] p-4">
+                             <div className="grid grid-cols-3 gap-2 w-full justify-items-center h-full">
+                                {/* Hint section */}
+                                <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
+                                    <div className="p-6 bg-[#e4e3a9] rounded-full shadow-md border-[4px] border-amber-400 ring-4 ring-amber-100/30">
+                                        <div 
+                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat"
+                                            style={{ backgroundImage: "url('/images/hint.png')" }}
+                                        ></div>
+                                    </div>
+                                    <div className="py-2 px-7 bg-gradient-to-r from-[#615858] to-[#8a7e7e] rounded-full flex justify-center items-center shadow-md">
+                                    <div className="text-white nauda ena2 mt-1 font-medium">
+                                        {privileges ? privileges.flag_quantity : 0}
+                                    </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Clock/Skip section */}
+                                <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
+                                    <div className="p-6 bg-[#a9e4ae] rounded-lg shadow-md border-[4px] border-emerald-400 ring-4 ring-emerald-100/30">
+                                        <div 
+                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat"
+                                            style={{ backgroundImage: "url('/images/icons/skip.png')" }}
+                                        ></div>
+                                    </div>
+                                    <div className="py-2 px-7 bg-gradient-to-r from-[#615858] to-[#8a7e7e] rounded-full flex justify-center items-center shadow-md">
+                                    <div className="text-white nauda ena2 mt-1 font-medium">
+                                        {privileges ? privileges.skip_quantity : 0}
+                                    </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Freeze/Flag section */}
+                                <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
+                                    <div className="p-6 bg-[#a9b0e4] rounded-full shadow-md border-[4px] border-purple-400 ring-4 ring-blue-100/30">
+                                        <div 
+                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat rounded-full"
+                                            style={{ backgroundImage: "url('/images/icons/flag.png')" }}
+                                        ></div>
+                                    </div>
+                                    <div className="py-2 px-7 bg-gradient-to-r from-[#615858] to-[#8a7e7e] rounded-full flex justify-center items-center shadow-md">
+                                    <div className="text-white nauda ena2 mt-1 font-medium">
+                                        {privileges ? privileges.hint_quantity : 0}
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
 
                 </div>
-
+               
 
             </div>
-        </HomeLayout>
+        </div>
     );
 };
 

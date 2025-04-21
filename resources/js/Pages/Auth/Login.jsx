@@ -1,10 +1,8 @@
 import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
+import { initializeUserMissions } from '@/Utilities/missionStorage'; 
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -12,6 +10,15 @@ export default function Login({ status, canResetPassword }) {
         password: '',
         remember: false,
     });
+
+    const { auth } = usePage().props;
+
+    useEffect(() => {
+        // Initialize missions when user is authenticated
+        if (auth?.user?.id) {
+            initializeUserMissions(auth.user.id);
+        }
+    }, [auth?.user]);
 
     const submit = (e) => {
         e.preventDefault();
@@ -33,45 +40,43 @@ export default function Login({ status, canResetPassword }) {
         <GuestLayout>
             <Head title="Log in" />
 
-          
-
-            <form  className="login-form"onSubmit={submit}>
-            <h1 className="signIn">Pieslēgties</h1>
+            <form className="login-form" onSubmit={submit}>
+                <h1 className="signIn">Pieslēgties</h1>
 
                 <input
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        placeholder="Ievadi epastu"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={data.email}
+                    placeholder="Ievadi epastu"
+                    autoComplete="username"
+                    isFocused={true}
+                    onChange={(e) => setData('email', e.target.value)}
+                />
 
-                    <input
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        placeholder="Ievadi paroli"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    value={data.password}
+                    placeholder="Ievadi paroli"
+                    autoComplete="current-password"
+                    onChange={(e) => setData('password', e.target.value)}
+                />
 
-                        <div className="remember-container">
-                            <Checkbox
-                                name="remember"
-                                checked={data.remember}
-                                onChange={(e) => setData('remember', e.target.checked)}
-                                className="checkbox" 
-                            />
-                            <span className="remember">
-                                Remember me
-                            </span>
-                        </div>
-                
-                        {Object.values(errors).length > 0 && (
+                <div className="remember-container">
+                    <Checkbox
+                        name="remember"
+                        checked={data.remember}
+                        onChange={(e) => setData('remember', e.target.checked)}
+                        className="checkbox" 
+                    />
+                    <span className="remember">
+                        Remember me
+                    </span>
+                </div>
+        
+                {Object.values(errors).length > 0 && (
                     <div className="error-messages">
                         {Object.values(errors)
                             .filter(error => error) 
@@ -82,32 +87,18 @@ export default function Login({ status, canResetPassword }) {
                     </div>
                 )}
 
-
-                    <div className="remember-container">
+                <div className="remember-container">
                     <Link
                         href={route('register')}
                         className="link"
                     >
-                       Izveidot profilu šeit!
+                        Izveidot profilu šeit!
                     </Link>
-                    </div>
+                </div>
 
                 <div className="action-container2">
-                
-                    {/* {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="link"
-                        >
-                           Aizmirsi paroli?
-                        </Link>
-                    )} */}
-
-
-
-
                     <button className="button" disabled={processing}>
-                       Ienākt
+                        Ienākt
                     </button>
                 </div>
             </form>

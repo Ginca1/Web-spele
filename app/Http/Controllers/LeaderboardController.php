@@ -9,35 +9,32 @@ class LeaderboardController extends Controller
 {
     public function index(Request $request)
     {
-        // Force JSON  nxd bcvb mmmmmmm
-        $request->headers->set('Accept', 'application/json');
-        
         try {
-            $users = User::orderBy('xp', 'desc')
-                ->orderBy('level', 'desc')
-                ->orderBy('games_completed', 'desc')
-                ->select('id', 'name', 'xp', 'picture_id', 'level', 'games_completed')
+            $users = User::orderBy('level', 'desc')
+                ->orderBy('xp', 'desc')
+                ->orderBy('coins', 'desc')
+                ->select('id', 'name', 'xp', 'picture_id', 'level', 'coins')
                 ->get()
                 ->map(function ($user) {
                     return [
                         'id' => $user->id,
                         'name' => $user->name,
-                        'xp' => $user->xp,
-                        'level' => $user->level,
-                        'picture_id' => $user->picture_id,
-                        'games_completed' => $user->games_completed
+                        'xp' => (int) $user->xp,
+                        'level' => (int) $user->level,
+                        'picture_id' => (int) $user->picture_id,
+                        'coins' => (int) $user->coins,
                     ];
                 });
 
             return response()->json([
                 'success' => true,
-                'users' => $users
-            ], 200, [], JSON_NUMERIC_CHECK);
-
+                'users' => $users,
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error fetching leaderboard: ' . $e->getMessage()
+                'message' => 'Failed to load leaderboard data.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

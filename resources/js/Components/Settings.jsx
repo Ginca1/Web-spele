@@ -9,7 +9,7 @@ import { usePage } from '@inertiajs/react';
 
 export default function Settings() {
     const [showPopup, setShowPopup] = useState(false);
-    const [volume, setVolume] = useState(80); // Default volume at 80%
+    const [volume, setVolume] = useState(80); 
     
   
     const { props } = usePage();
