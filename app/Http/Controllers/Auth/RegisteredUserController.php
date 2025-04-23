@@ -30,42 +30,39 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-    {
-      
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:users,email',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ], [
-            'name.required' => 'Ievadi vārdu.',
-            'email.required' => 'Ievadi e-pastu.',
-            'password.min' => 'Parolei jābūt ar vismaz 8 rakstzīmēm.',
-            'password.required' => 'Ievadi paroli.',
-            'password.confirmed' => 'Ievadītās paroles nesakrīt.',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:users,name', 
+        'email' => 'required|string|lowercase|email|max:255|unique:users,email',
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ], [
+        'name.required' => 'Ievadi lietotājvārdu.',
+        'name.unique' => 'Šis lietotājvārds jau ir aizņemts.', 
+        'email.required' => 'Ievadi e-pastu.',
+        'email.unique' => 'Šis e-pasts jau ir reģistrēts.',
+        'password.min' => 'Parolei jābūt ar vismaz 8 rakstzīmēm.',
+        'password.required' => 'Ievadi paroli.',
+        'password.confirmed' => 'Ievadītās paroles nesakrīt.',
+    ]);
 
-      
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'coins' => 5000,
-            'picture_id' => rand(1, 3), 
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'coins' => 200,
+        'picture_id' => rand(1, 3), 
+    ]);
 
-        
-        Privilege::create([
-            'user_id' => $user->id,
-            'hint_quantity' => 0,
-            'power_quantity' => 0,
-            'freeze_quantity' => 0,
-        ]);
+    Privilege::create([
+        'user_id' => $user->id,
+        'hint_quantity' => 2,
+        'skip_quantity' => 2,
+        'flag_quantity' => 2,
+    ]);
 
-      
-        event(new Registered($user));
-        Auth::login($user);
+    event(new Registered($user));
+    Auth::login($user);
 
-       
-        return redirect(route('home'));
-    }
+    return redirect(route('home'));
+}
 }

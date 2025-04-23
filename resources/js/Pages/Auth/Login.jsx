@@ -1,8 +1,9 @@
 import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
-import { initializeUserMissions } from '@/Utilities/missionStorage'; 
+import { useEffect, useState } from 'react';
+import { initializeUserMissions } from '@/Utilities/missionStorage';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -11,29 +12,74 @@ export default function Login({ status, canResetPassword }) {
         remember: false,
     });
 
+    const [inputErrors, setInputErrors] = useState({
+        email: '',
+        password: '',
+    });
+    const [hasErrors, setHasErrors] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    
+
     const { auth } = usePage().props;
 
     useEffect(() => {
-        // Initialize missions when user is authenticated
         if (auth?.user?.id) {
             initializeUserMissions(auth.user.id);
         }
     }, [auth?.user]);
 
+    const validateField = (name, value) => {
+        let error = '';
+
+        if (name === 'email') {
+            if (!value.trim()) {
+                error = 'E-pasts ir obligāts';
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                error = 'Lūdzu ievadiet derīgu e-pasta adresi';
+            }
+        } else if (name === 'password') {
+            if (!value.trim()) {
+                error = 'Parole ir obligāta';
+            }
+        }
+
+        setInputErrors(prev => ({ ...prev, [name]: error }));
+        return !error;
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData(name, value);
+        
+        // Clear error when user starts typing
+        if (inputErrors[name]) {
+            setInputErrors(prev => ({ ...prev, [name]: '' }));
+        }
+    };
+
     const submit = (e) => {
         e.preventDefault();
 
+        // Validate all fields before submission
+        const isEmailValid = validateField('email', data.email);
+        const isPasswordValid = validateField('password', data.password);
+
+        if (!isEmailValid || !isPasswordValid) {
+            setHasErrors(true);
+            return;
+        }
+
+        setHasErrors(false);
         post(route('login'), {
             onFinish: () => reset('password'),
+            onError: (errors) => {
+                setHasErrors(true);
+                setInputErrors({
+                    email: errors.email || '',
+                    password: errors.password || ''
+                });
+            }
         });
-    };
-
-    const PrimaryButton = ({ className, children, ...props }) => {
-        return (
-            <button className={`primary-button ${className}`} {...props}>
-                {children}
-            </button>
-        );
     };
 
     return (
@@ -41,7 +87,7 @@ export default function Login({ status, canResetPassword }) {
             <Head title="Log in" />
 
             <form className="login-form" onSubmit={submit}>
-                <h1 className="signIn">Pieslēgties</h1>
+                <h1 className="finish text-[3rem] text-white text-center">Pieslēgties</h1>
 
                 <input
                     id="email"
@@ -51,18 +97,29 @@ export default function Login({ status, canResetPassword }) {
                     placeholder="Ievadi epastu"
                     autoComplete="username"
                     isFocused={true}
-                    onChange={(e) => setData('email', e.target.value)}
+                    onChange={handleChange}
                 />
 
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    value={data.password}
-                    placeholder="Ievadi paroli"
-                    autoComplete="current-password"
-                    onChange={(e) => setData('password', e.target.value)}
-                />
+                
+
+                <div className="relative w-full">
+                    <input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        value={data.password}
+                        placeholder="Ievadi paroli"
+                        autoComplete="current-password"
+                        onChange={handleChange}
+                        className="w-full p-3 pr-10 ml-[2.15rem] rounded-[8px] border border-gray-300 focus:outline-none"
+                    />
+                    <span
+                        className="absolute right-[4rem]  top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+                        onClick={() => setShowPassword(prev => !prev)}
+                    >
+                        {showPassword ?  <FaEye className='w-5 h-5' /> : <FaEyeSlash className='w-5 h-5' />}
+                    </span>
+                </div>
 
                 <div className="remember-container">
                     <Checkbox
@@ -72,17 +129,23 @@ export default function Login({ status, canResetPassword }) {
                         className="checkbox" 
                     />
                     <span className="remember">
-                        Remember me
+                        Atcerēties mani
                     </span>
                 </div>
-        
-                {Object.values(errors).length > 0 && (
+
+                {/* Frontend validation errors */}
+                {hasErrors && (
                     <div className="error-messages">
-                        {Object.values(errors)
-                            .filter(error => error) 
-                            .reverse() 
-                            .map((error, index) => (
-                                <div key={index} className="error-message">{error}</div>
+                        {['email', 'password']
+                            .map(field => ({
+                                field,
+                                error: inputErrors[field]
+                            }))
+                            .filter(({ error }) => error)
+                            .map(({ field, error }, index) => (
+                                <div key={`frontend-${field}-${index}`} className="error-message">
+                                    {error}
+                                </div>
                             ))}
                     </div>
                 )}

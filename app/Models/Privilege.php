@@ -11,8 +11,8 @@ class Privilege extends Model
 
     protected $fillable = [
         'hint_quantity',
-        'power_quantity',
-        'freeze_quantity',
+        'skip_quantity',
+        'flag_quantity',
         'user_id',
     ];
 

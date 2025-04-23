@@ -22,6 +22,17 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameHistoryController;
 use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\CheckExistenceController;
+
+Route::post('/validate-current-password', [CheckExistenceController::class, 'validateCurrentPassword'])
+    ->middleware(['auth', 'verified']);
+
+
+Route::post('/check-name-exists', [CheckExistenceController::class, 'checkNameExists'])
+    ->middleware(['auth', 'verified']);
+
+Route::post('/check-email-exists', [CheckExistenceController::class, 'checkEmailExists'])
+    ->middleware(['auth', 'verified']);
 
 Route::get('/api/leaderboard', [LeaderboardController::class, 'index'])->middleware('web');
 
@@ -36,7 +47,7 @@ Route::get('/user-data', [UserController::class, 'getUserData'])->middleware('au
 Route::post('/claim-mission-reward', [MissionController::class, 'claimReward'])->middleware('auth');
 
 Route::post('/use-flag', [FlagController::class, 'useFlag']);
-Route::post('/use-skip', [SkipController::class, 'useSkip']);
+Route::post('/use-skip', [SkipController::class, 'useSkip'])->middleware(['web', 'auth']);;
 Route::post('/use-hint', [HintController::class, 'useHint']);
 
 
@@ -46,9 +57,9 @@ Route::get('/continent/asia', [ContinentController::class, 'asia'])->name('conti
 Route::get('/continent/africa', [ContinentController::class, 'africa'])->name('continent.africa');
 Route::get('/continent/all', [ContinentController::class, 'all'])->name('continent.all');
 
-Route::get('/lobby/valstis', function () {
-    return Inertia::render('Lobby/Valstis'); 
-})->name('lobby.valstis');
+Route::get('/valstis', function () {
+    return Inertia::render('Valstis'); 
+})->name('valstis');
 
 Route::middleware('auth')->get('/user', [UserController::class, 'getUserData']);
 
@@ -76,14 +87,14 @@ Route::get('/user/get-user-owned-pictures', [UserController::class, 'getOwnedPic
 
 
 
-Route::get('/lobby/{room_code}', [RoomController::class, 'show'])->name('lobby.show');
-Route::post('/lobby', [RoomController::class, 'store'])->name('lobby.store');
+// Route::get('/lobby/{room_code}', [RoomController::class, 'show'])->name('lobby.show');
+// Route::post('/lobby', [RoomController::class, 'store'])->name('lobby.store');
 
 
 
-Route::get('/lobby', function () {
-    return Inertia::render('Lobby'); 
-})->name('lobby');
+// Route::get('/lobby', function () {
+//     return Inertia::render('Lobby'); 
+// })->name('lobby');
 
 Route::get('/create', function () {
     return Inertia::render('Create'); 

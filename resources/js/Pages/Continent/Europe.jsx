@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Missions, { allMissions } from '../../Components/Missions';
 import Level from '../../Components/Level';
 import Finish from '../../Components/Finish';
@@ -57,6 +57,8 @@ import { motion, AnimatePresence } from "framer-motion";
                 const [showFinishScreen, setShowFinishScreen] = useState(false);
                 const [gameStats, setGameStats] = useState(null);
 
+                const gameMusicRef = useRef(null);
+
                 const correctSound = new Audio('/sounds/correct.mp3');
                 const wrongSound = new Audio('/sounds/error.mp3');
                 const failSound = new Audio('/sounds/fail.mp3');
@@ -66,6 +68,7 @@ import { motion, AnimatePresence } from "framer-motion";
                 const startSound = new Audio('/sounds/start.mp3');
                 const guessedSound = new Audio('/sounds/guessed.mp3');
                 const winSound = new Audio('/sounds/win.mp3');
+            
 
                 const [privileges, setPrivileges] = useState({
                     hint_quantity: 0,
@@ -83,9 +86,22 @@ import { motion, AnimatePresence } from "framer-motion";
                 const [hasUsedFlagForCurrentCountry, setHasUsedFlagForCurrentCountry] = useState(false);
 
                 const [missionProgress, setMissionProgress] = useState(() => {
-                    const savedProgress = localStorage.getItem('missionProgress');
+                    const savedProgress = localStorage.getItem(`${currentUserId}_missionProgress`);
                     return savedProgress ? JSON.parse(savedProgress) : {};
                 });
+
+                useEffect(() => {
+                    gameMusicRef.current = new Audio('/sounds/game-music.mp3');
+                    gameMusicRef.current.loop = true;
+                    
+                    return () => {
+                        // Cleanup on unmount
+                        if (gameMusicRef.current) {
+                            gameMusicRef.current.pause();
+                            gameMusicRef.current = null;
+                        }
+                    };
+                }, []);
 
             // Funcioon to update mission progs
             const handleUpdateMissionProgress = (missionType, increment = 1) => {
@@ -183,6 +199,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
                 const handleUseSkip = async () => {
                     try {
+                        // First update mission progress
+                        handleUpdateMissionProgress('skip', 1, currentUserId); 
+                        
+                        // Then make the API call
                         const response = await fetch('/use-skip', {
                             method: 'POST',
                             headers: {
@@ -275,7 +295,9 @@ import { motion, AnimatePresence } from "framer-motion";
                 const handleStartGame = () => {
                     setIsGameStarted(true); 
                     startSound.play();
-                    setIsTimerRunning(true);  
+                    setIsTimerRunning(true); 
+                    gameMusicRef.current.play().catch(e => console.warn("Audio play failed:", e));
+                    gameMusicRef.current.volume = 0.1;
                 };
 
                 useEffect(() => {
@@ -385,177 +407,186 @@ import { motion, AnimatePresence } from "framer-motion";
                 };
 
                 const handleMapClick = (geo) => {
-                if (!currentCountry) return;
-                if (message) setMessage(null);
-                
-                const clickedCountry = countries.find((country) => country.name === geo.properties.name);
-                if (!clickedCountry) return;
-                
-                const allAnswered = new Set([
-                    ...correctlyGuessed,
-                    ...semiCorrectGuessed,
-                    ...failedGuessedCountries,
-                ]);
-                
-                if (allAnswered.has(clickedCountry.name)) {
-                    setMessage({ text: 'Šī valsts jau ir uzminēta!', type: 'info' });
-                    guessedSound.play();
-                    setTimeout(() => {
-                        setMessage({ text: '', type: '' });
-                    }, 500);
-                    return;
-                }
-                
-                if (clickedCountry.name === currentCountry.name) {
-                    let earnedScore = 1;
-                    let isPerfectGuess = wrongGuessCount === 0;
-                
-                    if (wrongGuessCount <= 2) {
-                        correctSound.play();
-                    }
-                
-                    if (wrongGuessCount === 1 || wrongGuessCount === 2) {
-                        earnedScore = 0.5;
-                        setSemiCorrectGuessed((prev) => [...prev, clickedCountry.name]);
-                    } else {
-                        setCorrectlyGuessed((prevGuessed) => [...prevGuessed, clickedCountry.name]);
-                    }
-                
-                    setScore((prev) => prev + earnedScore);
-                    setCorrectGuesses((prev) => prev + 1);
+                    if (!currentCountry) return;
+                    if (message) setMessage(null);
                     
-                    // Track perfect guesses separately
-                    if (isPerfectGuess) {
-                        setPerfectGuesses((prev) => prev + 1);
+                    const clickedCountry = countries.find((country) => country.name === geo.properties.name);
+                    if (!clickedCountry) return;
+                    
+                    const allAnswered = new Set([
+                        ...correctlyGuessed,
+                        ...semiCorrectGuessed,
+                        ...failedGuessedCountries,
+                    ]);
+                    
+                    if (allAnswered.has(clickedCountry.name)) {
+                        setMessage({ text: 'Šī valsts jau ir uzminēta!', type: 'info' });
+                        guessedSound.play();
+                        setTimeout(() => {
+                            setMessage({ text: '', type: '' });
+                        }, 500);
+                        return;
                     }
                     
-                    setMessage({
-                        text: isPerfectGuess ? 'Pareizi!' : 'Pareizi (ar atkārtotu mēģinājumu)!',
-                        type: 'correct',
-                    });
-                
-                    handleUpdateMissionProgress('country', 1, currentUserId);
-                
-                    setFlaggedCountry(null);
-                    setHasUsedFlagForCurrentCountry(false);
-                
-                    const remainingCountries = countries.filter(
-                        (country) => !allAnswered.has(country.name) && country.name !== clickedCountry.name
-                    );
-                
-                    if (remainingCountries.length > 0) {
-                        const randomIndex = Math.floor(Math.random() * remainingCountries.length);
-                        setCurrentCountry(remainingCountries[randomIndex]);
-                
-                        setHasUsedFlagForCurrentCountry(false);
+                    if (clickedCountry.name === currentCountry.name) {
+                        let earnedScore = 1;
+                        let isPerfectGuess = wrongGuessCount === 0;
+                    
+                        if (wrongGuessCount <= 2) {
+                            correctSound.play();
+                        }
+                    
+                        if (wrongGuessCount === 1 || wrongGuessCount === 2) {
+                            earnedScore = 0.5;
+                            setSemiCorrectGuessed((prev) => [...prev, clickedCountry.name]);
+                        } else {
+                            setCorrectlyGuessed((prevGuessed) => [...prevGuessed, clickedCountry.name]);
+                        }
+                    
+                        setScore((prev) => prev + earnedScore);
+                        setCorrectGuesses((prev) => prev + 1);
+                        
+                        // Track perfect guesses separately
+                        if (isPerfectGuess) {
+                            setPerfectGuesses((prev) => prev + 1);
+                        }
+                        
+                        setMessage({
+                            text: isPerfectGuess ? 'Pareizi!' : 'Pareizi (ar atkārtotu mēģinājumu)!',
+                            type: 'correct',
+                        });
+                    
+                        handleUpdateMissionProgress('country', 1, currentUserId);
+                    
                         setFlaggedCountry(null);
-                    } else {
-                        // Game complet vv
-                        setCurrentCountry(null);
-                        setIsTimerRunning(false);
-                        
-                        winSound.play().catch((e) => {
-                            console.warn('Could not play win sound:', e);
-                        });
-                        
-                        // Prepare complete game stats
-                        const finalStats = {
-                            countries: countries,
-                            totalCountries: countries.length,
-                            timePlayed: timeElapsed,
-                            perfectGuesses: perfectGuesses + (isPerfectGuess ? 1 : 0),
-                            hintsUsed: privileges.hint_quantity_initial - privileges.hint_quantity,
-                            skipsUsed: privileges.skip_quantity_initial - privileges.skip_quantity,
-                            flagsUsed: privileges.flag_quantity_initial - privileges.flag_quantity,
-                            score: score + earnedScore,
-                            correctGuesses: correctGuesses + 1,
-                            incorrectGuesses: incorrectGuesses,
-                            failedCountries: failedGuessedCountries,
-                            semiCorrectCountries: semiCorrectGuessed,
-                            perfectCountries: [...correctlyGuessed, ...(isPerfectGuess ? [clickedCountry.name] : [])]
-                                .filter(country => !semiCorrectGuessed.includes(country) && 
-                                                !failedGuessedCountries.includes(country))
-                        };
-                        
-                        setGameStats(finalStats);
-                        setShowFinishScreen(true);
+                        setHasUsedFlagForCurrentCountry(false);
                     
-                        setMessage({ text: 'Bravo tu izvēlējies visas valstis!', type: 'correct' });
-                    }
-                
-                    setWrongGuessCount(0);
-            
-                } else {
-                    setIncorrectGuesses((prev) => prev + 1);
-                    const newCount = wrongGuessCount + 1;
-                    setWrongGuessCount(newCount);
-                
-                    if (newCount >= 3) {
-                        setMessage({ text: 'Pārsniegts mēģinājumu limits!', type: 'incorrect' });
-                        failSound.play();
-                
-                        setFailedGuessedCountries((prevFailed) => {
-                            const updatedFailed = [...prevFailed, currentCountry.name];
-                
-                            setFlaggedCountry(null);
+                        const remainingCountries = countries.filter(
+                            (country) => !allAnswered.has(country.name) && country.name !== clickedCountry.name
+                        );
+                    
+                        if (remainingCountries.length > 0) {
+                            const randomIndex = Math.floor(Math.random() * remainingCountries.length);
+                            setCurrentCountry(remainingCountries[randomIndex]);
+                    
                             setHasUsedFlagForCurrentCountry(false);
-                
-                            const remainingCountries = countries.filter(
-                                (country) => !allAnswered.has(country.name) && country.name !== currentCountry.name
-                            );
-                
-                            if (remainingCountries.length > 0) {
-                                const randomIndex = Math.floor(Math.random() * remainingCountries.length);
-                                setCurrentCountry(remainingCountries[randomIndex]);
-                
-                                setHasUsedFlagForCurrentCountry(false);
-                                setFlaggedCountry(null);
-                            } else {
-                                // Game completed
-                                setCurrentCountry(null);
-                                setIsTimerRunning(false);
-                
-                                winSound.play().catch((e) => {
-                                    console.warn('Could not play win sound:', e);
-                                });
-                
-                                // Prepare complete game stats
-                                const finalStats = {
-                                    countries: countries,
-                                    totalCountries: countries.length,
-                                    timePlayed: timeElapsed,
-                                    perfectGuesses: perfectGuesses,
-                                    hintsUsed: privileges.hint_quantity_initial - privileges.hint_quantity,
-                                    skipsUsed: privileges.skip_quantity_initial - privileges.skip_quantity,
-                                    flagsUsed: privileges.flag_quantity_initial - privileges.flag_quantity,
-                                    score: score,
-                                    correctGuesses: correctGuesses,
-                                    incorrectGuesses: incorrectGuesses + 1,
-                                    failedCountries: updatedFailed,
-                                    semiCorrectCountries: semiCorrectGuessed,
-                                    perfectCountries: correctlyGuessed.filter(country => 
-                                        !semiCorrectGuessed.includes(country) && 
-                                        !failedGuessedCountries.includes(country))
-                                };
-                                
-                                setGameStats(finalStats);
-                                setShowFinishScreen(true);
-                
-                                setMessage({ text: 'Bravo tu izvēlējies visas valstis!', type: 'correct' });
-                            }
-                
-                            return updatedFailed;
-                        });
-                
+                            setFlaggedCountry(null);
+                        } else {
+                            // Game completed
+                            setCurrentCountry(null);
+                            setIsTimerRunning(false);
+                            
+                            // Stop the game music
+                            gameMusicRef.current.pause();
+                            gameMusicRef.current.currentTime = 0;
+                            
+                            winSound.play().catch((e) => {
+                                console.warn('Could not play win sound:', e);
+                            });
+                            
+                            // Prepare complete game stats
+                            const finalStats = {
+                                countries: countries,
+                                totalCountries: countries.length,
+                                timePlayed: timeElapsed,
+                                perfectGuesses: perfectGuesses + (isPerfectGuess ? 1 : 0),
+                                hintsUsed: privileges.hint_quantity_initial - privileges.hint_quantity,
+                                skipsUsed: privileges.skip_quantity_initial - privileges.skip_quantity,
+                                flagsUsed: privileges.flag_quantity_initial - privileges.flag_quantity,
+                                score: score + earnedScore,
+                                correctGuesses: correctGuesses + 1,
+                                incorrectGuesses: incorrectGuesses,
+                                failedCountries: failedGuessedCountries,
+                                semiCorrectCountries: semiCorrectGuessed,
+                                perfectCountries: [...correctlyGuessed, ...(isPerfectGuess ? [clickedCountry.name] : [])]
+                                    .filter(country => !semiCorrectGuessed.includes(country) && 
+                                                    !failedGuessedCountries.includes(country))
+                            };
+                            
+                            setGameStats(finalStats);
+                            setShowFinishScreen(true);
+                        
+                            setMessage({ text: 'Bravo tu izvēlējies visas valstis!', type: 'correct' });
+                        }
+                    
                         setWrongGuessCount(0);
-                    } else {
-                        setMessage({ text: 'Nepareizi!', type: 'incorrect' });
-                        wrongSound.play();
-                    }
-                }
                 
-                setTimeout(() => setMessage(null), 500);
-            };
+                    } else {
+                        setIncorrectGuesses((prev) => prev + 1);
+                        const newCount = wrongGuessCount + 1;
+                        setWrongGuessCount(newCount);
+                    
+                        if (newCount >= 3) {
+                            setMessage({ text: 'Pārsniegts mēģinājumu limits!', type: 'incorrect' });
+                            failSound.play();
+                    
+                            setFailedGuessedCountries((prevFailed) => {
+                                const updatedFailed = [...prevFailed, currentCountry.name];
+                    
+                                setFlaggedCountry(null);
+                                setHasUsedFlagForCurrentCountry(false);
+                    
+                                const remainingCountries = countries.filter(
+                                    (country) => !allAnswered.has(country.name) && country.name !== currentCountry.name
+                                );
+                    
+                                if (remainingCountries.length > 0) {
+                                    const randomIndex = Math.floor(Math.random() * remainingCountries.length);
+                                    setCurrentCountry(remainingCountries[randomIndex]);
+                    
+                                    setHasUsedFlagForCurrentCountry(false);
+                                    setFlaggedCountry(null);
+                                } else {
+                                    // Game completed
+                                    setCurrentCountry(null);
+                                    setIsTimerRunning(false);
+                    
+                                    // Stop the game music
+                                    gameMusicRef.current.pause();
+                                    gameMusicRef.current.currentTime = 0;
+                                    
+                    
+                                    winSound.play().catch((e) => {
+                                        console.warn('Could not play win sound:', e);
+                                    });
+                    
+                                    // Prepare complete game stats
+                                    const finalStats = {
+                                        countries: countries,
+                                        totalCountries: countries.length,
+                                        timePlayed: timeElapsed,
+                                        perfectGuesses: perfectGuesses,
+                                        hintsUsed: privileges.hint_quantity_initial - privileges.hint_quantity,
+                                        skipsUsed: privileges.skip_quantity_initial - privileges.skip_quantity,
+                                        flagsUsed: privileges.flag_quantity_initial - privileges.flag_quantity,
+                                        score: score,
+                                        correctGuesses: correctGuesses,
+                                        incorrectGuesses: incorrectGuesses + 1,
+                                        failedCountries: updatedFailed,
+                                        semiCorrectCountries: semiCorrectGuessed,
+                                        perfectCountries: correctlyGuessed.filter(country => 
+                                            !semiCorrectGuessed.includes(country) && 
+                                            !failedGuessedCountries.includes(country))
+                                    };
+                                    
+                                    setGameStats(finalStats);
+                                    setShowFinishScreen(true);
+                    
+                                    setMessage({ text: 'Bravo tu izvēlējies visas valstis!', type: 'correct' });
+                                }
+                    
+                                return updatedFailed;
+                            });
+                    
+                            setWrongGuessCount(0);
+                        } else {
+                            setMessage({ text: 'Nepareizi!', type: 'incorrect' });
+                            wrongSound.play();
+                        }
+                    }
+                    
+                    setTimeout(() => setMessage(null), 500);
+                };
                 
 
                 if (!europeTopoJSON) {
@@ -568,18 +599,25 @@ import { motion, AnimatePresence } from "framer-motion";
           {/* Header Section (unchanged) */}
           <div className="relative flex justify-between items-center px-4 w-full">
             <div className="flex flex-row justify-start items-center flex-wrap pl-4"> 
-              <Link href={route('home')} className="game2">
-                <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
-                <span>&nbsp;</span>
-                <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
+              <Link href={route('home')} className="game2"
+                    onClick={() => {
+                            const audio = new Audio('/sounds/reward.mp3');
+                            audio.play();
+                        }}>
+                 <span className='text-[3.5rem]'>Ģ</span><span>e</span><span>o</span><span className='text-[3.5rem]'>p</span><span>r</span><span>ā</span><span>t</span><span>s</span>
               </Link>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center bg-white p-2 rounded-lg space-x-2">
                 <Level/>
               </div>
-              <Link href={route('lobby.valstis')} className="bg-white p-1 rounded-lg text-[56px] text-[#084fd3] transform">
-                <IoArrowBackCircleSharp /> 
+              <Link href={route('valstis')} className="bg-white bg-opacity-70 rounded-full p-1 shadow-lg hover:bg-opacity-100 hover:scale-105 transition-all duration-300"
+                        onClick={() => {
+                            const audio = new Audio('/sounds/reward.mp3');
+                            audio.play();
+                        }}>
+             
+                <IoArrowBackCircleSharp className='text-5xl text-[#084fd3]' /> 
               </Link>
             </div>
             <div className="absolute top-3 left-1/2 transform -translate-x-1/2">

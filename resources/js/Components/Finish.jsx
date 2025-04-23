@@ -92,10 +92,14 @@ const Finish = ({  gameStats: initialGameStats, onClose, user, europePicUrl, eur
     useEffect(() => {
         saveResults();
     }, []);
-    
+   
+    const audio = new Audio('/sounds/reward.mp3');
+       
+   
     const handleCloseAndReload = () => {
         onClose(); 
         window.location.reload(); 
+        audio.play();
     };
 
     const formatNumber = (num) => {
@@ -569,7 +573,11 @@ const Finish = ({  gameStats: initialGameStats, onClose, user, europePicUrl, eur
     
                 {/* Fixed button at bottom */}
                 <div className="flex justify-center gap-8 pt-4">
-                    <Link href={route('lobby.valstis')}>
+                    <Link href={route('valstis')} 
+                            onClick={() => {
+                                 const audio = new Audio('/sounds/reward.mp3');
+                                 audio.play();
+                            }}>
                         <div className="bg-red-100 rounded-full shadow-md transform transition-all duration-300 ease-out 
                                     hover:scale-110 hover:-rotate-6 active:scale-90">
                             <img 

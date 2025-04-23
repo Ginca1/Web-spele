@@ -11,12 +11,14 @@ export default function Settings() {
     const [showPopup, setShowPopup] = useState(false);
     const [volume, setVolume] = useState(80); 
     
+    const rewardSound = new Audio('/sounds/reward.mp3');
   
     const { props } = usePage();
     const user = props.auth.user;
 
     const togglePopup = () => {
         setShowPopup(!showPopup);
+        rewardSound.play();
     };
 
     const handleVolumeChange = (event) => {
@@ -51,37 +53,32 @@ export default function Settings() {
                 </div>
             </div>
             {showPopup && (
-                <div className="popup-overlay">
-                    <div className="popup-box">
-                        <div className="mid">
-                            <div className="rowL">
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[2000]">
+                    <div className="bg-[#F8FAFC] w-[70vw] h-full max-h-[90vh] p-5 rounded-lg shadow-lg relative text-center overflow-hidden flex flex-col z-[2001]">
+
+                    <img
+                            src="/images/icons/close.png"
+                            alt="Close"
+                            onClick={togglePopup}
+                            className="w-9 h-9 object-contain absolute top-2 right-2 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-110 hover:rotate-6"
+                        />
+                        <div className="flex justify-center items-center px-4 w-full">
+                            <div className="flex flex-row justify-start items-center flex-wrap w-full">
                                 <div className="settings-T">
                                     Iestatījumi
                                 </div>
                             </div>
-                            <div className="rowL">
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
-                            >
-                               Iziet
-                            </ResponsiveNavLink>
-
-                                <button className="close-button" onClick={togglePopup}>
-                                    &times;
-                                </button>
-                            </div>
+                            
                         </div>
 
                         <div className="scrollable-content">
-                            <div className="rowL volume-container">
+                            <div className="flex flex-row justify-start items-center flex-wrap w-full volume-container">
                                 {renderVolumeIcon()}
                                 <div className="volume">
                                     Skaņa: {volume}%
                                 </div>
                             </div>
-                            <div className="rowW">
+                            <div className="flex flex-row justify-center items-center flex-wrap w-full">
                                 <div className="volume-bar-container">
                                     <input 
                                         type="range" 
@@ -97,10 +94,10 @@ export default function Settings() {
                                 </div>
                             </div>
                             
-                            <div className="set-box">
-                                <div className="profile-update">
-                                    <div className="rowW">
-                                        <div className="profile-title">
+                            <div className="flex items-center grid grid-cols-2 px-4 w-full gap-[15px]">
+                                <div className="border-none h-full mt-[7%] bg-[#eeeeee] rounded-md p-[15px]">
+                                    <div className="flex flex-row justify-center items-center flex-wrap w-full">
+                                        <div className="finish text-white font-bold text-3xl">
                                             Atjaunināt profilu
                                         </div>
                                     </div>
@@ -110,10 +107,10 @@ export default function Settings() {
                                         status={props.status} 
                                     />
                                 </div>
-                                <div className="password-update">
+                                <div className="border-none h-full mt-[7%] bg-[#eeeeee] rounded-md p-[15px]">
                                     
                                     <div className="rowW">
-                                        <div className="profile-title">
+                                        <div className="finish text-white font-bold text-3xl">
                                             Atjaunināt paroli
                                         </div>
                                     </div>
@@ -121,8 +118,18 @@ export default function Settings() {
                                 </div>
                             </div>
                            
-                            
-                            <DeleteUserForm />
+                            <div className="flex flex-row justify-center mt-12 items-center flex-wrap w-full">
+                            <ResponsiveNavLink
+                                method="post"
+                                href={route('logout')}
+                                as="button"
+                            >
+                               Iziet
+                            </ResponsiveNavLink>
+
+                                
+                            </div>
+                            {/* <DeleteUserForm /> */}
                         </div>
                     </div>
                 </div>

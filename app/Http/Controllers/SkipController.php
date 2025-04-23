@@ -17,6 +17,7 @@ class SkipController extends Controller
             if (!$privilege) {
                 return response()->json(['message' => 'Privilege not found.'], 404);
             }
+            
 
             if ($privilege->skip_quantity > 0) {
                 $privilege->skip_quantity -= 1;

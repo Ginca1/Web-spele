@@ -8,6 +8,7 @@ import History from '../Components/History';
 import CoinsDisplay from '../Components/CoinsDisplay';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { router } from '@inertiajs/react';
 
 const pictureMap = {
     1: '/images/dog.png',
@@ -35,6 +36,7 @@ const Home = () => {
     const { auth } = usePage().props; 
 
     const buySound = new Audio('/sounds/buy.mp3');
+    const rewardSound = new Audio('/sounds/reward.mp3');
     
 
      const [missionProgress, setMissionProgress] = useState(() => {
@@ -80,6 +82,7 @@ const Home = () => {
 
         axios.post('/user/purchase-picture', { picture_id: pictureId })
             .then(response => {
+                rewardSound.play();
                 setProfilePicUrl(pictureMap[pictureId]);
                 setSelectedPictureId(pictureId);
                 console.log(response.data.message);
@@ -128,16 +131,27 @@ const Home = () => {
         };
     }, []);
 
+    const handlePlayClick = (e) => {
+        e.preventDefault(); 
+        rewardSound.play();
+        setTimeout(() => {
+            router.visit(route('valstis')); 
+        }, 300); 
+    };
+
     return (
         <div className="background-container">
         
         <div className="relative flex flex-col items-center min-h-screen text-center overflow-hidden">
             <div className="header">      
                 <div className="rowL-">
-                    <Link href={route('home')} className="game2">
-                        <span>P</span><span>r</span><span>ā</span><span>t</span><span>a</span>
-                        <span>&nbsp;</span>
-                        <span>D</span><span>u</span><span>e</span><span>ļ</span><span>i</span>
+                    <Link href={route('home')} className="game2" 
+                            onClick={() => {
+                                const audio = new Audio('/sounds/reward.mp3');
+                                audio.play();
+                        }}>
+                        <span className='text-[3.5rem]'>Ģ</span><span>e</span><span>o</span><span className='text-[3.5rem]'>p</span><span>r</span><span>ā</span><span>t</span><span>s</span>
+                        
                     </Link>
                 </div>            
                 <div className="flex flex-row justify-end items-center flex-wrap w-full pr-8">
@@ -145,12 +159,12 @@ const Home = () => {
                         <Level />
                     </div>
                     <CoinsDisplay coins={coins} />
-                    <Settings />
+                    <Settings  />
                 </div>
             </div>
 
             {/* Main Content Area */}
-            <div className="flex flex-row justify-center items-stretch w-full flex-1 mt-5 min-h-0 px-3 pb-3">     
+            <div className="flex flex-row justify-center items-stretch w-full flex-1 mt-1 min-h-0 px-3 pb-3">     
                 {/* Grid Container */}
                 <div className="w-full h-full grid grid-cols-3 gap-6 justify-items-center p-4 min-h-0 ">
 
@@ -342,9 +356,9 @@ const Home = () => {
                                         min-1300-max-1600:h-[55vh] 
                                         min-1000-max-1300:h-[45vh] 
                                         min-900-max-1000:h-[35vh]  
-                                        min-850-max-900:h-[40vh] 
-                                        min-800-max-850:h-[35vh] 
-                                        min-640-max-800:h-[35vh] 
+                                        min-850-max-900:h-[50vh] 
+                                        min-800-max-850:h-[42vh] 
+                                        min-640-max-800:h-[42vh] 
                                         min-441-max-640:h-[30vh] 
                                         min-300-max-441:h-[25vh]">
                             <Missions 
@@ -362,11 +376,13 @@ const Home = () => {
 
 
                     <div className="flex-grow flex items-center mt-3 justify-center">
-                        <Link href={route('lobby')} 
+                    <Link 
+                            onClick={handlePlayClick}
                             className="relative inline-flex items-center justify-center ena2 px-10 py-2 bg-gradient-to-r from-[#00A3FF] to-[#0066FF] text-white font-bold text-2xl
-                                    rounded-xl shadow-lg cursor-pointer overflow-hidden group
-                                    hover:shadow-xl hover:bg-gradient-to-r hover:from-[#0085cc] hover:to-[#0044cc]
-                                    transition-all duration-300 transform hover:-translate-y-1 min-w-[120px]">
+                                rounded-xl shadow-lg cursor-pointer overflow-hidden group
+                                hover:shadow-xl hover:bg-gradient-to-r hover:from-[#0085cc] hover:to-[#0044cc]
+                                transition-all duration-300 transform hover:-translate-y-1 min-w-[120px]"
+                        >
                             <span className="absolute inset-0 bg-gradient-to-r from-[#00C6FF] to-[#0072FF] opacity-0 
                                     group-hover:opacity-100 transition-opacity duration-500 rounded-xl"></span>
                             <span className="absolute top-0 left-0 w-1/3 h-full bg-white opacity-10 -skew-x-12
@@ -383,6 +399,7 @@ const Home = () => {
                                 </span>
                             </span>
                         </Link>
+
                     </div>
                 </div>
                
@@ -403,7 +420,9 @@ const Home = () => {
                             <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
                             <div className="p-6 bg-[#e4e3a9] rounded-full shadow-md border-[4px] border-amber-400 ring-4 ring-amber-100/30">
                                 <div 
-                                    className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat"
+                                    className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat
+                                    w-1300-1600:w-[70px] w-1300-1600:h-[70px] 
+                                    w-1000-1300:w-[50px] w-1000-1300:h-[50px]"
                                     style={{ backgroundImage: "url('/images/hint.png')" }}
                                 ></div>
                                 </div>
@@ -418,7 +437,9 @@ const Home = () => {
                             <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
                                 <div className="p-6 bg-[#a9e4ae] rounded-lg shadow-md border-[4px] border-emerald-400 ring-4 ring-emerald-100/30">
                                     <div 
-                                        className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat"
+                                        className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat
+                                        w-1300-1600:w-[70px] w-1300-1600:h-[70px] 
+                                         w-1000-1300:w-[50px] w-1000-1300:h-[50px]"
                                         style={{ backgroundImage: "url('/images/icons/skip.png')" }}
                                     ></div>
                                 </div>
@@ -433,7 +454,9 @@ const Home = () => {
                              <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
                                  <div className="p-6 bg-[#a9b0e4] rounded-full shadow-md border-[4px] border-purple-400 ring-4 ring-blue-100/30">
                                     <div 
-                                        className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat rounded-full"
+                                        className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat rounded-full
+                                        w-1300-1600:w-[70px] w-1300-1600:h-[70px] 
+                                        w-1000-1300:w-[50px] w-1000-1300:h-[50px]"
                                         style={{ backgroundImage: "url('/images/icons/flag.png')" }}
                                     ></div>
                                 </div>
@@ -455,7 +478,9 @@ const Home = () => {
                                 <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
                                     <div className="p-6 bg-[#e4e3a9] rounded-full shadow-md border-[4px] border-amber-400 ring-4 ring-amber-100/30">
                                         <div 
-                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat"
+                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat
+                                            w-1300-1600:w-[70px] w-1300-1600:h-[70px] 
+                                            w-1000-1300:w-[50px] w-1000-1300:h-[50px]"
                                             style={{ backgroundImage: "url('/images/hint.png')" }}
                                         ></div>
                                     </div>
@@ -470,7 +495,9 @@ const Home = () => {
                                 <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
                                     <div className="p-6 bg-[#a9e4ae] rounded-lg shadow-md border-[4px] border-emerald-400 ring-4 ring-emerald-100/30">
                                         <div 
-                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat"
+                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat
+                                             w-1300-1600:w-[70px] w-1300-1600:h-[70px] 
+                                            w-1000-1300:w-[50px] w-1000-1300:h-[50px]"
                                             style={{ backgroundImage: "url('/images/icons/skip.png')" }}
                                         ></div>
                                     </div>
@@ -485,7 +512,9 @@ const Home = () => {
                                 <div className="flex flex-col justify-center gap-10 items-center w-full h-full">
                                     <div className="p-6 bg-[#a9b0e4] rounded-full shadow-md border-[4px] border-purple-400 ring-4 ring-blue-100/30">
                                         <div 
-                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat rounded-full"
+                                            className="w-[100px] h-[100px] bg-contain bg-center bg-no-repeat rounded-full
+                                             w-1300-1600:w-[70px] w-1300-1600:h-[70px]  
+                                             w-1000-1300:w-[50px] w-1000-1300:h-[50px]"
                                             style={{ backgroundImage: "url('/images/icons/flag.png')" }}
                                         ></div>
                                     </div>

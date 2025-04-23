@@ -5,7 +5,9 @@ const Leaderboard = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [sortBy, setSortBy] = useState('level'); // 'level' or 'coins'
+    const [sortBy, setSortBy] = useState('level'); 
+
+    const rewardSound = new Audio('/sounds/reward.mp3');
 
     const pictureMap = {
         1: '/images/dog.png',
@@ -86,6 +88,7 @@ const Leaderboard = () => {
             await fetchLeaderboard();
         }
         setShowPopup(!showPopup);
+        rewardSound.play();
     };
 
     useEffect(() => {

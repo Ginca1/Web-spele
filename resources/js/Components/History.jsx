@@ -8,12 +8,14 @@ const History = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedContinent, setSelectedContinent] = useState(null); // Changed from 'all' to null
+    const rewardSound = new Audio('/sounds/reward.mp3');
 
     const togglePopup = async () => {
         if (!showPopup) {
             await fetchHistory();
         }
         setShowPopup(!showPopup);
+        rewardSound.play();
     };
 
     const fetchHistory = async () => {
@@ -70,7 +72,7 @@ const History = () => {
         // Store current sort value
         const sortSelect = document.querySelector('select');
         const currentSort = sortSelect ? sortSelect.value : 'newest';
-        
+        rewardSound.play();
         // Filter logic...
         let filtered = [];
         if (continent === null) {

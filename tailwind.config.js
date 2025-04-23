@@ -11,6 +11,9 @@ export default {
     extend: {
 
       screens: {
+        'w-1300-1600': { raw: '(min-width: 1300px) and (max-width: 1600px)' },
+        'w-1000-1300': { raw: '(min-width: 1000px) and (max-width: 1300px)' },
+
         'min-1300-max-1600': { raw: '(min-height: 1300px) and (max-height: 1600px)' },
         'min-1000-max-1300': { raw: '(min-height: 1000px) and (max-height: 1300px)' },
         'min-900-max-1000': { raw: '(min-height: 900px) and (max-height: 1000px)' },
