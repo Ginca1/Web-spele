@@ -1,17 +1,22 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
+
 const Level = () => {
+   // Saglabā līmeņa informāciju (līmenis, XP, vajadzīgais XP)
   const [levelData, setLevelData] = useState({ 
     level: 1, 
     xp: 0,
     xpneeded: 100
   });
+
+  // Stāvokļi ielādes, kļūdas un līmeņa paaugstināšanas procesiem
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [levelingUp, setLevelingUp] = useState(false);
 
   const levelSound = new Audio('/sounds/level-up.mp3');
 
+  // Funkcija, kas formatē XP lasāmākā formā (piem. 1.2k, 1M utt.)
   const formatXP = useCallback((xp) => {
     const xpNumber = Number(xp);
     if (isNaN(xpNumber)) return '0';
@@ -27,8 +32,11 @@ const Level = () => {
     return Math.floor(xpNumber).toString();
   }, []);
 
+  // Iegūst CSRF token no meta taga (svarīgi aizsardzībai POST pieprasījumiem)
   const getCsrfToken = () => document.querySelector('meta[name="csrf-token"]').content;
 
+
+    // Funkcija datu ielādei no servera
   const fetchData = useCallback(async (signal) => {
     try {
       const res = await fetch('/user-data', {
@@ -40,8 +48,9 @@ const Level = () => {
       if (!res.ok) throw new Error('Network error');
       
       const data = await res.json();
+
+      // Ja ir izmaiņas datu līmenī vai XP, atjauno state
       setLevelData(prev => {
-        
         if (prev.level !== data.level || prev.xp !== data.xp) {
           return {
             ...data,
@@ -53,13 +62,14 @@ const Level = () => {
       setError(null);
     } catch (err) {
       if (err.name !== 'AbortError') {
-        setError(err.message);
+        setError(err.message); // Apstrādā kļūdas, izņemot pārrāvumu
       }
     } finally {
       setLoading(false);
     }
   }, []);
 
+    // Funkcija līmeņa paaugstināšanas pieprasījumam
   const handleLevelUp = useCallback(async () => {
     setLevelingUp(true);
     try {
@@ -78,7 +88,7 @@ const Level = () => {
       if (!res.ok) throw new Error('Level up failed');
       
       const data = await res.json();
-      setLevelData(data);
+      setLevelData(data); // Atjauno datus pēc paaugstināšanas
     } catch (err) {
       setError(err.message);
     } finally {
@@ -86,10 +96,11 @@ const Level = () => {
     }
   }, []);
 
+
+    // Sākotnējā datu ielāde + automātiska atkārtota ielāde ar laika intervālu (polling)
   useEffect(() => {
     const abortController = new AbortController();
     
-    // Fast initial load
     fetchData(abortController.signal);
     
     let retryDelay = 500;
@@ -97,12 +108,10 @@ const Level = () => {
     
     const pollData = () => {
       fetchData(abortController.signal);
-      // Speed up polling if changes were detected recently
       retryDelay = levelData.xp > 0 ? 300 : 1000;
       retryTimer = setTimeout(pollData, retryDelay);
     };
     
-    // Start polling after initial load
     const initialTimer = setTimeout(pollData, 300);
     
     return () => {
@@ -112,7 +121,7 @@ const Level = () => {
     };
   }, [fetchData, levelData.xp]);
 
-  // Auto level-up detection
+  // Automātiski paaugstina līmeni, ja sasniegts vajadzīgais XP 
   useEffect(() => {
     if (levelData.xp >= levelData.xpneeded && !levelingUp) {
       handleLevelUp();
