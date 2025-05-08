@@ -147,7 +147,7 @@ export default function Register() {
                     </span>
                 </div>
 
-                {/* Confirm Password Input with Show/Hide Icon */}
+                {/*Confirm Password Input with Icon*/}
                 <div className="relative w-full ">
                     <input
                         type={showPasswordConfirm ? "text" : "password"}

@@ -95,7 +95,7 @@ import { motion, AnimatePresence } from "framer-motion";
                     gameMusicRef.current.loop = true;
                     
                     return () => {
-                        // Cleanup on unmount
+                    
                         if (gameMusicRef.current) {
                             gameMusicRef.current.pause();
                             gameMusicRef.current = null;
@@ -202,7 +202,6 @@ import { motion, AnimatePresence } from "framer-motion";
                         // First update mission progress
                         handleUpdateMissionProgress('skip', 1, currentUserId); 
                         
-                        // Then make the API call
                         const response = await fetch('/use-skip', {
                             method: 'POST',
                             headers: {
