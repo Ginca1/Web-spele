@@ -336,13 +336,15 @@ import { motion, AnimatePresence } from "framer-motion";
                 }, [userPictureId]);
 
                 useEffect(() => {
+                    // Veicu HTTP pieprasījumu, lai ielādētu JSON datus no norādītā ceļa
                     fetch('/data/countries-110m.json')
                         .then((response) => response.json())
-                        .then((data) => setEuropeTopoJSON(data))
+                        .then((data) => setEuropeTopoJSON(data)) // Saglabāju ielādētos datus state mainīgajā `europeTopoJSON`
                         .catch((error) => console.error('Error loading TopoJSON:', error));
                 }, []);
                 
                 useEffect(() => {
+                     // Eiropas valstu masīvs ar valsts nosaukumu, ISO kodu un ģeogrāfiskajām koordinātām
                     const europeanCountries = [
                         { name: 'Albānija', code: 'al', coordinates: [20.1683, 41.1533] },
                         { name: 'Austrija', code: 'at', coordinates: [14.5501, 47.5162] },
@@ -406,12 +408,15 @@ import { motion, AnimatePresence } from "framer-motion";
                 };
 
                 const handleMapClick = (geo) => {
-                    if (!currentCountry) return;
-                    if (message) setMessage(null);
+                    if (!currentCountry) return; // Ja nav pašreizējās valstis, pārtrauc funkciju
+
+                    if (message) setMessage(null); // Notīra iepriekšējo ziņu, ja tāda eksistē
                     
+                    // Atrod izvēlēto valsti pēc tās nosaukuma ģeogrāfiskajos datos
                     const clickedCountry = countries.find((country) => country.name === geo.properties.name);
                     if (!clickedCountry) return;
                     
+                    // Apvieno jau atbildētās valstis vienā kopā, lai nepieļautu dublēšanu
                     const allAnswered = new Set([
                         ...correctlyGuessed,
                         ...semiCorrectGuessed,
@@ -748,11 +753,11 @@ import { motion, AnimatePresence } from "framer-motion";
                                     )}
                                 </AnimatePresence>
 
-                                {/* Full-height map container */}
+                            
                                 <div className="w-full h-full">
                                     <ComposableMap
-                                        projection="geoMercator"
-                                        projectionConfig={{ center: [10, 45], scale: 500 }}
+                                        projection="geoMercator" // Izmanto Mercator projekciju
+                                        projectionConfig={{ center: [10, 45], scale: 500 }} // Centrē karti uz Eiropu un iestata mērogu
                                         className="w-full h-full"
                                     >
                                         <ZoomableGroup
@@ -761,7 +766,7 @@ import { motion, AnimatePresence } from "framer-motion";
                                             maxZoom={5}
                                             translateExtent={[[100, -300], [700, 500]]}
                                         >
-                                            <Geographies geography={europeTopoJSON}>
+                                            <Geographies geography={europeTopoJSON}>  {/* Ielādē valstu ģeogrāfiju no JSON */}
                                                 {({ geographies }) =>
                                                     geographies.map((geo) => {
                                                         const name = geo.properties.name;
@@ -774,19 +779,19 @@ import { motion, AnimatePresence } from "framer-motion";
                                                             <Geography
                                                                 key={geo.rsmKey}
                                                                 geography={geo}
-                                                                onClick={() => handleMapClick(geo)}
+                                                                onClick={() => handleMapClick(geo)} // Kad uzklikšķina uz valsts
                                                                 style={{
                                                                     default: {
                                                                         fill:
                                                                             isGuessed
-                                                                                ? '#4CAF50'
+                                                                                ? '#4CAF50' // Zaļš - pareizi uzminēta
                                                                                 : isSemiGuessed
-                                                                                ? '#FFD700'
+                                                                                ? '#FFD700' // Zeltains - daļēji pareizi
                                                                                 : isFailedGuess
-                                                                                ? '#FF5733'
+                                                                                ? '#FF5733' // Sarkans - kļūdaini minēta
                                                                                 : hintedCountry === name
-                                                                                ? '#a020f0'
-                                                                                : '#D6D6DA',
+                                                                                ? '#a020f0' // Violets - ieteiktā valsts
+                                                                                : '#D6D6DA',// Noklusējuma pelēka krāsa
                                                                         stroke: '#5a5c5f',
                                                                         strokeWidth: 0.6,
                                                                         outline: 'none',
@@ -799,7 +804,7 @@ import { motion, AnimatePresence } from "framer-motion";
                                                                                 ? '#FFD700'
                                                                                 : isFailedGuess
                                                                                 ? '#FF5733'
-                                                                                : '#0c6ae1',
+                                                                                : '#0c6ae1', // Zilā krāsa pie uzvedes ar peli
                                                                         stroke: '#5a5c5f',
                                                                         strokeWidth: 1,
                                                                         outline: 'none',
@@ -823,6 +828,7 @@ import { motion, AnimatePresence } from "framer-motion";
                                                 }
                                             </Geographies>
 
+                                            {/* Atzīmē valstu centrālās koordinātas ar sarkaniem punktiem */}
                                             {countries.map((country, index) => (
                                                 <Marker key={index} coordinates={country.coordinates}>
                                                     <circle r={1.7} fill="#FF5733" stroke="#fff" strokeWidth={0.7} />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+// Eksportē misijas, kas būs pieejamas ārpus šī faila
 export const allMissions = {
   daily: [
     { id: 1, type: 'country', description: 'Uzmini 15 valstis', reward: { coins: 20, xp: 20 }, goal: 15 },
@@ -55,10 +56,10 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
   
 
   useEffect(() => {
-    // Check for old global missionProgress
+     // Pārbaudīt veco globālo misijas progresu
     const globalProgress = localStorage.getItem('missionProgress');
     if (globalProgress && currentUserId) {
-      // Migrate to user-specific key
+      // Migrēt uz lietotāja specifisku atslēgu
       localStorage.setItem(`${currentUserId}_missionProgress`, globalProgress);
       localStorage.removeItem('missionProgress');
       setMissionProgress(JSON.parse(globalProgress));
@@ -66,7 +67,7 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
   }, [currentUserId]);
 
   const selectRandomMissions = (missions, count) => {
-  // Group missions by type
+  // Grupēt misijas pēc veida
   const missionsByType = {
     country: [],
     hint: [],
@@ -81,32 +82,30 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
   const selectedMissions = [];
   const selectedTypes = new Set();
 
-  // Keep trying until we get enough unique missions
+  // Turpināt līdz iegūst unikālu misiju
   while (selectedMissions.length < count && selectedTypes.size < Object.keys(missionsByType).length) {
-    // Get all remaining types we haven't selected yet
     const availableTypes = Object.keys(missionsByType).filter(
       type => missionsByType[type].length > 0 && !selectedTypes.has(type)
     );
 
-    // If no more unique types available, break to avoid infinite loop
+    // Ja nav pieejami unikāli veidi, pārtraukt
     if (availableTypes.length === 0) break;
 
-    // Randomly select a type we haven't used yet
+    // Nejauši izvēlas veidu, kurš vēl nav izmantots
     const randomType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
     selectedTypes.add(randomType);
 
-    // Get a random mission of this type
+
     const missionsOfType = missionsByType[randomType];
     const randomMission = missionsOfType[Math.floor(Math.random() * missionsOfType.length)];
 
-    // Add to selected missions
     selectedMissions.push(randomMission);
 
-    // Remove this mission from the pool to avoid duplicates
+    // Noņemt šo misiju no piedāvājuma, lai izvairītos no dublikātiem
     missionsByType[randomType] = missionsByType[randomType].filter(m => m.id !== randomMission.id);
   }
 
-  // If we still need more missions (not enough types), fill with random remaining missions
+  // Ja nav pietiekami daudz misiju veidu, aizpildīt ar nejaušām atlikušajām misijām
   while (selectedMissions.length < count) {
     const remainingMissions = Object.values(missionsByType).flat();
     if (remainingMissions.length === 0) break;
@@ -176,7 +175,7 @@ const Missions = ({ missionProgress, setMissionProgress, containerHeight = "33re
   const handleResetMissions = () => {
     const updatedMissionProgress = { ...missionProgress };
   
-    //boBOLO
+    
     dailyMissions.forEach((mission) => {
       delete updatedMissionProgress[mission.id];
       localStorage.removeItem(`showTimeLeft_${mission.id}`);
